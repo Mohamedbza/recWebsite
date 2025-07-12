@@ -1,0 +1,839 @@
+{
+  "home": {
+    "hero": {
+      "title": "Together Towards Employment",
+      "subtitle": "Connecting talents with the best professional opportunities through a personalized, human, and simple approach.",
+      "learn_more": "LEARN MORE ABOUT RECRUITMENT PLUS"
+    },
+    "services": {
+      "title": "Our Services",
+      "subtitle": "Tailored recruitment solutions",
+      "description": "Personalized services to meet the specific needs of candidates and employers."
+    },
+    "audiences": {
+      "candidates": {
+        "title": "For Candidates",
+        "description": "Explore opportunities and launch your professional future with our personalized support.",
+        "items": [
+          "Resume writing assistance",
+          "Interview preparation",
+          "Integration support"
+        ],
+        "button": "Find a job"
+      },
+      "employers": {
+        "title": "For Employers",
+        "description": "Targeted solutions for your recruitment and HR development needs.",
+        "items": [
+          "Personnel needs analysis",
+          "Rigorous candidate pre-selection",
+          "HR solutions"
+        ],
+        "button": "Post a job"
+      }
+    },
+    "stats": {
+      "title": "Key Figures",
+      "companies": "500+ Companies served",
+      "placements": "5000+ Successful placements",
+      "experience": "15+ Years of experience",
+      "satisfaction": "98% Satisfaction rate"
+    },
+    "newsletter": {
+      "badge": "Stay informed",
+      "title": "Newsletter",
+      "description": "Subscribe to our newsletter to receive our latest job offers and career advice.",
+      "placeholder": "Your email address",
+      "button": "Subscribe",
+      "privacy": "By subscribing, you accept our",
+      "privacy_link": "privacy policy"
+    },
+    "cta": {
+      "title": "Ready to collaborate with us?",
+      "description": "Whether you're looking for a job or the ideal candidate, our team is here to support you.",
+      "button": "Contact us"
+    }
+  },
+  "navigation": {
+    "candidates": "Candidates",
+    "employers": "Employers",
+    "about": "About",
+    "services": "Services",
+    "blog": "Blog",
+    "contact": "Contact",
+    "login": "Log in",
+    "register": "Create account"
+  },
+  "candidates": {
+    "dropdown": {
+      "overview": "Overview",
+      "overview_desc": "Discover our services",
+      "jobs": "Job Offers",
+      "jobs_desc": "Find your ideal job",
+      "career": "Career with R+",
+      "career_desc": "Personalized support"
+    },
+    "hero": {
+      "badge": "Your career starts here",
+      "title": "Build your career with Recruitment Plus",
+      "description": "Explore opportunities and launch your professional future with our personalized, human, and efficient support.",
+      "find_job_button": "Find a job",
+      "services_button": "Our services"
+    },
+    "job_search": {
+      "badge": "Job search",
+      "title": "Find your next job",
+      "description": "Discover thousands of opportunities that match your professional skills and aspirations.",
+      "search_button": "SEARCH",
+      "popular_searches": "Popular searches:",
+      "popular_terms": ["Developer", "Nurse", "Accountant", "Engineer", "Marketing"]
+    },
+    "services": {
+      "badge": "Our Services",
+      "title": "Our support services",
+      "description": "Personalized solutions to help you achieve your professional goals.",
+      "service_types": {
+        "local": {
+          "badge": "Local",
+          "title": "Local Recruitment",
+          "description": "Personalized support with resume writing assistance and interview preparation.",
+          "features": [
+            "Personalized support",
+            "Resume writing assistance",
+            "Interview preparation"
+          ]
+        },
+        "national": {
+          "badge": "National",
+          "title": "National Recruitment",
+          "description": "Service adapted to professional needs with coverage throughout Canada.",
+          "features": [
+            "Service adapted to needs",
+            "National coverage",
+            "Interregional mobility"
+          ]
+        },
+        "international": {
+          "badge": "International",
+          "title": "International Recruitment",
+          "description": "Support for immigration procedures and assistance with integration in Canada.",
+          "features": [
+            "Support for procedures",
+            "Integration assistance",
+            "Rigorous pre-selection"
+          ]
+        }
+      },
+      "learn_more": "Learn more"
+    },
+    "process": {
+      "badge": "Our Process",
+      "title": "How we support you",
+      "description": "A structured and personalized process to maximize your chances of success.",
+      "steps": [
+        {
+          "step": "1",
+          "title": "Assessment and Pre-selection",
+          "description": "Skills validation, language assessment, and verification of professional background."
+        },
+        {
+          "step": "2",
+          "title": "Placement",
+          "description": "Presentation of applications to employers and preparation of documents for the employment contract."
+        },
+        {
+          "step": "3",
+          "title": "Arrival Preparation",
+          "description": "Transportation logistics and installation coordination."
+        },
+        {
+          "step": "4",
+          "title": "Integration Support",
+          "description": "Information session on the company and familiarization with the environment."
+        }
+      ]
+    },
+    "impulse_program": {
+      "badge": "Exclusive Program",
+      "title": "Impulse Program",
+      "description": "Our customized professional development program designed to help you achieve your career goals with personalized support.",
+      "features": [
+        "Personalized coaching with experts",
+        "Skills development workshops",
+        "Mentoring by experienced professionals",
+        "Exclusive professional network"
+      ],
+      "button": "Discover Impulse"
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Candidate testimonials",
+      "description": "Discover the experiences of those who trusted Recruitment Plus for their career.",
+      "testimonials": [
+        {
+          "name": "Marie Tremblay",
+          "role": "Web Developer",
+          "content": "Thanks to Recruitment Plus, I found a job that perfectly matches my skills and aspirations. Their support was invaluable.",
+          "rating": 5
+        },
+        {
+          "name": "Pierre Lavoie",
+          "role": "Civil Engineer",
+          "content": "The recruitment process was quick and efficient. I particularly appreciated the interview preparation which gave me confidence.",
+          "rating": 5
+        },
+        {
+          "name": "Sophie Martin",
+          "role": "Nurse",
+          "content": "As an international candidate, the immigration process was complex, but the Recruitment Plus team guided me every step of the way.",
+          "rating": 5
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to launch your career?",
+      "description": "Whether you're looking for your first job or a new professional challenge, our team is here to help you succeed.",
+      "find_job_button": "Find a job",
+      "contact_button": "Contact us"
+    },
+    "jobs": {
+      "title": "Job Offers",
+      "subtitle": "Discover professional opportunities that match your skills and aspirations.",
+      "search_placeholder": "Job title, skills or keywords",
+      "location_placeholder": "City, province or postal code",
+      "search_button": "SEARCH",
+      "filters": "Filters",
+      "job_types": {
+        "title": "Job Type",
+        "full_time": "Full-time",
+        "part_time": "Part-time",
+        "contract": "Contract",
+        "temporary": "Temporary"
+      },
+      "experience": {
+        "title": "Experience",
+        "entry": "Entry Level",
+        "mid": "Intermediate",
+        "senior": "Senior"
+      },
+      "salary": {
+        "title": "Annual Salary",
+        "range1": "Less than $40,000",
+        "range2": "$40,000 - $60,000",
+        "range3": "$60,000 - $80,000",
+        "range4": "More than $80,000"
+      },
+      "apply_filters": "Apply Filters",
+      "found_jobs": "{count} job offers found",
+      "sort_by": "Sort by:",
+      "sort_options": {
+        "recent": "Most recent",
+        "relevance": "Relevance",
+        "salary": "Salary"
+      },
+      "apply_button": "Apply",
+      "posted_date": {
+        "days_ago_one": "{count} day ago",
+        "days_ago_other": "{count} days ago",
+        "week_ago_one": "{count} week ago",
+        "week_ago_other": "{count} weeks ago"
+      },
+      "job_examples": [
+        {
+          "title": "Full Stack Developer",
+          "company": "TechCorp Inc.",
+          "location": "Montreal, QC",
+          "type": "Full-time",
+          "salary": "$75,000 - $95,000 per year",
+          "tags": ["React", "Node.js", "TypeScript", "MongoDB"],
+          "posted": "2 days ago"
+        },
+        {
+          "title": "Clinical Nurse",
+          "company": "Saint-Laurent Medical Center",
+          "location": "Quebec City, QC",
+          "type": "Full-time",
+          "salary": "$70,000 - $85,000 per year",
+          "tags": ["Intensive care", "3+ years experience", "Bilingual"],
+          "posted": "3 days ago"
+        },
+        {
+          "title": "Senior Accountant",
+          "company": "National Financial Group",
+          "location": "Laval, QC",
+          "type": "Full-time",
+          "salary": "$65,000 - $80,000 per year",
+          "tags": ["CPA", "Taxation", "Financial statements"],
+          "posted": "1 week ago"
+        },
+        {
+          "title": "Civil Engineer",
+          "company": "Modern Constructions Inc.",
+          "location": "Montreal, QC",
+          "type": "Contract",
+          "salary": "$45 - $60 per hour",
+          "tags": ["Civil engineering", "AutoCAD", "Project management"],
+          "posted": "5 days ago"
+        },
+        {
+          "title": "Sales Representative",
+          "company": "Industrial Solutions",
+          "location": "Trois-Rivières, QC",
+          "type": "Full-time",
+          "salary": "Base + Commission",
+          "tags": ["B2B", "Business development", "Bilingual"],
+          "posted": "1 day ago"
+        }
+      ],
+      "location_filter": "Location",
+      "location_all": "All locations"
+    }
+  },
+  "employers": {
+    "dropdown": {
+      "overview": "Overview",
+      "overview_desc": "Our HR solutions",
+      "industries": "Industries Served",
+      "industries_desc": "Areas of expertise",
+      "post_job": "Post a Job",
+      "post_job_desc": "Find your talents"
+    },
+    "post_job": {
+      "title": "Post a Job",
+      "subtitle": "Find the best talent for your company",
+      "validation": {
+        "title_required": "Job title is required",
+        "company_required": "Company name is required",
+        "location_required": "Location is required",
+        "job_type_required": "Job type is required",
+        "description_required": "Job description is required",
+        "description_min": "Description must be at least 100 characters",
+        "email_required": "Contact email is required",
+        "email_invalid": "Please enter a valid email"
+      },
+      "form": {
+        "job_info": "Job Information",
+        "job_title": "Job Title",
+        "job_title_placeholder": "Ex: Full Stack Developer",
+        "company": "Company Name",
+        "company_placeholder": "Ex: TechCorp Inc.",
+        "location": "Location",
+        "location_placeholder": "Ex: Montreal, QC",
+        "job_type": "Job Type",
+        "job_description": "Job Description",
+        "job_description_placeholder": "Describe the responsibilities and role of the position...",
+        "requirements": "Requirements & Qualifications",
+        "requirements_placeholder": "List the skills, experience and qualifications required...",
+        "benefits": "Benefits & Compensation",
+        "benefits_placeholder": "Describe the salary, benefits and other perks...",
+        "tags": "Keywords / Skills",
+        "tags_placeholder": "Add relevant keywords...",
+        "application_info": "Application Information",
+        "contact_email": "Contact Email",
+        "contact_email_placeholder": "Ex: recruitment@example.com",
+        "application_deadline": "Application Deadline",
+        "save_draft": "Save Draft",
+        "preview": "Preview",
+        "submit": "Post Job"
+      },
+      "success": {
+        "title": "Job Posted Successfully!",
+        "message": "Your job listing has been published and is now visible to candidates."
+      }
+    },
+    "hero": {
+      "badge": "Innovative HR Solutions",
+      "title": "Custom Recruitment Solutions",
+      "subtitle": "tailored",
+      "description": "Targeted solutions for your recruitment and HR development needs. Find the talents that will make a difference in your organization.",
+      "post_job_button": "Post a Job",
+      "services_button": "Our Services"
+    },
+    "industries": {
+      "badge": "Areas of Expertise",
+      "title": "Industries We Serve",
+      "description": "Our expertise covers a wide range of sectors to meet all your recruitment needs.",
+      "industries": [
+        "Technology", 
+        "Healthcare", 
+        "Finance", 
+        "Engineering", 
+        "Manufacturing", 
+        "Construction", 
+        "Education", 
+        "Hospitality"
+      ]
+    },
+    "solutions": {
+      "badge": "Our Solutions",
+      "title": "Recruitment Solutions",
+      "description": "Personalized approaches for each type of recruitment need.",
+      "service_types": {
+        "local": {
+          "badge": "Local",
+          "title": "Local Recruitment",
+          "description": "Quickly available candidates with personnel needs analysis and rigorous pre-selection.",
+          "features": [
+            "Needs analysis",
+            "Rigorous pre-selection",
+            "Post-placement follow-up"
+          ]
+        },
+        "national": {
+          "badge": "National",
+          "title": "National Recruitment",
+          "description": "Search across Canada with coordination of relocation procedures.",
+          "features": [
+            "Targeted search",
+            "Relocation coordination",
+            "Integration support"
+          ]
+        },
+        "international": {
+          "badge": "International",
+          "title": "International Recruitment",
+          "description": "Specialists in recruiting qualified foreign workers with preparation and assembly of the LMIA file.",
+          "features": [
+            "LMIA file preparation",
+            "Permit process follow-up",
+            "Integration support"
+          ]
+        }
+      },
+      "learn_more": "Learn more"
+    },
+    "process": {
+      "badge": "Our Process",
+      "title": "Our Employer Process",
+      "description": "A structured and efficient process to guarantee the best results.",
+      "steps": [
+        {
+          "step": "1",
+          "title": "Needs Definition",
+          "description": "Analysis of specialized workforce needs."
+        },
+        {
+          "step": "2",
+          "title": "Job Posting",
+          "description": "Transmission to partners and integration into the network."
+        },
+        {
+          "step": "3",
+          "title": "Preliminary Analysis",
+          "description": "Document authentication and skills validation."
+        },
+        {
+          "step": "4",
+          "title": "Final Selection",
+          "description": "Document collection and work permit application."
+        },
+        {
+          "step": "5",
+          "title": "Integration",
+          "description": "Preparation for arrival and integration follow-up."
+        }
+      ]
+    },
+    "additional_services": {
+      "badge": "Additional Services",
+      "title": "Additional Services",
+      "description": "Additional services to optimize your HR strategy and develop your employer brand.",
+      "services": [
+        {
+          "title": "Employer Brand Development",
+          "description": "Strategies to strengthen your image and attract the best talent in your industry."
+        },
+        {
+          "title": "Talent Management",
+          "description": "Retention programs and skills development to maximize the potential of your teams."
+        },
+        {
+          "title": "Strategic Planning",
+          "description": "Analysis and planning of workforce needs in the short, medium and long term."
+        }
+      ]
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "What Our Clients Say",
+      "description": "Discover the experiences of our employer partners who trust us.",
+      "testimonials": [
+        {
+          "name": "John Smith",
+          "role": "HR Director, TechCorp",
+          "content": "We have been collaborating with Recruitment Plus for 3 years and their expertise has allowed us to build a strong and high-performing team. Their international recruitment process was particularly effective.",
+          "rating": 5
+        },
+        {
+          "name": "Mary Johnson",
+          "role": "CEO, Health Plus",
+          "content": "Faced with a shortage of staff in the healthcare sector, Recruitment Plus provided us with innovative and effective solutions. Their support has been valuable for our growth.",
+          "rating": 5
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to Find Your Talents?",
+      "description": "Whether you need one-time recruitment or a long-term strategy, our team is here to guide you toward success.",
+      "post_job_button": "Post a Job",
+      "contact_button": "Contact Us"
+    }
+  },
+  "services": {
+    "local": {
+      "title": "Local Recruitment",
+      "description": "Personalized support for job seekers with resume writing assistance and interview preparation."
+    },
+    "national": {
+      "title": "National Recruitment",
+      "description": "Service adapted to professional needs with coverage throughout Canada."
+    },
+    "international": {
+      "title": "International Recruitment",
+      "description": "Recruitment of qualified talent for the Canadian market with support for immigration procedures."
+    },
+    "more": "Learn more",
+    "hero": {
+      "badge": "Complete Solutions",
+      "title": "Our",
+      "title_highlight": "Services",
+      "description": "Complete recruitment solutions tailored to your specific needs, from local search to international placement.",
+      "contact_button": "Contact Us"
+    },
+    "overview": {
+      "badge": "Our Expertise",
+      "title": "Complete Recruitment Solutions",
+      "description": "Discover our full range of services designed to meet all your recruitment needs."
+    },
+    "service_list": [
+      {
+        "title": "Permanent Recruitment",
+        "description": "Placement of permanent employees with close collaboration between applicants and employers for a perfect match of profiles.",
+        "features": ["In-depth assessment", "Precise matching", "Long-term follow-up"],
+        "href": "/services/recrutement-permanent"
+      },
+      {
+        "title": "Temporary Recruitment",
+        "description": "Solution for short-term needs, covering vacations, sick leave, and special projects with flexibility.",
+        "features": ["Quick responsiveness", "Total flexibility", "Simplified management"],
+        "href": "/services/recrutement-temporaire"
+      },
+      {
+        "title": "Executive Search",
+        "description": "Specialized services for leadership positions with rigorous selection of the best high-level candidates.",
+        "features": ["Confidential approach", "Exclusive network", "Expert evaluation"],
+        "href": "/services/recherche-cadres"
+      },
+      {
+        "title": "International Recruitment",
+        "description": "Agency recognized by CNESST with LMIA assistance and a global network of recruiters and partners.",
+        "features": ["LMIA expertise", "Global network", "Immigration support"],
+        "href": "/services/recrutement-international"
+      },
+      {
+        "title": "Recruitment Process Outsourcing (RPO)",
+        "description": "Complete outsourcing of the recruitment process with management from search to integration.",
+        "features": ["Complete process", "Economies of scale", "Dedicated expertise"],
+        "href": "/services/recrutement-externalise"
+      },
+      {
+        "title": "Internships",
+        "description": "Opportunities for students with a valuable professional experience serving as a springboard for a successful career.",
+        "features": ["Structured programs", "Mentoring included", "Hiring opportunities"],
+        "href": "/services/stages"
+      }
+    ],
+    "approach": {
+      "badge": "Our Approach",
+      "title": "How We Work",
+      "description": "A proven and structured process to ensure the best results at every stage."
+    },
+    "process_steps": [
+      {
+        "step": "01",
+        "title": "Needs Analysis",
+        "description": "In-depth understanding of your requirements and company culture."
+      },
+      {
+        "step": "02",
+        "title": "Active Search",
+        "description": "Identification and approach of the best candidates on the market."
+      },
+      {
+        "step": "03",
+        "title": "Rigorous Evaluation",
+        "description": "Tests, interviews, and verifications to ensure the quality of profiles."
+      },
+      {
+        "step": "04",
+        "title": "Support",
+        "description": "Personalized follow-up until the successful integration of the candidate."
+      }
+    ],
+    "industries": {
+      "badge": "Areas of Expertise",
+      "title": "Industries We Serve",
+      "description": "Our expertise extends to many sectors to meet all your needs."
+    },
+    "industry_list": [
+      {"name": "Technology", "emoji": "💻"},
+      {"name": "Healthcare", "emoji": "🏥"},
+      {"name": "Finance", "emoji": "💰"},
+      {"name": "Engineering", "emoji": "⚙️"},
+      {"name": "Manufacturing", "emoji": "🏭"},
+      {"name": "Construction", "emoji": "🏗️"},
+      {"name": "Education", "emoji": "📚"},
+      {"name": "Hospitality", "emoji": "🏨"},
+      {"name": "Transportation", "emoji": "🚛"}
+    ],
+    "benefits": {
+      "badge": "Our Advantages",
+      "title": "Why Choose Our Services",
+      "description": "Concrete advantages that make a difference in your recruitment strategy."
+    },
+    "benefit_list": [
+      {
+        "title": "Speed of Execution",
+        "description": "Optimized processes for fast results without compromising quality."
+      },
+      {
+        "title": "Recognized Expertise",
+        "description": "15+ years of experience and in-depth knowledge of the Canadian market."
+      },
+      {
+        "title": "Personalized Approach",
+        "description": "Tailored solutions adapted to your company culture and specific needs."
+      },
+      {
+        "title": "International Network",
+        "description": "Access to a vast network of qualified local and international talent."
+      },
+      {
+        "title": "High Success Rate",
+        "description": "98% client satisfaction rate and 95% placement retention."
+      },
+      {
+        "title": "Continuous Support",
+        "description": "Post-placement support and follow-up on candidate integration."
+      }
+    ],
+    "cta": {
+      "title": "Ready to Transform Your Recruitment?",
+      "description": "Discover how our services can help you attract, recruit, and retain the best talent for your organization.",
+      "consultation_button": "Request a Consultation",
+      "pricing_button": "View Our Pricing"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Leave us a message and we will get back to you as soon as possible.",
+    "form": {
+      "name_placeholder": "Your name",
+      "email_placeholder": "Your email",
+      "message_placeholder": "Your message",
+      "submit": "Send"
+    },
+    "success": "Message sent! We will contact you soon."
+  },
+  "language": {
+    "fr": "French",
+    "en": "English",
+    "change": "Change language"
+  },
+  "common": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "about": {
+    "hero": {
+      "badge": "Our Story",
+      "title": "About Recruitment Plus",
+      "description": "Recruitment Plus Inc. helps Canadian employers address workforce shortages with a personalized, human, and simple approach that makes a difference.",
+      "contact_button": "Contact Us"
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "title": "Connecting Talents to Opportunities",
+      "description": "Connecting talents to the best professional opportunities, helping candidates find an exciting job, and helping employers recruit the right person with a transparent, efficient, and human service.",
+      "values": [
+        {
+          "title": "Connect",
+          "description": "Connecting talents and professional opportunities."
+        },
+        {
+          "title": "Trust",
+          "description": "Building lasting relationships based on trust and respect."
+        },
+        {
+          "title": "Results",
+          "description": "Providing a transparent, efficient, and results-oriented service."
+        }
+      ]
+    },
+    "why_choose": {
+      "badge": "Our Advantages",
+      "title": "Why Choose Us",
+      "description": "Our human, personalized and results-oriented approach sets us apart. We offer comprehensive support, rigorous candidate selection, and a deep understanding of our clients' needs.",
+      "advantages": [
+        {
+          "title": "Recognized Expertise",
+          "description": "Years of experience and in-depth market knowledge."
+        },
+        {
+          "title": "Personalized Service",
+          "description": "Custom solutions for lasting results."
+        },
+        {
+          "title": "Global Reach",
+          "description": "International recruitment of top talent."
+        }
+      ]
+    },
+    "team": {
+      "badge": "Our Team",
+      "title": "Meet Our Team",
+      "description": "Passionate and experienced professionals dedicated to your success.",
+      "members": [
+        {
+          "name": "Marie Tremblay",
+          "role": "General Manager",
+          "initial": "M"
+        },
+        {
+          "name": "Jean Dupont",
+          "role": "Recruitment Director",
+          "initial": "J"
+        },
+        {
+          "name": "Sophie Martin",
+          "role": "International Manager",
+          "initial": "S"
+        },
+        {
+          "name": "Pierre Lavoie",
+          "role": "Senior HR Consultant",
+          "initial": "P"
+        }
+      ]
+    },
+    "stats": {
+      "badge": "Our Results",
+      "title": "Our Numbers Speak for Themselves",
+      "description": "Concrete results that demonstrate our expertise and commitment.",
+      "stats": [
+        {
+          "number": "500+",
+          "label": "Companies served",
+          "icon": "🏢"
+        },
+        {
+          "number": "5000+",
+          "label": "Successful placements",
+          "icon": "✅"
+        },
+        {
+          "number": "15+",
+          "label": "Years of experience",
+          "icon": "📅"
+        },
+        {
+          "number": "98%",
+          "label": "Satisfaction rate",
+          "icon": "⭐"
+        }
+      ]
+    },
+    "locations": {
+      "badge": "Our Offices",
+      "title": "Our Branches",
+      "description": "Present in the major cities of Canada to better serve you.",
+      "locations": [
+        {
+          "city": "Montreal (Headquarters)",
+          "address": "123 Main Street, Montreal, QC H3Z 2Y7",
+          "phone": "+1 (514) 123-4567",
+          "email": "montreal@recruitmentplus.ca"
+        },
+        {
+          "city": "Quebec City",
+          "address": "456 Des Forges Blvd, Quebec City, QC G1K 7P4",
+          "phone": "+1 (418) 987-6543",
+          "email": "quebec@recruitmentplus.ca"
+        },
+        {
+          "city": "Toronto",
+          "address": "789 Bay Street, Toronto, ON M5G 2N8",
+          "phone": "+1 (416) 555-7890",
+          "email": "toronto@recruitmentplus.ca"
+        }
+      ],
+      "view_map": "View on Map"
+    },
+    "contact": {
+      "title": "Let's Talk",
+      "description": "Contact our team for your specific recruitment and human resources needs.",
+      "contacts": [
+        {
+          "title": "Phone",
+          "info": "+1 (514) 123-4567"
+        },
+        {
+          "title": "Email",
+          "info": "info@recruitmentplus.ca"
+        },
+        {
+          "title": "Address",
+          "info": "Montreal, Quebec City, Toronto"
+        }
+      ],
+      "contact_button": "Contact Us"
+    }
+  },
+  "login": {
+    "welcome": "Welcome back",
+    "title": "Sign in to your account",
+    "subtitle": "Enter your credentials to access your dashboard",
+    "email_label": "Email",
+    "email_placeholder": "name@example.com",
+    "password_label": "Password",
+    "password_placeholder": "Enter your password",
+    "forgot_password": "Forgot password?",
+    "submit": "Sign in",
+    "loading": "Signing in...",
+    "no_account": "Don't have an account?",
+    "register_link": "Create one now",
+    "success_title": "Welcome back!",
+    "success_message": "You have successfully signed in.",
+    "error_title": "Sign in failed",
+    "error_message": "There was a problem signing in. Please check your credentials and try again."
+  },
+  "register": {
+    "welcome": "Create your account",
+    "title": "Join Recruitment Plus",
+    "subtitle": "Sign up to access personalized recruitment services",
+    "account_type": "I am a:",
+    "candidate": "Job Seeker",
+    "employer": "Employer",
+    "name_label": "Full Name",
+    "name_placeholder_candidate": "John Smith",
+    "name_placeholder_employer": "Company or Full Name",
+    "email_label": "Email",
+    "email_placeholder": "name@example.com",
+    "password_label": "Password",
+    "password_placeholder": "Create a password",
+    "password_requirements": "At least 8 characters with a number and a special character",
+    "terms_text": "I agree to the",
+    "terms_link": "Terms of Service and Privacy Policy",
+    "marketing_text": "I want to receive job alerts and career advice via email",
+    "submit": "Create account",
+    "loading": "Creating account...",
+    "have_account": "Already have an account?",
+    "login_link": "Sign in",
+    "success_title": "Account created",
+    "success_message": "Your account has been created successfully!",
+    "error_title": "Registration failed",
+    "error_message": "There was a problem creating your account. Please try again.",
+    "error_required_fields": "Please fill in all required fields",
+    "error_terms": "You must agree to the Terms of Service"
+  }
+}
