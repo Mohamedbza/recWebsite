@@ -86,8 +86,8 @@ const AVAILABLE_SKILLS = [
 ];
 
 const AVAILABLE_LOCATIONS = [
-  { value: 'montreal', label: 'Montreal, Canada' },
-  { value: 'dubai', label: 'Dubai, UAE' },
+  { value: 'montreal', label: ' Canada' },
+  { value: 'dubai', label: 'United Arab Emirates' },
   { value: 'turkey', label: 'Turkey' }
 ];
 
