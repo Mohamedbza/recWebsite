@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://srv884531.hstgr.cloud/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app/api';
 
 export interface ApiResponse<T = any> {
   success: boolean;
