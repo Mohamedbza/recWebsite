@@ -3,52 +3,56 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Lock, Mail, Sparkles } from "lucide-react"
+import { Eye, EyeOff, Lock, Mail, User, Building } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useToast } from "@/hooks/use-toast"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useAuth } from "@/contexts/EmployerAuthContext"
 
 export default function LoginPage() {
   const { t } = useLanguage()
   const { toast } = useToast()
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const { login, loading } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [userType, setUserType] = useState<'candidate' | 'employer'>('candidate')
 
-  // Mock login function - would connect to authentication service in production
+  // Handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
 
     try {
-      // Simulate API request
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Example validation
+      // Validate inputs
       if (!email || !password) {
         throw new Error("Please enter both email and password")
       }
 
+      // Call the login function from auth context
+      await login(email, password, userType)
+
       // Success notification
       toast({
-        title: t('login.success_title'),
-        description: t('login.success_message'),
+        title: "Success",
+        description: "You have successfully signed in.",
       })
 
-      // Redirect to home page
-      router.push("/")
+      // Redirect based on user type
+      if (userType === 'employer') {
+        router.push("/employeurs/dashboard")
+      } else {
+        router.push("/candidats")
+      }
     } catch (error) {
       toast({
-        title: t('login.error_title'),
-        description: error instanceof Error ? error.message : t('login.error_message'),
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred while signing in.",
         variant: "destructive",
       })
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -63,34 +67,55 @@ export default function LoginPage() {
 
       <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[350px] md:w-[450px]">
         <div className="flex flex-col items-center space-y-2 text-center">
-          <div className="inline-block mb-6 px-6 py-2 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer">
-            <Sparkles className="inline-block h-4 w-4 mr-2" />
-            {t('login.welcome')}
-          </div>
           <h1 className="text-3xl font-bold">
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              {t('login.title')}
+              Sign in to your account
             </span>
           </h1>
           <p className="text-muted-foreground">
-            {t('login.subtitle')}
+            Enter your credentials to access your dashboard
           </p>
         </div>
 
         <div className="magic-card p-6 shadow-xl bg-background/70 backdrop-blur-md border border-white/20">
+          <Tabs defaultValue="candidate" className="w-full mb-6" onValueChange={(value) => setUserType(value as 'candidate' | 'employer')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="candidate" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Candidate
+              </TabsTrigger>
+              <TabsTrigger value="employer" className="flex items-center gap-2">
+                <Building className="h-4 w-4" />
+                Employer
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="candidate">
+              <p className="text-sm text-muted-foreground mb-6">
+                Access your candidate portal to manage your job applications
+              </p>
+            </TabsContent>
+
+            <TabsContent value="employer">
+              <p className="text-sm text-muted-foreground mb-6">
+                Access your employer dashboard to manage job postings
+              </p>
+            </TabsContent>
+          </Tabs>
+
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">{t('login.email_label')}</Label>
+              <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t('login.email_placeholder')}
+                  placeholder={userType === 'employer' ? 'company@example.com' : 'name@example.com'}
                   className="pl-10"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={isLoading}
+                  disabled={loading}
                   required
                 />
               </div>
@@ -98,12 +123,12 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">{t('login.password_label')}</Label>
+                <Label htmlFor="password">Password</Label>
                 <Link 
-                  href="/forgot-password" 
+                  href="/auth/reset-password" 
                   className="text-xs text-primary hover:underline underline-offset-4"
                 >
-                  {t('login.forgot_password')}
+                  Forgot password?
                 </Link>
               </div>
               <div className="relative">
@@ -111,11 +136,11 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder={t('login.password_placeholder')}
+                  placeholder="Enter your password"
                   className="pl-10 pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
+                  disabled={loading}
                   required
                 />
                 <button
@@ -132,19 +157,19 @@ export default function LoginPage() {
             <Button 
               type="submit" 
               className="w-full magic-button bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white font-medium py-2 h-auto text-base"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? t('login.loading') : t('login.submit')}
+              {loading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm">
-            {t('login.no_account')}{" "}
+            Don&apos;t have an account?{" "}
             <Link
-              href="/register"
+              href="/auth/register"
               className="font-medium text-primary hover:underline underline-offset-4"
             >
-              {t('login.register_link')}
+              Create one now
             </Link>
           </div>
         </div>

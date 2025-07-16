@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
+
 import { Badge } from "@/components/ui/badge"
 import { 
   Card, 
@@ -48,10 +48,9 @@ import {
 } from "@/components/ui/tabs"
 
 export default function RegisterPage() {
-  const { t, locale } = useLanguage()
+  const { locale } = useLanguage()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
-  const [accountType, setAccountType] = useState("candidate")
 
   // Form validation schema for candidates
   const candidateFormSchema = z.object({
@@ -206,7 +205,7 @@ export default function RegisterPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <Tabs defaultValue="candidate" className="w-full" onValueChange={setAccountType}>
+                  <Tabs defaultValue="candidate" className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-6">
                       <TabsTrigger value="candidate" className="flex items-center gap-2">
                         <User className="h-4 w-4" />

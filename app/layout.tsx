@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { FloatingContact } from "@/components/floating-contact"
 import { CookieConsent } from "@/components/ui/cookie-consent"
 import { LanguageProvider } from "@/contexts/LanguageContext"
+import { AuthProvider } from "@/contexts/EmployerAuthContext"
 import "./globals.css"
 import type { Metadata } from "next"
 
@@ -24,13 +25,15 @@ export default function RootLayout({
       <body className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider>
-            <div className="flex min-h-screen flex-col">
-              <SiteHeader />
-              <main className="flex-1">{children}</main>
-              <SiteFooter />
-              <FloatingContact />
-              <CookieConsent />
-            </div>
+            <AuthProvider>
+              <div className="flex min-h-screen flex-col">
+                <SiteHeader />
+                <main className="flex-1">{children}</main>
+                <SiteFooter />
+                <FloatingContact />
+                <CookieConsent />
+              </div>
+            </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

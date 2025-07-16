@@ -5,7 +5,7 @@ import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { ArrowRight, Eye, EyeOff, KeyRound, LogIn, Mail } from "lucide-react"
+import { ArrowRight, Eye, EyeOff, KeyRound, LogIn, Mail, User, Building } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { useLanguage } from "@/contexts/LanguageContext"
@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,7 +21,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { 
   Card, 
@@ -33,14 +31,20 @@ import {
   CardTitle
 } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 
 export default function LoginPage() {
-  const { t, locale } = useLanguage()
+  const { locale } = useLanguage()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
 
-  // Form validation schema
-  const formSchema = z.object({
+  // Form validation schema for candidates
+  const candidateFormSchema = z.object({
     email: z
       .string()
       .min(1, { message: locale === 'fr' ? 'L\'email est requis' : 'Email is required' })
@@ -51,9 +55,21 @@ export default function LoginPage() {
     rememberMe: z.boolean().optional(),
   })
 
-  // Initialize form
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  // Form validation schema for employers
+  const employerFormSchema = z.object({
+    email: z
+      .string()
+      .min(1, { message: locale === 'fr' ? 'L\'email est requis' : 'Email is required' })
+      .email({ message: locale === 'fr' ? 'Email invalide' : 'Invalid email' }),
+    password: z
+      .string()
+      .min(1, { message: locale === 'fr' ? 'Le mot de passe est requis' : 'Password is required' }),
+    rememberMe: z.boolean().optional(),
+  })
+
+  // Initialize candidate form
+  const candidateForm = useForm<z.infer<typeof candidateFormSchema>>({
+    resolver: zodResolver(candidateFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -61,8 +77,18 @@ export default function LoginPage() {
     },
   })
 
-  // Form submission handler
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  // Initialize employer form
+  const employerForm = useForm<z.infer<typeof employerFormSchema>>({
+    resolver: zodResolver(employerFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  })
+
+  // Form submission handler for candidates
+  const onCandidateSubmit = (values: z.infer<typeof candidateFormSchema>) => {
     // This would normally submit to an API
     console.log(values)
     
@@ -77,6 +103,24 @@ export default function LoginPage() {
     
     // Redirect to home page
     router.push('/')
+  }
+
+  // Form submission handler for employers
+  const onEmployerSubmit = (values: z.infer<typeof employerFormSchema>) => {
+    // This would normally submit to an API
+    console.log(values)
+    
+    // Show success toast
+    toast({
+      title: locale === 'fr' ? 'Connexion réussie' : 'Login successful',
+      description: locale === 'fr' 
+        ? 'Vous êtes maintenant connecté à votre compte' 
+        : 'You are now logged in to your account',
+      duration: 3000,
+    })
+    
+    // Redirect to employer dashboard
+    router.push('/employeurs/dashboard')
   }
 
   return (
@@ -124,98 +168,210 @@ export default function LoginPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center text-base">
-                              <Mail className="mr-2 h-4 w-4 text-primary" />
-                              {locale === 'fr' ? 'Email' : 'Email'}
-                            </FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder={locale === 'fr' ? 'votre@email.com' : 'your@email.com'} 
-                                className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                  <Tabs defaultValue="candidate" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                      <TabsTrigger value="candidate" className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        {locale === 'fr' ? 'Candidat' : 'Candidate'}
+                      </TabsTrigger>
+                      <TabsTrigger value="employer" className="flex items-center gap-2">
+                        <Building className="h-4 w-4" />
+                        {locale === 'fr' ? 'Employeur' : 'Employer'}
+                      </TabsTrigger>
+                    </TabsList>
 
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center text-base">
-                              <KeyRound className="mr-2 h-4 w-4 text-primary" />
-                              {locale === 'fr' ? 'Mot de passe' : 'Password'}
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <Input 
-                                  type={showPassword ? "text" : "password"}
-                                  placeholder={locale === 'fr' ? 'Votre mot de passe' : 'Your password'} 
-                                  className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50 pr-10"
-                                  {...field} 
-                                />
-                                <button
-                                  type="button"
-                                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                  onClick={() => setShowPassword(!showPassword)}
-                                >
-                                  {showPassword ? (
-                                    <EyeOff className="h-4 w-4" />
-                                  ) : (
-                                    <Eye className="h-4 w-4" />
-                                  )}
-                                </button>
-                              </div>
-                            </FormControl>
-                            <div className="flex justify-end">
-                              <Link
-                                href="/auth/reset-password"
-                                className="text-sm text-primary hover:underline"
-                              >
-                                {locale === 'fr' ? 'Mot de passe oublié ?' : 'Forgot password?'}
-                              </Link>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    {/* Candidate Login Form */}
+                    <TabsContent value="candidate">
+                      <Form {...candidateForm}>
+                        <form onSubmit={candidateForm.handleSubmit(onCandidateSubmit)} className="space-y-4">
+                          <FormField
+                            control={candidateForm.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="flex items-center text-base">
+                                  <Mail className="mr-2 h-4 w-4 text-primary" />
+                                  {locale === 'fr' ? 'Email' : 'Email'}
+                                </FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder={locale === 'fr' ? 'votre@email.com' : 'your@email.com'} 
+                                    className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
+                                    {...field} 
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
 
-                      <FormField
-                        control={form.control}
-                        name="rememberMe"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm font-normal">
-                              {locale === 'fr' ? 'Se souvenir de moi' : 'Remember me'}
-                            </FormLabel>
-                          </FormItem>
-                        )}
-                      />
+                          <FormField
+                            control={candidateForm.control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="flex items-center text-base">
+                                  <KeyRound className="mr-2 h-4 w-4 text-primary" />
+                                  {locale === 'fr' ? 'Mot de passe' : 'Password'}
+                                </FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Input 
+                                      type={showPassword ? "text" : "password"}
+                                      placeholder={locale === 'fr' ? 'Votre mot de passe' : 'Your password'} 
+                                      className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50 pr-10"
+                                      {...field} 
+                                    />
+                                    <button
+                                      type="button"
+                                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                      onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                      {showPassword ? (
+                                        <EyeOff className="h-4 w-4" />
+                                      ) : (
+                                        <Eye className="h-4 w-4" />
+                                      )}
+                                    </button>
+                                  </div>
+                                </FormControl>
+                                <div className="flex justify-end">
+                                  <Link
+                                    href="/auth/reset-password"
+                                    className="text-sm text-primary hover:underline"
+                                  >
+                                    {locale === 'fr' ? 'Mot de passe oublié ?' : 'Forgot password?'}
+                                  </Link>
+                                </div>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
 
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white mt-6"
-                      >
-                        {locale === 'fr' ? 'Se connecter' : 'Log In'}
-                      </Button>
-                    </form>
-                  </Form>
+                          <FormField
+                            control={candidateForm.control}
+                            name="rememberMe"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <FormLabel className="text-sm font-normal">
+                                  {locale === 'fr' ? 'Se souvenir de moi' : 'Remember me'}
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+
+                          <Button 
+                            type="submit" 
+                            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white mt-6"
+                          >
+                            {locale === 'fr' ? 'Se connecter' : 'Log In'}
+                          </Button>
+                        </form>
+                      </Form>
+                    </TabsContent>
+
+                    {/* Employer Login Form */}
+                    <TabsContent value="employer">
+                      <Form {...employerForm}>
+                        <form onSubmit={employerForm.handleSubmit(onEmployerSubmit)} className="space-y-4">
+                          <FormField
+                            control={employerForm.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="flex items-center text-base">
+                                  <Mail className="mr-2 h-4 w-4 text-primary" />
+                                  {locale === 'fr' ? 'Email professionnel' : 'Business Email'}
+                                </FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder={locale === 'fr' ? 'votre@entreprise.com' : 'your@company.com'} 
+                                    className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
+                                    {...field} 
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={employerForm.control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="flex items-center text-base">
+                                  <KeyRound className="mr-2 h-4 w-4 text-primary" />
+                                  {locale === 'fr' ? 'Mot de passe' : 'Password'}
+                                </FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Input 
+                                      type={showPassword ? "text" : "password"}
+                                      placeholder={locale === 'fr' ? 'Votre mot de passe' : 'Your password'} 
+                                      className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50 pr-10"
+                                      {...field} 
+                                    />
+                                    <button
+                                      type="button"
+                                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                      onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                      {showPassword ? (
+                                        <EyeOff className="h-4 w-4" />
+                                      ) : (
+                                        <Eye className="h-4 w-4" />
+                                      )}
+                                    </button>
+                                  </div>
+                                </FormControl>
+                                <div className="flex justify-end">
+                                  <Link
+                                    href="/auth/reset-password"
+                                    className="text-sm text-primary hover:underline"
+                                  >
+                                    {locale === 'fr' ? 'Mot de passe oublié ?' : 'Forgot password?'}
+                                  </Link>
+                                </div>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={employerForm.control}
+                            name="rememberMe"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <FormLabel className="text-sm font-normal">
+                                  {locale === 'fr' ? 'Se souvenir de moi' : 'Remember me'}
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+
+                          <Button 
+                            type="submit" 
+                            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white mt-6"
+                          >
+                            {locale === 'fr' ? 'Se connecter' : 'Log In'}
+                          </Button>
+                        </form>
+                      </Form>
+                    </TabsContent>
+                  </Tabs>
 
                   <div className="mt-6">
                     <div className="relative">
