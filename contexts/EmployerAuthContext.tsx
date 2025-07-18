@@ -49,9 +49,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     
     try {
+      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+      const normalizedBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/$/, '')}/api`;
       const endpoint = userType === 'candidate' 
-        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/candidates/login`
-        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/companies/login`;
+        ? `${normalizedBase}/auth/candidates/login/public`
+        : `${normalizedBase}/auth/companies/login/public`;
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -61,10 +63,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ email, password }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+      if (!data.token) {
+        throw new Error('No token provided');
       }
 
       // Extract user data based on user type

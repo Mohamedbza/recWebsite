@@ -7,13 +7,11 @@ import { Eye, EyeOff, Lock, Mail, User, Building } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useLanguage } from "@/contexts/LanguageContext"
 import { useToast } from "@/hooks/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/contexts/EmployerAuthContext"
 
 export default function LoginPage() {
-  const { t } = useLanguage()
   const { toast } = useToast()
   const router = useRouter()
   const { login, loading } = useAuth()
@@ -45,7 +43,7 @@ export default function LoginPage() {
       if (userType === 'employer') {
         router.push("/employeurs/dashboard")
       } else {
-        router.push("/candidats")
+        router.push("/candidate")
       }
     } catch (error) {
       toast({
@@ -166,7 +164,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link
-              href="/auth/register"
+              href="/register"
               className="font-medium text-primary hover:underline underline-offset-4"
             >
               Create one now

@@ -87,7 +87,7 @@ class ApiService {
     skills?: string[];
     isActive?: boolean;
   }) {
-    return this.request('/candidates/register', {
+    return this.request('/candidate/register/public', {
       method: 'POST',
       body: JSON.stringify(candidateData),
     });
@@ -118,7 +118,7 @@ class ApiService {
     status?: string;
     totalEmployees?: number;
   }) {
-    return this.request('/companies/register', {
+    return this.request('/companies/register/public', {
       method: 'POST',
       body: JSON.stringify(companyData),
     });
@@ -134,4 +134,36 @@ class ApiService {
   }
 }
 
-export const apiService = new ApiService(); 
+export const apiService = new ApiService();
+
+// Job search parameters interface
+export interface JobSearchParams {
+  search?: string;
+  location?: string;
+  page?: number;
+  limit?: number;
+  jobType?: string;
+  experienceLevel?: string;
+  skills?: string[];
+}
+
+// Job search API function
+export const searchJobs = async (params: JobSearchParams) => {
+  const queryParams = new URLSearchParams();
+  
+  if (params.search) queryParams.append('search', params.search);
+  if (params.location) queryParams.append('location', params.location);
+  if (params.page) queryParams.append('page', params.page.toString());
+  if (params.limit) queryParams.append('limit', params.limit.toString());
+  if (params.jobType) queryParams.append('jobType', params.jobType);
+  if (params.experienceLevel) queryParams.append('experienceLevel', params.experienceLevel);
+  if (params.skills && params.skills.length > 0) queryParams.append('skills', params.skills.join(','));
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const response = await fetch(`${apiUrl}/jobs/public?${queryParams.toString()}`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch jobs');
+  }
+  return response.json();
+}; 

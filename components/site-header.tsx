@@ -55,13 +55,13 @@ export function SiteHeader() {
       description: "Découvrez nos services",
     },
     {
-      href: "/candidats/emplois",
+      href: "/candidate/emplois",
       icon: <Search className="h-4 w-4 text-primary" />,
       title: "Offres d'emploi",
       description: "Trouvez votre emploi idéal",
     },
     // {
-    //   href: "/candidats/faire-carriere",
+    //   href: "/candidate/faire-carriere",
     //   icon: <Sparkles className="h-4 w-4 text-primary" />,
     //   title: "Faire carrière avec R+",
     //   description: "Accompagnement personnalisé",

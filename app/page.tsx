@@ -30,7 +30,7 @@ export default function Home() {
     const params = new URLSearchParams();
     if (searchTerm) params.set("q", searchTerm);
     if (selectedLocation && selectedLocation !== "all") params.set("location", selectedLocation);
-    router.push(`/candidats/emplois?${params.toString()}`);
+    router.push(`/candidate/emplois?${params.toString()}`);
   };
 
   return (
