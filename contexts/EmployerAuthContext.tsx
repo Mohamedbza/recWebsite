@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string, userType: 'candidate' | 'employer') => {
     setLoading(true);
-    
+      
     try {
       const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       const normalizedBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/$/, '')}/api`;
