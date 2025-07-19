@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useAuth } from "@/contexts/EmployerAuthContext";
+import { createJobApplication } from "@/lib/api";
+import { CheckCircle } from "lucide-react";
 
 interface ApplyJobModalProps {
   open: boolean;
@@ -19,32 +21,27 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({ open, jobId, onClose }) =
   const [coverLetter, setCoverLetter] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async () => {
-    if (!jobId || !user) return;
+    if (!jobId || !user || !token) return;
     setSubmitting(true);
     setError(null);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-      const resp = await fetch(`${apiUrl}/job-applications`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          candidate: user.id,
-          job: jobId,
-          resumeUrl,
-          coverLetter,
-          location: user.location,
-        }),
-      });
-      if (!resp.ok) {
-        const data = await resp.json();
-        throw new Error(data.message || "Failed to apply");
-      }
-      onClose();
+      await createJobApplication({
+        job: jobId,
+        resumeUrl: resumeUrl || undefined,
+        coverLetter: coverLetter || undefined,
+      }, token);
+      setShowSuccess(true);
+      // Auto close after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+        // Reset form
+        setResumeUrl("");
+        setCoverLetter("");
+      }, 3000);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -53,33 +50,50 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({ open, jobId, onClose }) =
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Apply for Job</DialogTitle>
-        </DialogHeader>
-        {error && <p className="text-destructive text-sm mb-2">{error}</p>}
-        <div className="space-y-4">
-          <Input
-            placeholder="Resume URL (optional)"
-            value={resumeUrl}
-            onChange={(e) => setResumeUrl(e.target.value)}
-          />
-          <Textarea
-            placeholder="Cover Letter (optional)"
-            value={coverLetter}
-            onChange={(e) => setCoverLetter(e.target.value)}
-            rows={4}
-          />
-        </div>
-        <div className="flex justify-end gap-2 pt-4">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSubmit} disabled={submitting || !user}>
-            {submitting ? "Submitting..." : "Submit Application"}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Apply for Job</DialogTitle>
+          </DialogHeader>
+          {error && <p className="text-destructive text-sm mb-2">{error}</p>}
+          <div className="space-y-4">
+            <Input
+              placeholder="Resume URL (optional)"
+              value={resumeUrl}
+              onChange={(e) => setResumeUrl(e.target.value)}
+            />
+            <Textarea
+              placeholder="Cover Letter (optional)"
+              value={coverLetter}
+              onChange={(e) => setCoverLetter(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <div className="flex justify-end gap-2 pt-4">
+            <Button variant="outline" onClick={onClose}>Cancel</Button>
+            <Button onClick={handleSubmit} disabled={submitting || !user || !token}>
+              {submitting ? "Submitting..." : "Submit Application"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Modal */}
+      <Dialog open={showSuccess} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md">
+          <div className="flex flex-col items-center text-center space-y-4 py-6">
+            <CheckCircle className="h-16 w-16 text-green-500" />
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Application Successful!</h3>
+              <p className="text-sm text-gray-600 mt-2">
+                Your job application has been submitted successfully. We'll review your application and get back to you soon.
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

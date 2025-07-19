@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext"
 import { AuthProvider } from "@/contexts/EmployerAuthContext"
 import "./globals.css"
 import type { Metadata } from "next"
+import { ConditionalLayout } from "@/components/ConditionalLayout"
 
 export const metadata: Metadata = {
   title: "Recruitment Plus",
@@ -26,13 +27,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>
-              <div className="flex min-h-screen flex-col">
-                <SiteHeader />
-                <main className="flex-1">{children}</main>
-                <SiteFooter />
-                <FloatingContact />
-                <CookieConsent />
-              </div>
+              <ConditionalLayout>{children}</ConditionalLayout>
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>

@@ -8,37 +8,72 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { 
-  Briefcase, Calendar, Clock, Eye, 
-  TrendingUp, Users, Star, CheckCircle,
-  ArrowUpRight, Plus, Filter, MoreHorizontal,
+  Briefcase, Calendar, Clock, 
+  TrendingUp, Star, CheckCircle,
+  ArrowUpRight, Plus,
   Building2, MapPin, DollarSign, User, FileText
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { getMyJobApplications, getRecommendedJobs } from "@/lib/api"
 
-// Mock data types
-interface Application {
-  id: number
-  jobId: string
-  position: string
-  company: string
-  companyLogo?: string
-  status: 'applied' | 'reviewing' | 'interview' | 'offer' | 'rejected'
-  date: string
-  salary?: string
-  location: string
-  type: string
+// Real data types based on API response
+interface JobApplication {
+  _id: string
+  job: {
+    _id: string
+    title: string
+    companyId: {
+      _id: string
+      name: string
+      logo?: string
+      location: string
+    }
+    location: string
+    salary?: string
+    type: string
+  }
+  status: 'new' | 'reviewed' | 'interview' | 'offer' | 'hired' | 'rejected'
+  createdAt: string
+  updatedAt: string
 }
 
-interface Job {
-  id: string
+interface JobApplicationsResponse {
+  jobApplications: JobApplication[]
+  total: number
+  page: number
+  totalPages: number
+}
+
+interface RecommendedJob {
+  _id: string
   title: string
-  company: string
+  companyId: {
+    _id: string
+    name: string
+    logo?: string
+    location: string
+  }
   location: string
+  salary?: string
   type: string
-  salary: string
-  match: number
-  postedDate: string
+  matchScore: number
+  matchingSkills: string[]
+  createdAt: string
+}
+
+interface RecommendedJobsResponse {
+  success: boolean
+  data: {
+    candidate: {
+      id: string
+      firstName: string
+      lastName: string
+      skills: string[]
+    }
+    jobs: RecommendedJob[]
+    total: number
+  }
 }
 
 interface Stats {
@@ -51,28 +86,48 @@ interface Stats {
 }
 
 const statusColors = {
-  applied: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
-  reviewing: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+  new: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+  reviewed: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
   interview: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300',
   offer: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+  hired: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300',
   rejected: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
 }
 
 const statusLabels = {
-  applied: { en: 'Applied', fr: 'Postulé' },
-  reviewing: { en: 'Under Review', fr: 'En cours' },
+  new: { en: 'New', fr: 'Nouveau' },
+  reviewed: { en: 'Reviewed', fr: 'Examiné' },
   interview: { en: 'Interview', fr: 'Entrevue' },
   offer: { en: 'Offer', fr: 'Offre' },
+  hired: { en: 'Hired', fr: 'Embauché' },
   rejected: { en: 'Rejected', fr: 'Rejeté' }
+}
+
+// Helper function to get status label with fallback
+const getStatusLabel = (status: string, locale: string) => {
+  if (statusLabels[status as keyof typeof statusLabels]) {
+    return statusLabels[status as keyof typeof statusLabels][locale as keyof typeof statusLabels[keyof typeof statusLabels]]
+  }
+  return status // fallback to raw status if not found
+}
+
+// Helper function to get status color with fallback
+const getStatusColor = (status: string) => {
+  return statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300'
 }
 
 export default function CandidateDashboardPage() {
   const { locale } = useLanguage()
-  const { user, isLoggedIn } = useAuth()
+  const { user, isLoggedIn, token } = useAuth()
   const router = useRouter()
-  const [selectedPeriod, setSelectedPeriod] = useState('7d')
+  const [recentApplications, setRecentApplications] = useState<JobApplication[]>([])
+  const [applicationsLoading, setApplicationsLoading] = useState(true)
+  const [applicationsError, setApplicationsError] = useState<string | null>(null)
+  const [recommendedJobs, setRecommendedJobs] = useState<RecommendedJob[]>([])
+  const [recommendedJobsLoading, setRecommendedJobsLoading] = useState(true)
+  const [recommendedJobsError, setRecommendedJobsError] = useState<string | null>(null)
 
-  // Mock data
+  // Mock data for stats (keeping these for now)
   const stats: Stats = {
     totalApplications: 12,
     inProgress: 8,
@@ -82,85 +137,57 @@ export default function CandidateDashboardPage() {
     profileCompletion: 85
   }
 
-  const recentApplications: Application[] = [
-    {
-      id: 1,
-      jobId: 'job1',
-      position: 'Senior Frontend Developer',
-      company: 'TechCorp Inc.',
-      status: 'interview',
-      date: '2024-01-15',
-      salary: '$85,000 - $110,000',
-      location: 'Montreal, QC',
-      type: 'Full-time'
-    },
-    {
-      id: 2,
-      jobId: 'job2',
-      position: 'Full Stack Engineer',
-      company: 'Innovation Labs',
-      status: 'reviewing',
-      date: '2024-01-12',
-      salary: '$75,000 - $95,000',
-      location: 'Toronto, ON',
-      type: 'Remote'
-    },
-    {
-      id: 3,
-      jobId: 'job3',
-      position: 'React Developer',
-      company: 'StartupXYZ',
-      status: 'applied',
-      date: '2024-01-10',
-      salary: '$65,000 - $80,000',
-      location: 'Vancouver, BC',
-      type: 'Hybrid'
-    },
-    {
-      id: 4,
-      jobId: 'job4',
-      position: 'UI/UX Developer',
-      company: 'DesignStudio',
-      status: 'offer',
-      date: '2024-01-08',
-      salary: '$70,000 - $85,000',
-      location: 'Calgary, AB',
-      type: 'Full-time'
-    }
-  ]
+  // Fetch recent applications and recommended jobs
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isLoggedIn || !token || !user?.id) {
+        setApplicationsLoading(false)
+        setRecommendedJobsLoading(false)
+        return
+      }
 
-  const recommendedJobs: Job[] = [
-    {
-      id: 'job5',
-      title: 'Senior React Developer',
-      company: 'WebTech Solutions',
-      location: 'Montreal, QC',
-      type: 'Full-time',
-      salary: '$90,000 - $120,000',
-      match: 95,
-      postedDate: '2024-01-16'
-    },
-    {
-      id: 'job6',
-      title: 'DevOps Engineer',
-      company: 'CloudFirst',
-      location: 'Remote',
-      type: 'Remote',
-      salary: '$85,000 - $115,000',
-      match: 88,
-      postedDate: '2024-01-15'
-    },
-    {
-      id: 'job7',
-      title: 'Frontend Lead',
-      company: 'TechVision',
-      location: 'Toronto, ON',
-      type: 'Hybrid',
-      salary: '$95,000 - $130,000',
-      match: 92,
-      postedDate: '2024-01-14'
+      try {
+        // Fetch applications
+        setApplicationsLoading(true)
+        setApplicationsError(null)
+        
+        const applicationsResponse: JobApplicationsResponse = await getMyJobApplications(token, 1, 5)
+        setRecentApplications(applicationsResponse.jobApplications)
+        
+        // Update stats with real data
+        stats.totalApplications = applicationsResponse.total
+        stats.inProgress = applicationsResponse.jobApplications.filter(app => 
+          ['new', 'reviewed'].includes(app.status)
+        ).length
+        stats.interviews = applicationsResponse.jobApplications.filter(app => 
+          app.status === 'interview'
+        ).length
+        
+      } catch (error) {
+        console.error('Error fetching applications:', error)
+        setApplicationsError(error instanceof Error ? error.message : 'Failed to fetch applications')
+      } finally {
+        setApplicationsLoading(false)
+      }
+
+      try {
+        // Fetch recommended jobs
+        setRecommendedJobsLoading(true)
+        setRecommendedJobsError(null)
+        
+        const recommendedResponse: RecommendedJobsResponse = await getRecommendedJobs(token, 5)
+        setRecommendedJobs(recommendedResponse.data.jobs)
+        
+      } catch (error) {
+        console.error('Error fetching recommended jobs:', error)
+        setRecommendedJobsError(error instanceof Error ? error.message : 'Failed to fetch recommended jobs')
+      } finally {
+        setRecommendedJobsLoading(false)
+      }
     }
-  ]
+
+    fetchData()
+  }, [isLoggedIn, token, user?.id])
 
   if (!isLoggedIn || user?.role !== 'candidate') {
     return (
@@ -181,28 +208,29 @@ export default function CandidateDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto space-y-8">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-800/50">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/10 to-secondary/5 border border-primary/20 p-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-50"></div>
+        <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-foreground">
               {locale === 'fr' ? `Bonjour, ${user.name || 'Candidat'}!` : `Hello, ${user.name || 'Candidate'}!`}
             </h1>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-muted-foreground text-lg">
               {locale === 'fr' 
-                ? 'Voici un résumé de votre activité récente' 
-                : 'Here\'s a summary of your recent activity'}
+                ? 'Voici un aperçu de votre activité récente' 
+                : 'Here\'s an overview of your recent activity'}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild>
+          <div className="flex gap-3">
+            <Button variant="outline" size="sm" className="border-primary/30 hover:bg-primary/5" asChild>
               <Link href="/candidate/emplois">
                 <Plus className="h-4 w-4 mr-2" />
                 {locale === 'fr' ? 'Rechercher' : 'Find Jobs'}
               </Link>
             </Button>
-            <Button size="sm" asChild>
+            <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
               <Link href="/candidate/profile">
                 <User className="h-4 w-4 mr-2" />
                 {locale === 'fr' ? 'Profil' : 'Profile'}
@@ -213,84 +241,82 @@ export default function CandidateDashboardPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-300">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="group hover:shadow-lg transition-all duration-300 border-primary/10 hover:border-primary/30">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Briefcase className="h-6 w-6 text-primary" />
+              </div>
+              <TrendingUp className="h-4 w-4 text-green-500" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-foreground">{stats.totalApplications}</p>
+              <p className="text-sm text-muted-foreground">
                 {locale === 'fr' ? 'Candidatures totales' : 'Total Applications'}
-              </CardTitle>
-              <Briefcase className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </p>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{stats.totalApplications}</div>
-            <p className="text-xs text-blue-600 dark:text-blue-400 flex items-center mt-1">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +2 {locale === 'fr' ? 'cette semaine' : 'this week'}
-            </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-purple-700 dark:text-purple-300">
+        <Card className="group hover:shadow-lg transition-all duration-300 border-primary/10 hover:border-primary/30">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                <Clock className="h-6 w-6 text-secondary" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-foreground">{stats.inProgress}</p>
+              <p className="text-sm text-muted-foreground">
                 {locale === 'fr' ? 'En cours' : 'In Progress'}
-              </CardTitle>
-              <Clock className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              </p>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-900 dark:text-purple-100">{stats.inProgress}</div>
-            <p className="text-xs text-purple-600 dark:text-purple-400">
-              {locale === 'fr' ? 'candidatures actives' : 'active applications'}
-            </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-green-700 dark:text-green-300">
+        <Card className="group hover:shadow-lg transition-all duration-300 border-primary/10 hover:border-primary/30">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                <Calendar className="h-6 w-6 text-accent-foreground" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-foreground">{stats.interviews}</p>
+              <p className="text-sm text-muted-foreground">
                 {locale === 'fr' ? 'Entrevues' : 'Interviews'}
-              </CardTitle>
-              <Calendar className="h-4 w-4 text-green-600 dark:text-green-400" />
+              </p>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-900 dark:text-green-100">{stats.interviews}</div>
-            <p className="text-xs text-green-600 dark:text-green-400">
-              {locale === 'fr' ? 'prévues' : 'scheduled'}
-            </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-800">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-orange-700 dark:text-orange-300">
-                {locale === 'fr' ? 'Taux de réponse' : 'Response Rate'}
-              </CardTitle>
-              <TrendingUp className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+        <Card className="group hover:shadow-lg transition-all duration-300 border-primary/10 hover:border-primary/30">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <TrendingUp className="h-6 w-6 text-primary" />
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-900 dark:text-orange-100">{stats.responseRate}%</div>
-            <p className="text-xs text-orange-600 dark:text-orange-400">
-              +5% {locale === 'fr' ? 'ce mois' : 'this month'}
-            </p>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-foreground">{stats.responseRate}%</p>
+              <p className="text-sm text-muted-foreground">
+                {locale === 'fr' ? 'Taux de réponse' : 'Response Rate'}
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Profile Completion */}
-      <Card>
-        <CardHeader>
+      <Card className="border-primary/10">
+        <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5 text-blue-600" />
+            <div className="space-y-1">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
                 {locale === 'fr' ? 'Complétion du profil' : 'Profile Completion'}
               </CardTitle>
               <CardDescription>
@@ -299,23 +325,23 @@ export default function CandidateDashboardPage() {
                   : 'Complete your profile to attract more employers'}
               </CardDescription>
             </div>
-            <Badge variant="secondary" className="text-lg px-3 py-1">
+            <Badge variant="secondary" className="text-lg px-4 py-2 bg-primary/10 text-primary border-primary/20">
               {stats.profileCompletion}%
             </Badge>
           </div>
         </CardHeader>
-        <CardContent>
-          <Progress value={stats.profileCompletion} className="h-2 mb-4" />
+        <CardContent className="space-y-4">
+          <Progress value={stats.profileCompletion} className="h-3" />
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" className="text-xs">
-              <CheckCircle className="h-3 w-3 mr-1 text-green-500" />
+            <Badge variant="outline" className="text-xs border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300">
+              <CheckCircle className="h-3 w-3 mr-1" />
               {locale === 'fr' ? 'Info de base' : 'Basic Info'}
             </Badge>
-            <Badge variant="outline" className="text-xs">
-              <CheckCircle className="h-3 w-3 mr-1 text-green-500" />
+            <Badge variant="outline" className="text-xs border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300">
+              <CheckCircle className="h-3 w-3 mr-1" />
               {locale === 'fr' ? 'Expérience' : 'Experience'}
             </Badge>
-            <Badge variant="outline" className="text-xs text-orange-600 dark:text-orange-400">
+            <Badge variant="outline" className="text-xs border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-300">
               <Clock className="h-3 w-3 mr-1" />
               {locale === 'fr' ? 'Portfolio' : 'Portfolio'}
             </Badge>
@@ -323,16 +349,18 @@ export default function CandidateDashboardPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Applications */}
-        <Card>
-          <CardHeader>
+        <Card className="border-primary/10">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-purple-600" />
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Briefcase className="h-4 w-4 text-primary" />
+                </div>
                 {locale === 'fr' ? 'Candidatures récentes' : 'Recent Applications'}
               </CardTitle>
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/5" asChild>
                 <Link href="/candidate/applications">
                   {locale === 'fr' ? 'Voir tout' : 'View All'}
                   <ArrowUpRight className="h-4 w-4 ml-1" />
@@ -341,52 +369,92 @@ export default function CandidateDashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {recentApplications.slice(0, 3).map(application => (
-                <div 
-                  key={application.id} 
-                  className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+            {applicationsLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-20 bg-muted rounded-xl"></div>
+                  </div>
+                ))}
+              </div>
+            ) : applicationsError ? (
+              <div className="text-center py-8">
+                <p className="text-destructive mb-4">{applicationsError}</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => window.location.reload()}
                 >
-                  <div className="flex-1 min-w-0">
+                  {locale === 'fr' ? 'Réessayer' : 'Retry'}
+                </Button>
+              </div>
+            ) : recentApplications.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                  <Briefcase className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground mb-4">
+                  {locale === 'fr' 
+                    ? 'Aucune candidature pour le moment' 
+                    : 'No applications yet'}
+                </p>
+                <Button asChild>
+                  <Link href="/candidate/emplois">
+                    {locale === 'fr' ? 'Rechercher des emplois' : 'Search Jobs'}
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentApplications.slice(0, 3).map(application => (
+                  <div 
+                    key={application._id} 
+                    className="group p-4 rounded-xl border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 cursor-pointer"
+                  >
                     <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 dark:text-white truncate">
-                          {application.position}
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <p className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                          {application.job.title}
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                          <Building2 className="h-3 w-3" />
-                          {application.company}
-                          <span>•</span>
-                          <MapPin className="h-3 w-3" />
-                          {application.location}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                          {locale === 'fr' ? 'Postulé le' : 'Applied'} {application.date}
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Building2 className="h-3 w-3" /> 
+                            
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {application.job.location}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {locale === 'fr' ? 'Postulé le' : 'Applied'} {new Date(application.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                       <Badge 
                         variant="secondary" 
-                        className={`ml-2 ${statusColors[application.status]}`}
+                        className={`ml-3 ${getStatusColor(application.status)}`}
                       >
-                        {statusLabels[application.status][locale]}
+                        {getStatusLabel(application.status, locale)}
                       </Badge>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
         {/* Recommended Jobs */}
-        <Card>
-          <CardHeader>
+        <Card className="border-primary/10">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-600" />
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Star className="h-4 w-4 text-primary" />
+                </div>
                 {locale === 'fr' ? 'Emplois recommandés' : 'Recommended Jobs'}
               </CardTitle>
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/5" asChild>
                 <Link href="/candidate/emplois">
                   {locale === 'fr' ? 'Voir plus' : 'View More'}
                   <ArrowUpRight className="h-4 w-4 ml-1" />
@@ -395,89 +463,144 @@ export default function CandidateDashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {recommendedJobs.slice(0, 3).map(job => (
-                <div 
-                  key={job.id} 
-                  className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+            {recommendedJobsLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-20 bg-muted rounded-xl"></div>
+                  </div>
+                ))}
+              </div>
+            ) : recommendedJobsError ? (
+              <div className="text-center py-8">
+                <p className="text-destructive mb-4">{recommendedJobsError}</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => window.location.reload()}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 dark:text-white truncate">
-                        {job.title}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                        <Building2 className="h-3 w-3" />
-                        {job.company}
-                        <span>•</span>
-                        <MapPin className="h-3 w-3" />
-                        {job.location}
-                      </p>
-                    </div>
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
-                      {job.match}% {locale === 'fr' ? 'compatible' : 'match'}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <DollarSign className="h-3 w-3" />
-                      {job.salary}
-                    </span>
-                    <span>{job.type}</span>
-                  </div>
+                  {locale === 'fr' ? 'Réessayer' : 'Retry'}
+                </Button>
+              </div>
+            ) : recommendedJobs.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                  <Star className="h-8 w-8 text-muted-foreground" />
                 </div>
-              ))}
-            </div>
+                <p className="text-muted-foreground mb-4">
+                  {locale === 'fr' 
+                    ? 'Aucun emploi recommandé pour le moment' 
+                    : 'No recommended jobs yet'}
+                </p>
+                <Button asChild>
+                  <Link href="/candidate/emplois">
+                    {locale === 'fr' ? 'Rechercher des emplois' : 'Search Jobs'}
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recommendedJobs.slice(0, 3).map(job => (
+                  <div 
+                    key={job._id} 
+                    className="group p-4 rounded-xl border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 cursor-pointer"
+                    onClick={() => router.push(`/candidate/emplois/${job._id}`)}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                          {job.title}
+                        </p>
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+                          <span className="flex items-center gap-1">
+                            <Building2 className="h-3 w-3" /> 
+                            
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {job.location}
+                          </span>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 border-green-200 dark:border-green-800">
+                        {job.matchScore}% {locale === 'fr' ? 'compatible' : 'match'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                      <span className="flex items-center gap-1">
+                        <DollarSign className="h-3 w-3" />
+                        {job.salary || locale === 'fr' ? 'Salaire non spécifié' : 'Salary not specified'}
+                      </span>
+                      <span>{job.type}</span>
+                    </div>
+                    {job.matchingSkills && job.matchingSkills.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {job.matchingSkills.slice(0, 3).map((skill, index) => (
+                          <Badge key={index} variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20">
+                            {skill}
+                          </Badge>
+                        ))}
+                        {job.matchingSkills.length > 3 && (
+                          <Badge variant="outline" className="text-xs text-muted-foreground">
+                            +{job.matchingSkills.length - 3} {locale === 'fr' ? 'autres' : 'more'}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
+      <Card className="border-primary/10">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg">
             {locale === 'fr' ? 'Actions rapides' : 'Quick Actions'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline" className="h-auto p-4 justify-start" asChild>
+            <Button variant="outline" className="h-auto p-6 justify-start border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-200" asChild>
               <Link href="/candidate/profile">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                    <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <User className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium">{locale === 'fr' ? 'Modifier le profil' : 'Edit Profile'}</div>
-                    <div className="text-xs text-gray-500">{locale === 'fr' ? 'Mettre à jour vos informations' : 'Update your information'}</div>
+                    <div className="font-semibold text-foreground">{locale === 'fr' ? 'Modifier le profil' : 'Edit Profile'}</div>
+                    <div className="text-sm text-muted-foreground">{locale === 'fr' ? 'Mettre à jour vos informations' : 'Update your information'}</div>
                   </div>
                 </div>
               </Link>
             </Button>
 
-            <Button variant="outline" className="h-auto p-4 justify-start" asChild>
+            <Button variant="outline" className="h-auto p-6 justify-start border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-200" asChild>
               <Link href="/candidate/resume">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
-                    <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <FileText className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium">{locale === 'fr' ? 'Gérer le CV' : 'Manage Resume'}</div>
-                    <div className="text-xs text-gray-500">{locale === 'fr' ? 'Télécharger ou modifier' : 'Upload or edit'}</div>
+                    <div className="font-semibold text-foreground">{locale === 'fr' ? 'Gérer le CV' : 'Manage Resume'}</div>
+                    <div className="text-sm text-muted-foreground">{locale === 'fr' ? 'Télécharger ou modifier' : 'Upload or edit'}</div>
                   </div>
                 </div>
               </Link>
             </Button>
 
-            <Button variant="outline" className="h-auto p-4 justify-start" asChild>
+            <Button variant="outline" className="h-auto p-6 justify-start border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-200" asChild>
               <Link href="/candidate/interviews">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Calendar className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium">{locale === 'fr' ? 'Mes entrevues' : 'My Interviews'}</div>
-                    <div className="text-xs text-gray-500">{locale === 'fr' ? 'Voir le calendrier' : 'View schedule'}</div>
+                    <div className="font-semibold text-foreground">{locale === 'fr' ? 'Mes entrevues' : 'My Interviews'}</div>
+                    <div className="text-sm text-muted-foreground">{locale === 'fr' ? 'Voir le calendrier' : 'View schedule'}</div>
                   </div>
                 </div>
               </Link>

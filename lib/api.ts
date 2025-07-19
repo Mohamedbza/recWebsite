@@ -166,4 +166,79 @@ export const searchJobs = async (params: JobSearchParams) => {
     throw new Error('Failed to fetch jobs');
   }
   return response.json();
+};
+
+// Job application interface
+export interface JobApplicationData {
+  job: string;
+  resumeUrl?: string;
+  coverLetter?: string;
+  notes?: string;
+}
+
+// Create job application API function
+export const createJobApplication = async (applicationData: JobApplicationData, token: string) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const response = await fetch(`${apiUrl}/job-applications/public`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(applicationData),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to create job application');
+  }
+  return response.json();
+};
+
+// Get candidate's job applications API function
+export const getMyJobApplications = async (token: string, page: number = 1, limit: number = 10) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const response = await fetch(`${apiUrl}/job-applications/public/my-applications?page=${page}&limit=${limit}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to fetch job applications');
+  }
+  return response.json();
+};
+
+// Get recommended jobs for candidate based on skills
+export const getRecommendedJobs = async (token: string, limit: number = 5) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const response = await fetch(`${apiUrl}/job-applications/public/recommended-jobs?limit=${limit}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to fetch recommended jobs');
+  }
+  return response.json();
+};
+
+// Debug function to check jobs and candidates
+export const debugJobsAndCandidates = async (token: string) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const response = await fetch(`${apiUrl}/job-applications/public/debug`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to fetch debug info');
+  }
+  return response.json();
 }; 

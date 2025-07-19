@@ -86,7 +86,7 @@ const JobCardSkeleton = () => {
 
 export default function JobsPage() {
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const searchParams = useSearchParams();
   
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -279,6 +279,18 @@ export default function JobsPage() {
             </div>
             <p className="text-sm text-blue-600 mt-1">
               <a href="/login" className="underline hover:no-underline">Log in</a> to see jobs specifically for your location and get better matches.
+            </p>
+          </div>
+        )}
+
+        {user && !token && (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-center text-yellow-700">
+              <AlertCircle className="h-5 w-5 mr-2" />
+              <span className="font-medium">Authentication required</span>
+            </div>
+            <p className="text-sm text-yellow-600 mt-1">
+              Please <a href="/login" className="underline hover:no-underline">log in again</a> to apply for jobs.
             </p>
           </div>
         )}
