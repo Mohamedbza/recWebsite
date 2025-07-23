@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
       
     try {
-      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app';
+      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
       const normalizedBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/$/, '')}/api`;
       const endpoint = userType === 'candidate' 
         ? `${normalizedBase}/auth/candidates/login/public`

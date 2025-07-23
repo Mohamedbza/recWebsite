@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/contexts/LanguageContext"
+import { getLocationLabel } from "@/lib/location-utils"
 
 interface JobCardProps {
   title: string
@@ -17,7 +18,7 @@ interface JobCardProps {
 }
 
 export function JobCard({ title, company, location, type, salary, tags, postedDate, onApply }: JobCardProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -27,7 +28,7 @@ export function JobCard({ title, company, location, type, salary, tags, postedDa
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
           <div className="flex items-center">
             <MapPin className="h-4 w-4 mr-1" />
-            {location}
+            {getLocationLabel(location, locale as 'en' | 'fr')}
           </div>
           <div className="flex items-center">
             <Briefcase className="h-4 w-4 mr-1" />

@@ -21,6 +21,7 @@ interface Job {
     logo: string;
   };
   location: string;
+  address?: string;
   jobType: string;
   description: string;
   salary: string;
@@ -42,6 +43,7 @@ const JobCardSkeleton = () => {
             <div className="flex items-center">
               <Skeleton className="h-4 w-4 mr-1" />
               <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-3 w-16 ml-1" />
             </div>
             <div className="flex items-center">
               <Skeleton className="h-4 w-4 mr-1" />
@@ -327,6 +329,11 @@ export default function JobsPage() {
                       <span className="flex items-center">
                         <MapPin className="h-4 w-4 mr-1" />
                         {getLocationDisplayName(job.location)}
+                        {job.address && (
+                          <span className="ml-1 text-xs opacity-75">
+                            • {job.address}
+                          </span>
+                        )}
                       </span>
                       <span className="flex items-center">
                         <Briefcase className="h-4 w-4 mr-1" />
