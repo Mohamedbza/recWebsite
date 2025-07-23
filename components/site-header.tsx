@@ -12,6 +12,7 @@ import {
   ChevronDown,
   User,
   LogIn,
+  LogOut,
   Sparkles,
   Briefcase,
   Users,
@@ -22,6 +23,9 @@ import { useLanguage } from "@/contexts/LanguageContext"
 import { LanguageSwitcher } from "./LanguageSwitcher"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useAppSelector, useAppDispatch } from "@/store/hooks"
+import { logoutUser } from "@/store/slices/accountSlice"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import React from "react"
 
 // Define dropdown item types
@@ -39,49 +43,13 @@ export function SiteHeader() {
   const pathname = usePathname()
   const router = useRouter()
   const { t } = useLanguage()
+  const dispatch = useAppDispatch()
+  const { user, isAuthenticated } = useAppSelector((state) => state.account)
   
   // Refs for dropdowns
-  const candidatsRef = useRef<HTMLDivElement>(null)
-  const employeursRef = useRef<HTMLDivElement>(null)
   const accountRef = useRef<HTMLDivElement>(null)
   const languageRef = useRef<HTMLDivElement>(null)
 
-  // Define dropdown content
-  const candidatsDropdown: DropdownItem[] = [
-    {
-      href: "/candidats",
-      icon: <Briefcase className="h-4 w-4 text-primary" />,
-      title: "Vue d'ensemble",
-      description: "Découvrez nos services",
-    },
-    {
-      href: "/candidate/emplois",
-      icon: <Search className="h-4 w-4 text-primary" />,
-      title: "Offres d'emploi",
-      description: "Trouvez votre emploi idéal",
-    },
-    // {
-    //   href: "/candidate/faire-carriere",
-    //   icon: <Sparkles className="h-4 w-4 text-primary" />,
-    //   title: "Faire carrière avec R+",
-    //   description: "Accompagnement personnalisé",
-    // },
-  ]
-
-  const employeursDropdown: DropdownItem[] = [
-    {
-      href: "/employeurs",
-      icon: <Building2 className="h-4 w-4 text-primary" />,
-      title: "Vue d'ensemble",
-      description: "Nos solutions RH",
-    },
-    {
-      href: "https://recplus.vercel.app/login",
-      icon: <Users className="h-4 w-4 text-primary" />,
-      title: "Tableau de bord",
-      description: "Gérer vos offres",
-    },
-  ]
 
   // Handle scroll effect for header background
   useEffect(() => {
@@ -113,18 +81,6 @@ export function SiteHeader() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
-        activeDropdown === "candidats" &&
-        candidatsRef.current &&
-        !candidatsRef.current.contains(e.target as Node)
-      ) {
-        setActiveDropdown(null)
-      } else if (
-        activeDropdown === "employeurs" &&
-        employeursRef.current &&
-        !employeursRef.current.contains(e.target as Node)
-      ) {
-        setActiveDropdown(null)
-      } else if (
         activeDropdown === "account" &&
         accountRef.current &&
         !accountRef.current.contains(e.target as Node)
@@ -169,6 +125,13 @@ export function SiteHeader() {
     }
   }
 
+  // Handle logout
+  const handleLogout = async () => {
+    await dispatch(logoutUser())
+    setActiveDropdown(null)
+    router.push('/')
+  }
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-2 md:px-4">
       <div
@@ -202,101 +165,31 @@ export function SiteHeader() {
             </Link>
 
             <nav className="hidden lg:flex gap-2">
-              {/* Candidats Dropdown */}
-              <div className="relative" ref={candidatsRef}>
-                <button
-                  onClick={() => toggleDropdown("candidats")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    isActive("/candidats") || activeDropdown === "candidats"
-                      ? "text-primary bg-primary/10 backdrop-blur-sm shadow-md"
-                      : "hover:bg-white/10 hover:text-primary hover:shadow-md"
-                  }`}
-                >
-                  <Users className="h-4 w-4" />
-                  {t('navigation.candidates')}
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === "candidats" ? "rotate-180" : ""}`}
-                  />
-                </button>
+              {/* Candidats Direct Link */}
+              <Link
+                href="/candidats"
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                  isActive("/candidats")
+                    ? "text-primary bg-primary/10 backdrop-blur-sm shadow-md"
+                    : "hover:bg-white/10 hover:text-primary hover:shadow-md"
+                }`}
+              >
+                <Users className="h-4 w-4" />
+                {t('navigation.candidates')}
+              </Link>
 
-                {activeDropdown === "candidats" && (
-                  <div className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden z-50">
-                    <div className="p-6">
-                      <div className="mb-4">
-                        <h3 className="font-bold text-lg mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                          Pour les Candidats
-                        </h3>
-                        <p className="text-sm text-muted-foreground">Explorez vos opportunités de carrière</p>
-                      </div>
-                      <div className="space-y-3">
-                        {candidatsDropdown.map((item, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleDropdownItemClick(item.href)}
-                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
-                          >
-                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                              {item.icon}
-                            </div>
-                            <div>
-                              <div className="font-medium">{item.title}</div>
-                              <div className="text-xs text-muted-foreground">{item.description}</div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Employeurs Dropdown */}
-              <div className="relative" ref={employeursRef}>
-                <button
-                  onClick={() => toggleDropdown("employeurs")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    isActive("/employeurs") || activeDropdown === "employeurs"
-                      ? "text-primary bg-primary/10 backdrop-blur-sm shadow-md"
-                      : "hover:bg-white/10 hover:text-primary hover:shadow-md"
-                  }`}
-                >
-                  <Building2 className="h-4 w-4" />
-                  {t('navigation.employers')}
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === "employeurs" ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                {activeDropdown === "employeurs" && (
-                  <div className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden z-50">
-                    <div className="p-6">
-                      <div className="mb-4">
-                        <h3 className="font-bold text-lg mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                          Pour les Employeurs
-                        </h3>
-                        <p className="text-sm text-muted-foreground">Solutions de recrutement sur mesure</p>
-                      </div>
-                      <div className="space-y-3">
-                        {employeursDropdown.map((item, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleDropdownItemClick(item.href)}
-                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
-                          >
-                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                              {item.icon}
-                            </div>
-                            <div>
-                              <div className="font-medium">{item.title}</div>
-                              <div className="text-xs text-muted-foreground">{item.description}</div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Employeurs Direct Link */}
+              <Link
+                href="http://localhost:3001/employeurs"
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                  isActive("/employeurs")
+                    ? "text-primary bg-primary/10 backdrop-blur-sm shadow-md"
+                    : "hover:bg-white/10 hover:text-primary hover:shadow-md"
+                }`}
+              >
+                <Building2 className="h-4 w-4" />
+                {t('navigation.employers')}
+              </Link>
 
               <Link
                 href="/a-propos"
@@ -348,7 +241,19 @@ export function SiteHeader() {
                 }`}
                 aria-label="Compte"
               >
-                <User className="h-4 w-4" />
+                {isAuthenticated && user ? (
+                  <>
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback className="text-xs">
+                        {user.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="font-medium">{user.name}</span>
+                  </>
+                ) : (
+                  <User className="h-4 w-4" />
+                )}
                 <ChevronDown
                   className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === "account" ? "rotate-180" : ""}`}
                 />
@@ -357,22 +262,54 @@ export function SiteHeader() {
               {activeDropdown === "account" && (
                 <div className="absolute top-full right-0 mt-2 w-64 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden z-50">
                   <div className="p-4">
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => handleDropdownItemClick("/login")}
-                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
-                      >
-                        <LogIn className="h-4 w-4 text-primary" />
-                        <span>{t('navigation.login')}</span>
-                      </button>
-                      <button
-                        onClick={() => handleDropdownItemClick("/register")}
-                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
-                      >
-                        <User className="h-4 w-4 text-primary" />
-                        <span>{t('navigation.register')}</span>
-                      </button>
-                    </div>
+                    {isAuthenticated && user ? (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={user.avatar} alt={user.name} />
+                            <AvatarFallback>
+                              {user.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium truncate">{user.name}</div>
+                            <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                            <div className="text-xs text-primary capitalize">{user.role}</div>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleDropdownItemClick(user.role === 'candidate' ? '/candidate/dashboard' : '/employeurs/dashboard')}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
+                        >
+                          <User className="h-4 w-4 text-primary" />
+                          <span>Dashboard</span>
+                        </button>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
+                        >
+                          <LogOut className="h-4 w-4 text-primary" />
+                          <span>{t('navigation.logout') || 'Déconnexion'}</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => handleDropdownItemClick("/login")}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
+                        >
+                          <LogIn className="h-4 w-4 text-primary" />
+                          <span>{t('navigation.login')}</span>
+                        </button>
+                        <button
+                          onClick={() => handleDropdownItemClick("/register")}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
+                        >
+                          <User className="h-4 w-4 text-primary" />
+                          <span>{t('navigation.register')}</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -410,41 +347,25 @@ export function SiteHeader() {
           <div className="py-6 space-y-6 px-6">
             {/* Mobile Menu Content */}
             <div className="space-y-4">
-              <div className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Candidats
-              </div>
-              <nav className="flex flex-col space-y-2 pl-4">
-                {candidatsDropdown.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className="flex items-center gap-3 px-3 py-2 text-sm rounded-xl hover:bg-primary/5 transition-all duration-300"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {React.cloneElement(item.icon as React.ReactElement, {})}
-                    {item.title}
-                  </Link>
-                ))}
-              </nav>
+              <Link
+                href="/candidats"
+                className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Users className="h-4 w-4 text-primary" />
+                {t('navigation.candidates')}
+              </Link>
             </div>
 
             <div className="space-y-4">
-              <div className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Employeurs
-              </div>
-              <nav className="flex flex-col space-y-2 pl-4">
-                {employeursDropdown.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className="flex items-center gap-3 px-3 py-2 text-sm rounded-xl hover:bg-primary/5 transition-all duration-300"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {React.cloneElement(item.icon as React.ReactElement, {})}
-                    {item.title}
-                  </Link>
-                ))}
-              </nav>
+              <Link
+                href="http://localhost:3001/employeurs"
+                className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Building2 className="h-4 w-4 text-primary" />
+                {t('navigation.employers')}
+              </Link>
             </div>
 
             <div className="space-y-2 border-t border-white/10 pt-4">
@@ -471,22 +392,62 @@ export function SiteHeader() {
                 <Search className="h-4 w-4 text-primary" />
                 Blog
               </Link>
-              <Link
-                href="/login"
-                className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <LogIn className="h-4 w-4 text-primary" />
-                {t('navigation.login')}
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <User className="h-4 w-4 text-primary" />
-                {t('navigation.register')}
-              </Link>
+              
+              {/* Mobile Account Section */}
+              {isAuthenticated && user ? (
+                <div className="space-y-2 border-t border-white/10 pt-4">
+                  <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-primary/5">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback>
+                        {user.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{user.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                      <div className="text-xs text-primary capitalize">{user.role}</div>
+                    </div>
+                  </div>
+                  <Link
+                    href={user.role === 'candidate' ? '/candidate/dashboard' : '/employeurs/dashboard'}
+                    className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="h-4 w-4 text-primary" />
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout()
+                      setIsMobileMenuOpen(false)
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300 text-left"
+                  >
+                    <LogOut className="h-4 w-4 text-primary" />
+                    {t('navigation.logout') || 'Déconnexion'}
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 border-t border-white/10 pt-4">
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <LogIn className="h-4 w-4 text-primary" />
+                    {t('navigation.login')}
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="flex items-center gap-3 px-3 py-2 font-medium rounded-xl hover:bg-primary/5 transition-all duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="h-4 w-4 text-primary" />
+                    {t('navigation.register')}
+                  </Link>
+                </div>
+              )}
             </div>
 
             <div className="pt-4 border-t border-white/10">

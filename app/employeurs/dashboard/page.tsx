@@ -200,38 +200,51 @@ function DashboardContent() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 pt-16">
       <main className="flex-1">
-        {/* Header Section */}
-        <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-8">
-          <div className="container">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
+        {/* Enhanced Header Section */}
+        <section className="relative overflow-hidden py-12">
+          {/* Animated background elements */}
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          </div>
+          
+          <div className="container relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="space-y-3">
                 <motion.h1 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+                  className="text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary to-secondary bg-clip-text text-transparent"
                 >
                   {locale === 'fr' ? 'Tableau de bord employeur' : 'Employer Dashboard'}
                 </motion.h1>
-                <motion.p 
+                <motion.div 
                   initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 0.7, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="text-muted-foreground"
+                  className="text-xl text-muted-foreground flex items-center gap-2"
                 >
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
                   {locale === 'fr' 
                     ? `Bienvenue, ${user?.name || 'Employeur'}`
                     : `Welcome, ${user?.name || 'Employer'}`
                   }
-                </motion.p>
+                </motion.div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleCreateJob} className="flex items-center gap-2">
+              <div className="flex gap-3">
+                <Button 
+                  onClick={handleCreateJob} 
+                  className="bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white font-semibold px-6 py-3 rounded-2xl transition-all duration-300 flex items-center gap-2"
+                >
                   <Plus className="h-4 w-4" />
                   {locale === 'fr' ? 'Publier une offre' : 'Post a Job'}
                 </Button>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  className="border-2 border-white/20 hover:bg-white/10 hover:border-primary/30 backdrop-blur-sm font-semibold px-6 py-3 rounded-2xl transition-all duration-300 flex items-center gap-2"
+                >
                   <Settings className="h-4 w-4" />
                   {locale === 'fr' ? 'Paramètres' : 'Settings'}
                 </Button>
@@ -243,22 +256,36 @@ function DashboardContent() {
         {/* Main Dashboard Content */}
         <section className="py-8">
           <div className="container">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              {/* Tab Navigation */}
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="overview">
-                  {locale === 'fr' ? 'Aperçu' : 'Overview'}
-                </TabsTrigger>
-                <TabsTrigger value="jobs">
-                  {locale === 'fr' ? 'Offres d\'emploi' : 'Jobs'}
-                </TabsTrigger>
-                <TabsTrigger value="applications">
-                  {locale === 'fr' ? 'Candidatures' : 'Applications'}
-                </TabsTrigger>
-                <TabsTrigger value="profile">
-                  {locale === 'fr' ? 'Profil' : 'Profile'}
-                </TabsTrigger>
-              </TabsList>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+              {/* Enhanced Tab Navigation */}
+              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-3xl p-2 border border-white/20 shadow-lg">
+                <TabsList className="grid w-full grid-cols-4 bg-transparent gap-2 p-0">
+                  <TabsTrigger 
+                    value="overview" 
+                    className="rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 font-semibold py-3 transition-all duration-300"
+                  >
+                    {locale === 'fr' ? 'Aperçu' : 'Overview'}
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="jobs"
+                    className="rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 font-semibold py-3 transition-all duration-300"
+                  >
+                    {locale === 'fr' ? 'Offres d\'emploi' : 'Jobs'}
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="applications"
+                    className="rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 font-semibold py-3 transition-all duration-300"
+                  >
+                    {locale === 'fr' ? 'Candidatures' : 'Applications'}
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="profile"
+                    className="rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 font-semibold py-3 transition-all duration-300"
+                  >
+                    {locale === 'fr' ? 'Profil' : 'Profile'}
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="space-y-6 mt-0">
@@ -285,43 +312,50 @@ function DashboardContent() {
                     )}
 
                     {/* Recent Activity */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       {/* Recent Applications */}
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Users className="h-5 w-5" />
-                            {locale === 'fr' ? 'Candidatures récentes' : 'Recent Applications'}
-                          </CardTitle>
-                          <CardDescription>
-                            {locale === 'fr' 
-                              ? 'Les dernières candidatures reçues'
-                              : 'Latest applications received'
-                            }
-                          </CardDescription>
+                      <Card className="border-0 bg-gradient-to-br from-white/90 via-white/80 to-blue-50/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-blue-950/50 backdrop-blur-xl shadow-2xl shadow-blue-500/10 hover:shadow-blue-500/20 transition-all duration-300">
+                        <CardHeader className="pb-6">
+                          <div className="flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 flex items-center justify-center shadow-lg">
+                              <Users className="h-7 w-7 text-blue-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-2xl text-foreground">
+                                {locale === 'fr' ? 'Candidatures récentes' : 'Recent Applications'}
+                              </CardTitle>
+                              <CardDescription className="text-muted-foreground font-medium">
+                                {locale === 'fr' 
+                                  ? 'Les dernières candidatures reçues'
+                                  : 'Latest applications received'
+                                }
+                              </CardDescription>
+                            </div>
+                          </div>
                         </CardHeader>
                         <CardContent>
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             {applications.slice(0, 5).map((application) => (
-                              <div key={application._id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <div key={application._id} className="group flex items-center justify-between p-4 bg-white/50 dark:bg-gray-800/50 rounded-2xl border border-white/20 hover:border-blue-300/50 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all duration-300 cursor-pointer">
                                 <div className="flex flex-col">
-                                  <span className="font-medium">
+                                  <span className="font-semibold text-foreground group-hover:text-blue-700 transition-colors">
                                     {application.candidate.firstName} {application.candidate.lastName}
                                   </span>
                                   <span className="text-sm text-muted-foreground">
                                     {application.job.title}
                                   </span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline" className="text-xs">
+                                <div className="flex items-center gap-3">
+                                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 border-blue-200 dark:border-blue-800 text-xs">
                                     {application.status}
                                   </Badge>
                                   <Button 
                                     variant="ghost" 
                                     size="sm"
+                                    className="hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-xl group-hover:scale-110 transition-all duration-300"
                                     onClick={() => handleApplicationClick(application)}
                                   >
-                                    <Eye className="h-4 w-4" />
+                                    <Eye className="h-4 w-4 text-blue-600" />
                                   </Button>
                                 </div>
                               </div>
@@ -342,39 +376,46 @@ function DashboardContent() {
                       </Card>
 
                       {/* Recent Jobs */}
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Briefcase className="h-5 w-5" />
-                            {locale === 'fr' ? 'Offres récentes' : 'Recent Jobs'}
-                          </CardTitle>
-                          <CardDescription>
-                            {locale === 'fr' 
-                              ? 'Vos dernières offres d\'emploi'
-                              : 'Your latest job postings'
-                            }
-                          </CardDescription>
+                      <Card className="border-0 bg-gradient-to-br from-white/90 via-white/80 to-purple-50/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-purple-950/50 backdrop-blur-xl shadow-2xl shadow-purple-500/10 hover:shadow-purple-500/20 transition-all duration-300">
+                        <CardHeader className="pb-6">
+                          <div className="flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 flex items-center justify-center shadow-lg">
+                              <Briefcase className="h-7 w-7 text-purple-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-2xl text-foreground">
+                                {locale === 'fr' ? 'Offres récentes' : 'Recent Jobs'}
+                              </CardTitle>
+                              <CardDescription className="text-muted-foreground font-medium">
+                                {locale === 'fr' 
+                                  ? 'Vos dernières offres d\'emploi'
+                                  : 'Your latest job postings'
+                                }
+                              </CardDescription>
+                            </div>
+                          </div>
                         </CardHeader>
                         <CardContent>
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             {jobs.slice(0, 5).map((job) => (
-                              <div key={job._id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <div key={job._id} className="group flex items-center justify-between p-4 bg-white/50 dark:bg-gray-800/50 rounded-2xl border border-white/20 hover:border-purple-300/50 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all duration-300 cursor-pointer">
                                 <div className="flex flex-col">
-                                  <span className="font-medium">{job.title}</span>
+                                  <span className="font-semibold text-foreground group-hover:text-purple-700 transition-colors">{job.title}</span>
                                   <span className="text-sm text-muted-foreground">
                                     {getLocationLabel(job.location, locale as 'en' | 'fr')} • {job.jobType}
                                   </span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline" className="text-xs">
+                                <div className="flex items-center gap-3">
+                                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300 border-purple-200 dark:border-purple-800 text-xs">
                                     {job.status}
                                   </Badge>
                                   <Button 
                                     variant="ghost" 
                                     size="sm"
+                                    className="hover:bg-purple-100 dark:hover:bg-purple-900/20 rounded-xl group-hover:scale-110 transition-all duration-300"
                                     onClick={() => handleJobClick(job)}
                                   >
-                                    <Eye className="h-4 w-4" />
+                                    <Eye className="h-4 w-4 text-purple-600" />
                                   </Button>
                                 </div>
                               </div>

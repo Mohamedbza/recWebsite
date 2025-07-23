@@ -9,12 +9,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAuth } from "@/contexts/EmployerAuthContext"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { loginUser, clearError } from "@/store/slices/accountSlice"
 
 export default function LoginPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const { login, loading } = useAuth()
+  const dispatch = useAppDispatch()
+  const { isLoading, error } = useAppSelector((state) => state.account)
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -24,31 +26,48 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    try {
-      // Validate inputs
-      if (!email || !password) {
-        throw new Error("Please enter both email and password")
-      }
-
-      // Call the login function from auth context
-      await login(email, password, userType)
-
-      // Success notification
+    // Validate inputs
+    if (!email || !password) {
       toast({
-        title: "Success",
-        description: "You have successfully signed in.",
+        title: "Error",
+        description: "Please enter both email and password",
+        variant: "destructive",
       })
+      return
+    }
 
-      // Redirect based on user type
-      if (userType === 'employer') {
-        router.push("/employeurs/dashboard")
+    try {
+      // Clear any previous errors
+      dispatch(clearError())
+
+      // Call the login function from Redux
+      const result = await dispatch(loginUser({ email, password, userType }))
+
+      if (loginUser.fulfilled.match(result)) {
+        // Success notification
+        toast({
+          title: "Success",
+          description: "You have successfully signed in.",
+        })
+
+        // Redirect based on user type
+        if (userType === 'employer') {
+          router.push("/employeurs/dashboard")
+        } else {
+          router.push("/candidate/dashboard")
+        }
       } else {
-        router.push("/candidate")
+        // Handle login failure
+        toast({
+          title: "Error",
+          description: result.payload as string || "An error occurred while signing in.",
+          variant: "destructive",
+        })
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred while signing in.",
+        description: "An unexpected error occurred.",
         variant: "destructive",
       })
     }
@@ -113,7 +132,7 @@ export default function LoginPage() {
                   className="pl-10"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={loading}
+                  disabled={isLoading}
                   required
                 />
               </div>
@@ -138,7 +157,7 @@ export default function LoginPage() {
                   className="pl-10 pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  disabled={loading}
+                  disabled={isLoading}
                   required
                 />
                 <button
@@ -155,9 +174,9 @@ export default function LoginPage() {
             <Button 
               type="submit" 
               className="w-full magic-button bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white font-medium py-2 h-auto text-base"
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 

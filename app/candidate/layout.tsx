@@ -2,7 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation"
 import { useLanguage } from "@/contexts/LanguageContext"
-import { useAuth } from "@/contexts/EmployerAuthContext"
+import { useAppSelector, useAppDispatch } from "@/store/hooks"
+import { logoutUser } from "@/store/slices/accountSlice"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { 
@@ -31,25 +32,25 @@ const navigationItems = [
     title: { en: "Dashboard", fr: "Tableau de bord" },
     href: "/candidate/dashboard",
     icon: LayoutDashboard,
-    color: "text-blue-600 dark:text-blue-400"
+    gradient: "from-primary to-primary/80"
   },
   {
     title: { en: "Job Search", fr: "Recherche d'emploi" },
     href: "/candidate/emplois",
     icon: Search,
-    color: "text-green-600 dark:text-green-400"
+    gradient: "from-green-500 to-green-600"
   },
   {
     title: { en: "My Applications", fr: "Mes candidatures" },
     href: "/candidate/applications",
     icon: Briefcase,
-    color: "text-purple-600 dark:text-purple-400"
+    gradient: "from-purple-500 to-purple-600"
   },
   {
     title: { en: "Profile", fr: "Profil" },
     href: "/candidate/profile",
     icon: User,
-    color: "text-orange-600 dark:text-orange-400"
+    gradient: "from-orange-500 to-orange-600"
   }
 ]
 
@@ -58,25 +59,25 @@ const toolsItems = [
     title: { en: "My Resume", fr: "Mon CV" },
     href: "/candidate/resume",
     icon: FileText,
-    color: "text-gray-600 dark:text-gray-400"
+    gradient: "from-blue-500 to-blue-600"
   },
   {
     title: { en: "Interviews", fr: "Entrevues" },
     href: "/candidate/interviews",
     icon: Calendar,
-    color: "text-indigo-600 dark:text-indigo-400"
+    gradient: "from-indigo-500 to-indigo-600"
   },
   {
     title: { en: "Certifications", fr: "Certifications" },
     href: "/candidate/certifications",
     icon: Award,
-    color: "text-yellow-600 dark:text-yellow-400"
+    gradient: "from-yellow-500 to-yellow-600"
   },
   {
     title: { en: "Learning", fr: "Formation" },
     href: "/candidate/learning",
     icon: BookOpen,
-    color: "text-pink-600 dark:text-pink-400"
+    gradient: "from-pink-500 to-pink-600"
   }
 ]
 
@@ -84,55 +85,53 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { locale } = useLanguage()
-  const { user, isLoggedIn, logout } = useAuth()
+  const { user, isAuthenticated } = useAppSelector((state) => state.account)
+  const dispatch = useAppDispatch()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Check if user is authenticated and has candidate role
   useEffect(() => {
-    if (!isLoggedIn || user?.role !== 'candidate') {
+    if (!isAuthenticated || user?.role !== 'candidate') {
       router.push('/login')
     }
-  }, [isLoggedIn, user, router])
+  }, [isAuthenticated, user, router])
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await dispatch(logoutUser())
     router.push('/')
   }
 
   // Don't render layout if user is not authenticated or not a candidate
-  if (!isLoggedIn || user?.role !== 'candidate') {
+  if (!isAuthenticated || user?.role !== 'candidate') {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+        <div className="animate-spin rounded-full h-32 w-32 border-4 border-primary/20 border-t-primary"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed left-0 top-0 z-50 h-full w-64 transform bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 transition-transform duration-300 ease-in-out lg:translate-x-0",
+        "fixed left-0 top-0 z-50 h-full w-72 transform bg-gradient-to-b from-white/95 via-white/90 to-primary/5 dark:from-gray-900/95 dark:via-gray-800/90 dark:to-primary/10 backdrop-blur-xl border-r border-white/20 dark:border-gray-700/20 shadow-2xl shadow-primary/10 transition-transform duration-300 ease-in-out lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="flex h-full flex-col">
-          {/* Header */}
-          <div className="flex h-16 items-center justify-between px-6 border-b border-gray-200/50 dark:border-gray-700/50">
-            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Candidate Hub
-            </h2>
+          {/* Mobile Close Button */}
+          <div className="flex justify-end p-4 lg:hidden">
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden"
+              className="hover:bg-white/20 rounded-xl"
               onClick={() => setSidebarOpen(false)}
             >
               <X className="h-4 w-4" />
@@ -140,30 +139,36 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
           </div>
 
           {/* User Info */}
-          <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
-            <div className="flex items-center space-x-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                {user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase()}
+          <div className="p-6 border-b border-white/20 dark:border-gray-700/20">
+            <div className="flex items-center space-x-4">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-primary via-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-primary/20">
+                {user?.name ? user.name[0].toUpperCase() : user?.email?.[0].toUpperCase() || 'U'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                  {user.name || 'User'}
+                <p className="text-sm font-semibold text-foreground truncate">
+                  {user?.name || 'User'}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {user.email}
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.email}
                 </p>
+                <div className="flex items-center gap-1 mt-1">
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-xs text-green-600 font-medium">
+                    {locale === 'fr' ? 'En ligne' : 'Online'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 px-4 py-6 space-y-8">
+          <div className="flex-1 px-4 py-6 space-y-8 overflow-y-auto">
             {/* Main Navigation */}
             <div>
-              <h3 className="px-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+              <h3 className="px-3 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">
                 {locale === 'fr' ? 'Navigation' : 'Navigation'}
               </h3>
-              <nav className="space-y-1">
+              <nav className="space-y-2">
                 {navigationItems.map((item) => {
                   const isActive = pathname === item.href
                   const Icon = item.icon
@@ -172,20 +177,29 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
+                        "group flex items-center px-4 py-3.5 text-sm font-medium rounded-2xl transition-all duration-300 relative overflow-hidden",
                         isActive
-                          ? "bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-sm"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white"
+                          ? "bg-gradient-to-r from-primary/10 via-primary/5 to-transparent text-primary shadow-lg shadow-primary/10 border border-primary/20"
+                          : "text-muted-foreground hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-foreground hover:shadow-md hover:scale-105"
                       )}
                       onClick={() => setSidebarOpen(false)}
                     >
-                      <Icon className={cn(
-                        "mr-3 h-5 w-5 transition-colors",
-                        isActive ? item.color : "text-gray-400 group-hover:text-gray-500"
-                      )} />
+                      <div className={cn(
+                        "h-8 w-8 rounded-xl flex items-center justify-center mr-4 transition-all duration-300",
+                        isActive 
+                          ? `bg-gradient-to-br ${item.gradient} shadow-lg` 
+                          : "bg-muted/50 group-hover:bg-muted"
+                      )}>
+                        <Icon className={cn(
+                          "h-4 w-4 transition-all duration-300",
+                          isActive ? "text-white" : "text-muted-foreground group-hover:text-foreground"
+                        )} />
+                      </div>
                       {item.title[locale]}
                       {isActive && (
-                        <div className="ml-auto h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+                        <div className="ml-auto flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                        </div>
                       )}
                     </Link>
                   )
@@ -195,10 +209,10 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
 
             {/* Tools Section */}
             <div>
-              <h3 className="px-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+              <h3 className="px-3 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">
                 {locale === 'fr' ? 'Outils' : 'Tools'}
               </h3>
-              <nav className="space-y-1">
+              <nav className="space-y-2">
                 {toolsItems.map((item) => {
                   const isActive = pathname === item.href
                   const Icon = item.icon
@@ -207,17 +221,24 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
+                        "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300",
                         isActive
-                          ? "bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-sm"
-                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white"
+                          ? "bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent text-secondary shadow-lg shadow-secondary/10 border border-secondary/20"
+                          : "text-muted-foreground hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-foreground hover:shadow-md hover:scale-105"
                       )}
                       onClick={() => setSidebarOpen(false)}
                     >
-                      <Icon className={cn(
-                        "mr-3 h-4 w-4 transition-colors",
-                        isActive ? item.color : "text-gray-400 group-hover:text-gray-500"
-                      )} />
+                      <div className={cn(
+                        "h-7 w-7 rounded-xl flex items-center justify-center mr-3 transition-all duration-300",
+                        isActive 
+                          ? `bg-gradient-to-br ${item.gradient} shadow-lg` 
+                          : "bg-muted/50 group-hover:bg-muted"
+                      )}>
+                        <Icon className={cn(
+                          "h-3.5 w-3.5 transition-all duration-300",
+                          isActive ? "text-white" : "text-muted-foreground group-hover:text-foreground"
+                        )} />
+                      </div>
                       {item.title[locale]}
                     </Link>
                   )
@@ -227,21 +248,25 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
           </div>
 
           {/* Settings & Logout */}
-          <div className="p-4 border-t border-gray-200/50 dark:border-gray-700/50 space-y-2">
+          <div className="p-4 border-t border-white/20 dark:border-gray-700/20 space-y-2">
             <Link
               href="/candidate/settings"
-              className="group flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
+              className="group flex items-center px-4 py-3 text-sm font-medium text-muted-foreground rounded-2xl hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-foreground transition-all duration-300 hover:scale-105"
               onClick={() => setSidebarOpen(false)}
             >
-              <Settings className="mr-3 h-4 w-4 text-gray-400 group-hover:text-gray-500" />
+              <div className="h-7 w-7 rounded-xl bg-muted/50 group-hover:bg-muted flex items-center justify-center mr-3 transition-all duration-300">
+                <Settings className="h-3.5 w-3.5" />
+              </div>
               {locale === 'fr' ? 'Paramètres' : 'Settings'}
             </Link>
             <Button
               variant="ghost"
-              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
+              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 rounded-2xl py-3 h-auto font-medium hover:scale-105 transition-all duration-300"
               onClick={handleLogout}
             >
-              <LogOut className="mr-3 h-4 w-4" />
+              <div className="h-7 w-7 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-3">
+                <LogOut className="h-3.5 w-3.5" />
+              </div>
               {locale === 'fr' ? 'Déconnexion' : 'Logout'}
             </Button>
           </div>
@@ -249,47 +274,22 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className="lg:pl-64">
-        {/* Top Bar */}
-        <div className="sticky top-0 z-30 h-16 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
-          <div className="flex h-full items-center justify-between px-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-            
-            {/* Page Title */}
-            <div className="hidden lg:block">
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {pathname === '/candidate/dashboard' && (locale === 'fr' ? 'Tableau de bord' : 'Dashboard')}
-                {pathname === '/candidate/emplois' && (locale === 'fr' ? 'Recherche d\'emploi' : 'Job Search')}
-                {pathname === '/candidate/applications' && (locale === 'fr' ? 'Mes candidatures' : 'My Applications')}
-                {pathname === '/candidate/profile' && (locale === 'fr' ? 'Mon profil' : 'My Profile')}
-                {pathname === '/candidate/settings' && (locale === 'fr' ? 'Paramètres' : 'Settings')}
-              </h1>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/candidate/emplois">
-                  <Search className="h-4 w-4 mr-2" />
-                  {locale === 'fr' ? 'Rechercher' : 'Search Jobs'}
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+      <div className="lg:pl-72">
+        {/* Mobile Menu Button - Fixed Position */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="fixed top-4 left-4 z-40 lg:hidden hover:bg-white/20 rounded-xl bg-white/80 backdrop-blur-sm shadow-lg"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
 
         {/* Page Content */}
-        <main className="p-6">
+        <main>
           {children}
         </main>
       </div>
     </div>
   )
-} 
+}
