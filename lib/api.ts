@@ -159,7 +159,7 @@ export const searchJobs = async (params: JobSearchParams) => {
   if (params.experienceLevel) queryParams.append('experienceLevel', params.experienceLevel);
   if (params.skills && params.skills.length > 0) queryParams.append('skills', params.skills.join(','));
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app/api';
   const response = await fetch(`${apiUrl}/jobs/public?${queryParams.toString()}`);
   
   if (!response.ok) {
@@ -178,7 +178,7 @@ export interface JobApplicationData {
 
 // Create job application API function
 export const createJobApplication = async (applicationData: JobApplicationData, token: string) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app/api';
   const response = await fetch(`${apiUrl}/job-applications/public`, {
     method: 'POST',
     headers: {
@@ -197,7 +197,7 @@ export const createJobApplication = async (applicationData: JobApplicationData, 
 
 // Get candidate's job applications API function
 export const getMyJobApplications = async (token: string, page: number = 1, limit: number = 10) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app/api';
   const response = await fetch(`${apiUrl}/job-applications/public/my-applications?page=${page}&limit=${limit}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -213,7 +213,7 @@ export const getMyJobApplications = async (token: string, page: number = 1, limi
 
 // Get recommended jobs for candidate based on skills
 export const getRecommendedJobs = async (token: string, limit: number = 5) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app/api';
   const response = await fetch(`${apiUrl}/job-applications/public/recommended-jobs?limit=${limit}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -229,7 +229,7 @@ export const getRecommendedJobs = async (token: string, limit: number = 5) => {
 
 // Debug function to check jobs and candidates
 export const debugJobsAndCandidates = async (token: string) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://rec-plus-server.vercel.app/api';
   const response = await fetch(`${apiUrl}/job-applications/public/debug`, {
     headers: {
       'Authorization': `Bearer ${token}`,
