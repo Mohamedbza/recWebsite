@@ -62,7 +62,8 @@
     "blog": "Blog",
     "contact": "Contact",
     "login": "Se connecter",
-    "register": "Créer un compte"
+    "register": "Créer un compte",
+    "logout": "Se déconnecter"
   },
   "candidates": {
     "dropdown": {

@@ -132,6 +132,15 @@ class ApiService {
       },
     });
   }
+
+  // Get current candidate profile (requires authentication)
+  async getCurrentCandidate(token: string) {
+    return this.request('/candidate-profile/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 }
 
 export const apiService = new ApiService();
@@ -208,7 +217,19 @@ export const getMyJobApplications = async (token: string, page: number = 1, limi
     const errorData = await response.json();
     throw new Error(errorData.message || 'Failed to fetch job applications');
   }
-  return response.json();
+  
+  const data = await response.json();
+  
+  // Return in the expected format for the frontend
+  return {
+    success: true,
+    data: {
+      applications: data.jobApplications || data.applications || [],
+      total: data.total || 0,
+      page: data.page || page,
+      totalPages: data.totalPages || 1
+    }
+  };
 };
 
 // Get recommended jobs for candidate based on skills
@@ -224,7 +245,18 @@ export const getRecommendedJobs = async (token: string, limit: number = 5) => {
     const errorData = await response.json();
     throw new Error(errorData.message || 'Failed to fetch recommended jobs');
   }
-  return response.json();
+  
+  const data = await response.json();
+  
+  // Return in the expected format for the frontend
+  return {
+    success: data.success,
+    data: {
+      jobs: data.data?.jobs || data.jobs || [],
+      total: data.data?.total || data.total || 0
+    },
+    message: data.message
+  };
 };
 
 // Debug function to check jobs and candidates

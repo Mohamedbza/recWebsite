@@ -12,22 +12,170 @@ import {
   TrendingUp, Star, CheckCircle,
   ArrowUpRight, Plus, Search,
   Building2, MapPin, Settings,
-  Eye, Bell, FileText
+  Eye, Bell, FileText, Loader2
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { getMyJobApplications, getRecommendedJobs } from "@/lib/api"
+
+interface JobApplication {
+  _id: string
+  job: {
+    _id: string
+    title: string
+    company: {
+      name: string
+    }
+  }
+  status: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface RecommendedJob {
+  _id: string
+  title: string
+  companyId: {
+    name: string
+  }
+  address: string
+  skills: string[]
+  matchScore: number
+  matchingSkills: string[]
+}
 
 export default function CandidateDashboardPage() {
   const { locale } = useLanguage()
-  const { user, isAuthenticated } = useAppSelector((state) => state.account)
+  const { user, isAuthenticated, token } = useAppSelector((state) => state.account)
   const router = useRouter()
 
-  // Mock data for dashboard
-  const stats = {
-    totalApplications: 12,
-    inProgress: 8,
-    interviews: 3,
+  // State for real data
+  const [recentApplications, setRecentApplications] = useState<JobApplication[]>([])
+  const [recommendedJobs, setRecommendedJobs] = useState<RecommendedJob[]>([])
+  const [isLoadingApplications, setIsLoadingApplications] = useState(true)
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Stats calculated from real data
+  const [stats, setStats] = useState({
+    totalApplications: 0,
+    inProgress: 0,
+    interviews: 0,
     profileCompletion: 85
+  })
+
+  // Fetch recent applications
+  const fetchRecentApplications = async () => {
+    if (!token) return
+    
+    try {
+      setIsLoadingApplications(true)
+      const response = await getMyJobApplications(token, 1, 5)
+      
+      if (response.success) {
+        setRecentApplications(response.data.applications || [])
+        
+        // Calculate stats from applications
+        const applications = response.data.applications || []
+        const totalApplications = response.data.total || 0
+        const inProgress = applications.filter((app: JobApplication) => 
+          ['pending', 'reviewing', 'shortlisted'].includes(app.status.toLowerCase())
+        ).length
+        const interviews = applications.filter((app: JobApplication) => 
+          ['interview', 'interviewed'].includes(app.status.toLowerCase())
+        ).length
+
+        setStats(prev => ({
+          ...prev,
+          totalApplications,
+          inProgress,
+          interviews
+        }))
+      }
+    } catch (err) {
+      console.error('Error fetching applications:', err)
+      setError(locale === 'fr' ? 'Erreur lors du chargement des candidatures' : 'Error loading applications')
+    } finally {
+      setIsLoadingApplications(false)
+    }
+  }
+
+  // Fetch recommended jobs based on skills
+  const fetchRecommendedJobs = async () => {
+    if (!token) return
+    
+    try {
+      setIsLoadingRecommendations(true)
+      const response = await getRecommendedJobs(token, 5)
+      
+      if (response.success) {
+        setRecommendedJobs(response.data.jobs || [])
+      }
+    } catch (err) {
+      console.error('Error fetching recommended jobs:', err)
+      setError(locale === 'fr' ? 'Erreur lors du chargement des emplois recommandés' : 'Error loading recommended jobs')
+    } finally {
+      setIsLoadingRecommendations(false)
+    }
+  }
+
+  // Load data on component mount
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      fetchRecentApplications()
+      fetchRecommendedJobs()
+    }
+  }, [isAuthenticated, token])
+
+  // Helper function to get status color and text
+  const getStatusInfo = (status: string) => {
+    const statusLower = status.toLowerCase()
+    
+    if (['pending', 'reviewing'].includes(statusLower)) {
+      return {
+        color: 'yellow',
+        text: locale === 'fr' ? 'En révision' : 'Under Review'
+      }
+    } else if (['shortlisted', 'selected'].includes(statusLower)) {
+      return {
+        color: 'blue',
+        text: locale === 'fr' ? 'Sélectionné' : 'Shortlisted'
+      }
+    } else if (['interview', 'interviewed'].includes(statusLower)) {
+      return {
+        color: 'green',
+        text: locale === 'fr' ? 'Entrevue' : 'Interview'
+      }
+    } else if (['rejected', 'declined'].includes(statusLower)) {
+      return {
+        color: 'red',
+        text: locale === 'fr' ? 'Refusé' : 'Rejected'
+      }
+    } else {
+      return {
+        color: 'gray',
+        text: status
+      }
+    }
+  }
+
+  // Helper function to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays === 1) {
+      return locale === 'fr' ? 'Hier' : 'Yesterday'
+    } else if (diffDays < 7) {
+      return locale === 'fr' ? `Il y a ${diffDays} jours` : `${diffDays} days ago`
+    } else {
+      return date.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', {
+        month: 'short',
+        day: 'numeric'
+      })
+    }
   }
 
   if (!isAuthenticated || user?.role !== 'candidate') {
@@ -224,40 +372,75 @@ export default function CandidateDashboardPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {[
-                    { title: 'Frontend Developer', company: 'TechCorp Inc.', status: 'En révision', color: 'yellow' },
-                    { title: 'React Developer', company: 'StartupXYZ', status: 'Nouveau', color: 'blue' },
-                    { title: 'Full Stack Developer', company: 'WebSolutions', status: 'Entrevue', color: 'green' }
-                  ].map((app, index) => (
-                    <div key={index} className="group p-4 rounded-xl border border-border hover:border-blue-300 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all duration-200 cursor-pointer">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <p className="font-semibold text-foreground group-hover:text-blue-700 transition-colors">
-                            {app.title}
-                          </p>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <Building2 className="h-3 w-3" />
-                            <span>{app.company}</span>
+                {isLoadingApplications ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+                    <span className="ml-2 text-muted-foreground">
+                      {locale === 'fr' ? 'Chargement...' : 'Loading...'}
+                    </span>
+                  </div>
+                ) : error ? (
+                  <div className="text-center py-8">
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <Button onClick={fetchRecentApplications} variant="outline" size="sm">
+                      {locale === 'fr' ? 'Réessayer' : 'Retry'}
+                    </Button>
+                  </div>
+                ) : recentApplications.length > 0 ? (
+                  <div className="space-y-4">
+                    {recentApplications.map((app) => {
+                      const statusInfo = getStatusInfo(app.status)
+                      return (
+                        <div key={app._id} className="group p-4 rounded-xl border border-border hover:border-blue-300 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all duration-200 cursor-pointer">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                                                             <p className="font-semibold text-foreground group-hover:text-blue-700 transition-colors">
+                                 {app.job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
+                               </p>
+                                                             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                                 <Building2 className="h-3 w-3" />
+                                 <span>{app.job.company?.name || (locale === 'fr' ? 'Entreprise non spécifiée' : 'Company not specified')}</span>
+                               </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {locale === 'fr' ? 'Postulé' : 'Applied'} {formatDate(app.createdAt)}
+                              </p>
+                            </div>
+                            <Badge 
+                              variant="secondary" 
+                              className={`${
+                                statusInfo.color === 'yellow' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300' :
+                                statusInfo.color === 'blue' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300' :
+                                statusInfo.color === 'green' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' :
+                                statusInfo.color === 'red' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300' :
+                                'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300'
+                              }`}
+                            >
+                              {statusInfo.text}
+                            </Badge>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {locale === 'fr' ? 'Postulé il y a 2 jours' : 'Applied 2 days ago'}
-                          </p>
                         </div>
-                        <Badge 
-                          variant="secondary" 
-                          className={`${
-                            app.color === 'yellow' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300' :
-                            app.color === 'blue' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300' :
-                            'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                          }`}
-                        >
-                          {app.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Briefcase className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                      {locale === 'fr' ? 'Aucune candidature' : 'No applications yet'}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      {locale === 'fr' 
+                        ? 'Commencez à postuler pour voir vos candidatures ici'
+                        : 'Start applying to see your applications here'}
+                    </p>
+                    <Button asChild>
+                      <Link href="/candidate/emplois">
+                        <Search className="h-4 w-4 mr-2" />
+                        {locale === 'fr' ? 'Rechercher des emplois' : 'Search Jobs'}
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -287,47 +470,103 @@ export default function CandidateDashboardPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {[
-                    { title: 'Senior React Developer', company: 'InnovateLab', location: 'Montreal, QC', match: 95 },
-                    { title: 'Frontend Engineer', company: 'DigitalCorp', location: 'Toronto, ON', match: 89 },
-                    { title: 'UI/UX Developer', company: 'CreativeStudio', location: 'Remote', match: 87 }
-                  ].map((job, index) => (
-                    <div key={index} className="group p-4 rounded-xl border border-border hover:border-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all duration-200 cursor-pointer">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <p className="font-semibold text-foreground group-hover:text-purple-700 transition-colors">
-                            {job.title}
-                          </p>
-                          <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
-                            <span className="flex items-center gap-1">
-                              <Building2 className="h-3 w-3" />
-                              {job.company}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-3 w-3" />
-                              {job.location}
-                            </span>
+                {isLoadingRecommendations ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                    <span className="ml-2 text-muted-foreground">
+                      {locale === 'fr' ? 'Chargement...' : 'Loading...'}
+                    </span>
+                  </div>
+                ) : error ? (
+                  <div className="text-center py-8">
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <Button onClick={fetchRecommendedJobs} variant="outline" size="sm">
+                      {locale === 'fr' ? 'Réessayer' : 'Retry'}
+                    </Button>
+                  </div>
+                ) : recommendedJobs.length > 0 ? (
+                  <div className="space-y-4">
+                    {recommendedJobs.map((job) => (
+                      <div key={job._id} className="group p-4 rounded-xl border border-border hover:border-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all duration-200 cursor-pointer">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                                                         <p className="font-semibold text-foreground group-hover:text-purple-700 transition-colors">
+                               {job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
+                             </p>
+                                                         <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+                                                                <span className="flex items-center gap-1">
+                                   <MapPin className="h-3 w-3" />
+                                   {job.address || (locale === 'fr' ? 'Adresse non spécifiée' : 'Address not specified')}
+                                 </span>
+                             </div>
                           </div>
+                                                     <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                             {job.matchScore}% {locale === 'fr' ? 'compatible' : 'match'}
+                           </Badge>
                         </div>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
-                          {job.match}% {locale === 'fr' ? 'compatible' : 'match'}
-                        </Badge>
+                                                 <div className="flex items-center gap-2">
+                           {job.matchingSkills && job.matchingSkills.length > 0 ? (
+                             <>
+                               {job.matchingSkills.slice(0, 2).map((skill, index) => (
+                                 <Badge key={index} variant="outline" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 border-green-200">
+                                   {skill}
+                                 </Badge>
+                               ))}
+                               {job.matchingSkills.length > 2 && (
+                                 <Badge variant="outline" className="text-xs bg-green-50 text-green-700 dark:bg-green-900/10 dark:text-green-300 border-green-200">
+                                   +{job.matchingSkills.length - 2} {locale === 'fr' ? 'autres' : 'more'}
+                                 </Badge>
+                               )}
+                             </>
+                           ) : null}
+                           
+                           {/* Show missing skills in red */}
+                           {job.skills && job.skills.length > 0 && (
+                             <>
+                               {job.skills
+                                 .filter(skill => !job.matchingSkills?.includes(skill))
+                                 .slice(0, 2)
+                                 .map((skill, index) => (
+                                   <Badge key={`missing-${index}`} variant="outline" className="text-xs bg-red-50 text-red-700 dark:bg-red-900/10 dark:text-red-300 border-red-200">
+                                     {skill}
+                                   </Badge>
+                                 ))}
+                               {job.skills.filter(skill => !job.matchingSkills?.includes(skill)).length > 2 && (
+                                 <Badge variant="outline" className="text-xs bg-red-50 text-red-600 dark:bg-red-900/10 dark:text-red-300 border-red-200">
+                                   +{job.skills.filter(skill => !job.matchingSkills?.includes(skill)).length - 2} {locale === 'fr' ? 'manquantes' : 'missing'}
+                                 </Badge>
+                               )}
+                             </>
+                           )}
+                           
+                           {(!job.matchingSkills || job.matchingSkills.length === 0) && (!job.skills || job.skills.length === 0) && (
+                             <Badge variant="outline" className="text-xs text-muted-foreground">
+                               {locale === 'fr' ? 'Aucune compétence spécifiée' : 'No skills specified'}
+                             </Badge>
+                           )}
+                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20">
-                          React
-                        </Badge>
-                        <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20">
-                          TypeScript
-                        </Badge>
-                        <Badge variant="outline" className="text-xs text-muted-foreground">
-                          +3 {locale === 'fr' ? 'autres' : 'more'}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Star className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                      {locale === 'fr' ? 'Aucune recommandation' : 'No recommendations yet'}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      {locale === 'fr' 
+                        ? 'Complétez votre profil pour recevoir des recommandations personnalisées'
+                        : 'Complete your profile to receive personalized recommendations'}
+                    </p>
+                    <Button asChild>
+                      <Link href="/candidate/profile">
+                        <User className="h-4 w-4 mr-2" />
+                        {locale === 'fr' ? 'Compléter le profil' : 'Complete Profile'}
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -388,7 +627,7 @@ export default function CandidateDashboardPage() {
                 </Button>
 
                 <Button variant="outline" className="group h-auto p-6 justify-start border-0 bg-gradient-to-br from-green-500/5 to-green-500/10 hover:from-green-500/10 hover:to-green-500/20 hover:scale-105 transition-all duration-300 shadow-sm hover:shadow-lg" asChild>
-                  <Link href="/candidate/settings">
+                  <Link href="/candidate/resume">
                     <div className="flex items-center gap-4 w-full">
                       <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <FileText className="h-6 w-6 text-green-600" />

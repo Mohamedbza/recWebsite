@@ -60,25 +60,7 @@ const toolsItems = [
     href: "/candidate/resume",
     icon: FileText,
     gradient: "from-blue-500 to-blue-600"
-  },
-  {
-    title: { en: "Interviews", fr: "Entrevues" },
-    href: "/candidate/interviews",
-    icon: Calendar,
-    gradient: "from-indigo-500 to-indigo-600"
-  },
-  {
-    title: { en: "Certifications", fr: "Certifications" },
-    href: "/candidate/certifications",
-    icon: Award,
-    gradient: "from-yellow-500 to-yellow-600"
-  },
-  {
-    title: { en: "Learning", fr: "Formation" },
-    href: "/candidate/learning",
-    icon: BookOpen,
-    gradient: "from-pink-500 to-pink-600"
-  }
+  }, 
 ]
 
 export default function CandidateLayout({ children }: CandidateLayoutProps) {
