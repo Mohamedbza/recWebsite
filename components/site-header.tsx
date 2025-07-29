@@ -240,7 +240,7 @@ export function SiteHeader() {
 
               {/* Employeurs Link */}
               <Link
-                href="http://localhost:3001/employeurs"
+                href="/employeurs"
                 className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                   isActive("/employeurs")
                     ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
@@ -528,7 +528,7 @@ export function SiteHeader() {
               </Link>
 
               <Link
-                href="http://localhost:3001/employeurs"
+                href="/employeurs"
                 className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
                 onClick={() => setIsMobileMenuOpen(false)}
                 style={{ animationDelay: '100ms' }}

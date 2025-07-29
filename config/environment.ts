@@ -1,7 +1,7 @@
 // Environment configuration
 export const config = {
-  // API Configuration
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
+  // API Configuration - Using production URL directly
+  apiUrl: 'https://rec-plus-server.vercel.app/api',
   
   // Environment
   isDevelopment: process.env.NODE_ENV === 'development',

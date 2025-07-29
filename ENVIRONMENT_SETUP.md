@@ -1,87 +1,52 @@
-# Environment Setup Guide
+# API Configuration Guide
 
-This guide explains how to set up environment variables for the RecPlus website to connect to the production backend.
+This guide explains the current API configuration for the RecPlus website.
 
-## Environment Variables
+## Current Configuration
 
-The application uses environment variables to configure the API endpoints. The main variable you need to set is:
+The application is now configured to use the production backend URL directly:
 
-- `NEXT_PUBLIC_API_URL`: The base URL for the backend API
+- **Production API URL**: `https://rec-plus-server.vercel.app/api`
+- **Configuration File**: `config/environment.ts`
 
-## Setup Instructions
+## No Environment Variables Required
 
-### 1. Create Environment Files
+The application no longer requires environment variables for API configuration. The production URL is hardcoded in the configuration file for simplicity and reliability.
 
-Create the following files in the `recWebsite` directory:
+## Configuration Details
 
-#### For Development (.env.local)
-```bash
-# Create .env.local file
-echo "NEXT_PUBLIC_API_URL=https://rec-plus-server.vercel.app/api" > .env.local
-```
+### Centralized Configuration
+- **File**: `config/environment.ts`
+- **API URL**: `https://rec-plus-server.vercel.app/api`
+- **Status**: Production-ready
 
-#### For Production (.env.production)
-```bash
-# Create .env.production file
-echo "NEXT_PUBLIC_API_URL=https://rec-plus-server.vercel.app/api" > .env.production
-```
+### Updated Files
+All API-related files have been updated to use the centralized configuration:
 
-### 2. Environment File Contents
+- `lib/api.ts` - Main API service
+- `lib/employer-api.ts` - Employer-specific API service
+- `store/slices/accountSlice.ts` - Authentication store
+- `contexts/EmployerAuthContext.tsx` - Authentication context
+- `components/jobs/JobDetailsModal.tsx` - Job details component
+- `app/candidate/profile/page.tsx` - Profile management
 
-#### .env.local (Development)
-```env
-# API Configuration
-NEXT_PUBLIC_API_URL=https://rec-plus-server.vercel.app/api
+## Benefits
 
-# Environment
-NODE_ENV=development
-```
-
-#### .env.production (Production)
-```env
-# API Configuration
-NEXT_PUBLIC_API_URL=https://rec-plus-server.vercel.app/api
-
-# Environment
-NODE_ENV=production
-```
-
-### 3. Alternative: Local Development
-
-If you want to use a local backend server for development, use:
-
-```env
-# For local development
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
-```
-
-## Configuration Files
-
-The application now uses a centralized configuration system:
-
-- **`config/environment.ts`**: Centralized environment configuration
-- **`lib/api.ts`**: Updated to use the centralized config
-- **`lib/employer-api.ts`**: Updated to use the centralized config
-- **All components**: Updated to use the centralized config
+1. **Simplified Setup**: No environment variables needed
+2. **Production Ready**: Always uses the production backend
+3. **Reliable**: No risk of misconfiguration
+4. **Consistent**: Same behavior across all environments
 
 ## Verification
 
-To verify that your environment is set up correctly:
+To verify that the configuration is working correctly:
 
 1. Start the development server: `npm run dev`
 2. Check the browser console for any API errors
 3. Test the login functionality
-4. Verify that API calls are going to the correct URL
+4. Verify that API calls are going to the production URL
 
-## Troubleshooting
-
-### Common Issues
-
-1. **API calls still going to localhost**: Make sure you've created the `.env.local` file and restarted the development server
-2. **Environment variables not loading**: Ensure the variable name starts with `NEXT_PUBLIC_` for client-side access
-3. **CORS errors**: The production backend should handle CORS properly
-
-### Debug Information
+## Debug Information
 
 You can check which API URL is being used by adding this to any component:
 
@@ -92,10 +57,14 @@ console.log('API URL:', config.apiUrl);
 console.log('Using production API:', isUsingProductionApi());
 ```
 
+## Troubleshooting
+
+### Common Issues
+
+1. **CORS errors**: The production backend should handle CORS properly
+2. **Network errors**: Ensure the production backend is accessible
+3. **Authentication issues**: Verify the backend endpoints are working
+
 ## Deployment
 
-When deploying to production (e.g., Vercel), make sure to set the environment variable:
-
-- `NEXT_PUBLIC_API_URL=https://rec-plus-server.vercel.app/api`
-
-This ensures that the production frontend connects to the production backend. 
+The application is now ready for deployment without any additional configuration. The production API URL is already configured and will work in all environments. 
