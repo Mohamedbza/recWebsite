@@ -8,9 +8,31 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { 
-  Users, Briefcase, 
+  Users, 
+  Briefcase, 
+  TrendingUp, 
+  MapPin, 
+  Calendar, 
+  Eye, 
+  MessageSquare, 
+  Plus,
   Settings,
-  Plus, Eye
+  Building2,
+  ChevronRight,
+  Filter,
+  Search,
+  MoreHorizontal,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Bell,
+  Globe,
+  Shield,
+  Lock,
+  Mail,
+  Smartphone,
+  Save,
+  User
 } from "lucide-react"
 import Link from "next/link"
 import { EmployerAuthProvider } from "@/contexts/EmployerAuthContext"
@@ -22,6 +44,12 @@ import JobModal from "@/components/employer/JobModal"
 import ProfileManagement from "@/components/employer/ProfileManagement"
 import { motion } from "framer-motion"
 import { getLocationLabel } from "@/lib/location-utils"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 
 function DashboardContent() {
   const { locale } = useLanguage()
@@ -37,9 +65,34 @@ function DashboardContent() {
 
   // State for modals and actions
   const [selectedJob, setSelectedJob] = useState<EmployerJob | null>(null)
-  const [selectedApplication, setSelectedApplication] = useState<EmployerApplication | null>(null)
   const [showJobModal, setShowJobModal] = useState(false)
   const [showApplicationModal, setShowApplicationModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<EmployerApplication | null>(null);
+  const [editingJob, setEditingJob] = useState<EmployerJob | null>(null);
+  
+  // Settings state
+  const [employerSettings, setEmployerSettings] = useState({
+    notifications: {
+      emailNotifications: true,
+      applicationAlerts: true,
+      jobExpiryReminders: true,
+      weeklyReport: true,
+      smsNotifications: false
+    },
+    privacy: {
+      companyProfileVisible: true,
+      showContactInfo: true,
+      allowDirectMessages: true,
+      showJobStatistics: false
+    },
+    preferences: {
+      language: locale,
+      jobAutoExpiry: '30',
+      defaultJobType: 'full-time',
+      autoReplyEnabled: false
+    }
+  });
 
   // Load data on component mount
   useEffect(() => {
@@ -105,7 +158,7 @@ function DashboardContent() {
   }
 
   const handleEditJob = (job: EmployerJob) => {
-    setSelectedJob(job)
+    setEditingJob(job)
     setShowJobModal(true)
   }
 
@@ -121,9 +174,9 @@ function DashboardContent() {
   }
 
   const handleCreateJob = () => {
-    setSelectedJob(null)
-    setShowJobModal(true)
-  }
+    setEditingJob(null);
+    setShowJobModal(true);
+  };
 
   const handleSubmitJob = async (jobData: {
     title: string;
@@ -182,6 +235,45 @@ function DashboardContent() {
       alert(locale === 'fr' ? 'Erreur lors de la mise à jour' : 'Error updating status')
     }
   }
+
+  // Settings handlers
+  const handleOpenSettings = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleSettingChange = (category: string, setting: string, value: any) => {
+    setEmployerSettings(prev => ({
+      ...prev,
+      [category]: {
+        ...prev[category as keyof typeof prev],
+        [setting]: value
+      }
+    }));
+  };
+
+  const handleSaveSettings = async () => {
+    try {
+      // TODO: Implement API call to save settings
+      console.log('Saving settings:', employerSettings);
+      
+      // Show success feedback (you can replace this with a toast notification)
+      alert(locale === 'fr' 
+        ? 'Paramètres sauvegardés avec succès!' 
+        : 'Settings saved successfully!'
+      );
+      
+      // Close the modal
+      setShowSettingsModal(false);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      
+      // Show error feedback (you can replace this with a toast notification)
+      alert(locale === 'fr' 
+        ? 'Erreur lors de la sauvegarde des paramètres.' 
+        : 'Error saving settings.'
+      );
+    }
+  };
 
   if (!isLoggedIn) {
     return (
@@ -270,6 +362,7 @@ function DashboardContent() {
                 </Button>
                 <Button 
                   variant="outline" 
+                  onClick={handleOpenSettings}
                   className="border-2 border-white/20 hover:bg-white/10 hover:border-primary/30 backdrop-blur-sm font-semibold px-6 py-3 rounded-2xl transition-all duration-300 flex items-center gap-2"
                 >
                   <Settings className="h-4 w-4" />
@@ -534,7 +627,7 @@ function DashboardContent() {
       <JobModal
         isOpen={showJobModal}
         onClose={() => setShowJobModal(false)}
-        job={selectedJob}
+        job={editingJob}
         onSubmit={handleSubmitJob}
         isLoading={false}
       />
@@ -588,6 +681,349 @@ function DashboardContent() {
           </div>
         </div>
       )}
+
+      {/* Settings Modal */}
+      <Dialog open={showSettingsModal} onOpenChange={setShowSettingsModal}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              {locale === 'fr' ? 'Paramètres' : 'Settings'}
+            </DialogTitle>
+            <DialogDescription>
+              {locale === 'fr' 
+                ? 'Gérez vos préférences et paramètres de compte'
+                : 'Manage your account preferences and settings'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Notifications Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Bell className="h-5 w-5" />
+                  {locale === 'fr' ? 'Notifications' : 'Notifications'}
+                </CardTitle>
+                <CardDescription>
+                  {locale === 'fr' 
+                    ? 'Choisissez comment vous souhaitez être notifié'
+                    : 'Choose how you want to be notified'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Notifications par email' : 'Email Notifications'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Recevez des mises à jour par email'
+                        : 'Receive updates via email'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.notifications.emailNotifications}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('notifications', 'emailNotifications', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Alertes de candidatures' : 'Application Alerts'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Notification immédiate pour les nouvelles candidatures'
+                        : 'Instant notification for new applications'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.notifications.applicationAlerts}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('notifications', 'applicationAlerts', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Rappels d\'expiration' : 'Job Expiry Reminders'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Rappels avant l\'expiration des offres'
+                        : 'Reminders before job postings expire'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.notifications.jobExpiryReminders}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('notifications', 'jobExpiryReminders', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Rapport hebdomadaire' : 'Weekly Report'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Résumé hebdomadaire de l\'activité'
+                        : 'Weekly summary of activity'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.notifications.weeklyReport}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('notifications', 'weeklyReport', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Notifications SMS' : 'SMS Notifications'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Notifications urgentes par SMS'
+                        : 'Urgent notifications via SMS'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.notifications.smsNotifications}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('notifications', 'smsNotifications', checked)
+                    }
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Privacy Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  {locale === 'fr' ? 'Confidentialité' : 'Privacy'}
+                </CardTitle>
+                <CardDescription>
+                  {locale === 'fr' 
+                    ? 'Contrôlez la visibilité de vos informations'
+                    : 'Control the visibility of your information'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Profil d\'entreprise visible' : 'Company Profile Visible'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Votre profil est visible aux candidats'
+                        : 'Your profile is visible to candidates'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.privacy.companyProfileVisible}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('privacy', 'companyProfileVisible', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Afficher les informations de contact' : 'Show Contact Information'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Email et téléphone visibles publiquement'
+                        : 'Email and phone publicly visible'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.privacy.showContactInfo}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('privacy', 'showContactInfo', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Autoriser les messages directs' : 'Allow Direct Messages'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Les candidats peuvent vous contacter directement'
+                        : 'Candidates can contact you directly'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.privacy.allowDirectMessages}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('privacy', 'allowDirectMessages', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Afficher les statistiques d\'emploi' : 'Show Job Statistics'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Nombre de vues et candidatures visibles'
+                        : 'View and application counts visible'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.privacy.showJobStatistics}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('privacy', 'showJobStatistics', checked)
+                    }
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Preferences Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  {locale === 'fr' ? 'Préférences' : 'Preferences'}
+                </CardTitle>
+                <CardDescription>
+                  {locale === 'fr' 
+                    ? 'Personnalisez votre expérience'
+                    : 'Customize your experience'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>
+                    {locale === 'fr' ? 'Langue' : 'Language'}
+                  </Label>
+                  <Select
+                    value={employerSettings.preferences.language}
+                    onValueChange={(value) => 
+                      handleSettingChange('preferences', 'language', value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="en">English</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>
+                    {locale === 'fr' ? 'Expiration automatique des emplois (jours)' : 'Auto Job Expiry (days)'}
+                  </Label>
+                  <Select
+                    value={employerSettings.preferences.jobAutoExpiry}
+                    onValueChange={(value) => 
+                      handleSettingChange('preferences', 'jobAutoExpiry', value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="15">15 {locale === 'fr' ? 'jours' : 'days'}</SelectItem>
+                      <SelectItem value="30">30 {locale === 'fr' ? 'jours' : 'days'}</SelectItem>
+                      <SelectItem value="45">45 {locale === 'fr' ? 'jours' : 'days'}</SelectItem>
+                      <SelectItem value="60">60 {locale === 'fr' ? 'jours' : 'days'}</SelectItem>
+                      <SelectItem value="90">90 {locale === 'fr' ? 'jours' : 'days'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>
+                    {locale === 'fr' ? 'Type d\'emploi par défaut' : 'Default Job Type'}
+                  </Label>
+                  <Select
+                    value={employerSettings.preferences.defaultJobType}
+                    onValueChange={(value) => 
+                      handleSettingChange('preferences', 'defaultJobType', value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="full-time">
+                        {locale === 'fr' ? 'Temps plein' : 'Full-time'}
+                      </SelectItem>
+                      <SelectItem value="part-time">
+                        {locale === 'fr' ? 'Temps partiel' : 'Part-time'}
+                      </SelectItem>
+                      <SelectItem value="contract">
+                        {locale === 'fr' ? 'Contrat' : 'Contract'}
+                      </SelectItem>
+                      <SelectItem value="internship">
+                        {locale === 'fr' ? 'Stage' : 'Internship'}
+                      </SelectItem>
+                      <SelectItem value="freelance">
+                        {locale === 'fr' ? 'Freelance' : 'Freelance'}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">
+                      {locale === 'fr' ? 'Réponse automatique activée' : 'Auto Reply Enabled'}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'fr' 
+                        ? 'Réponse automatique aux candidatures'
+                        : 'Automatic reply to applications'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={employerSettings.preferences.autoReplyEnabled}
+                    onCheckedChange={(checked) => 
+                      handleSettingChange('preferences', 'autoReplyEnabled', checked)
+                    }
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSettingsModal(false)}>
+              {locale === 'fr' ? 'Annuler' : 'Cancel'}
+            </Button>
+            <Button onClick={handleSaveSettings} className="bg-primary text-white">
+              <Save className="h-4 w-4 mr-2" />
+              {locale === 'fr' ? 'Enregistrer' : 'Save Settings'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
