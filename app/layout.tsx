@@ -1,4 +1,5 @@
 import type React from "react"
+import { Montserrat } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -11,6 +12,13 @@ import { AuthInitializer } from "@/components/AuthInitializer"
 import "./globals.css"
 import type { Metadata } from "next"
 import { ConditionalLayout } from "@/components/ConditionalLayout"
+
+// Configure Montserrat font
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-montserrat",
+})
 
 export const metadata: Metadata = {
   title: "Recruitment Plus",
@@ -25,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning>
-      <body className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+      <body className={`min-h-screen bg-gradient-to-br from-background via-background to-muted/30 ${montserrat.className}`}>
         <ReduxProvider>
           <AuthInitializer />
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
