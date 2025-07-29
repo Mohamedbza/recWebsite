@@ -227,7 +227,7 @@ class EmployerApiService {
     if (params.status) queryParams.append('status', params.status);
     if (params.search) queryParams.append('search', params.search);
 
-    return this.request(`/employer-public/jobs?${queryParams.toString()}`);
+    return this.publicRequest(`/employer/jobs/public?${queryParams.toString()}`);
   }
 
   // Get employer's job applications
@@ -252,13 +252,13 @@ class EmployerApiService {
     if (params.jobId) queryParams.append('jobId', params.jobId);
     if (params.search) queryParams.append('search', params.search);
 
-    return this.request(`/employer-public/applications?${queryParams.toString()}`);
+    return this.publicRequest(`/employer/applications/public?${queryParams.toString()}`);
   }
 
   // Get dashboard statistics
   async getDashboardStats(): Promise<DashboardStats> {
     const companyId = this.getCompanyId();
-    return this.request(`/employer-public/dashboard-stats?companyId=${companyId}`);
+    return this.publicRequest(`/employer/applications/public/stats/dashboard?companyId=${companyId}`);
   }
 
   // Update application status
@@ -273,7 +273,7 @@ class EmployerApiService {
   // Get application details
   async getApplicationDetails(applicationId: string): Promise<EmployerApplication> {
     const companyId = this.getCompanyId();
-    return this.request(`/employer-public/applications/${applicationId}?companyId=${companyId}`);
+    return this.publicRequest(`/employer/applications/public/${applicationId}?companyId=${companyId}`);
   }
 
   // Add notes to application

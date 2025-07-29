@@ -4,19 +4,20 @@ import { useState, useEffect } from "react"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAppSelector } from "@/store/hooks"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { 
   Briefcase, Calendar, User, 
   TrendingUp, Star, CheckCircle,
-  ArrowUpRight, Plus, Search,
+  ArrowUpRight, Search,
   Building2, MapPin, Settings,
-  Eye, Bell, FileText, Loader2
+  FileText, Loader2, Eye
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { getMyJobApplications, getRecommendedJobs } from "@/lib/api"
+import JobDetailsModal from "@/components/jobs/JobDetailsModal"
 
 interface JobApplication {
   _id: string
@@ -55,6 +56,12 @@ export default function CandidateDashboardPage() {
   const [isLoadingApplications, setIsLoadingApplications] = useState(true)
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Job details modal state
+  const [jobDetailsModal, setJobDetailsModal] = useState({
+    open: false,
+    jobId: null as string | null
+  })
 
   // Stats calculated from real data
   const [stats, setStats] = useState({
@@ -176,6 +183,20 @@ export default function CandidateDashboardPage() {
         day: 'numeric'
       })
     }
+  }
+
+  // Handle job details modal
+  const openJobDetails = (jobId: string) => {
+    setJobDetailsModal({ open: true, jobId })
+  }
+
+  const closeJobDetails = () => {
+    setJobDetailsModal({ open: false, jobId: null })
+  }
+
+  const handleApplicationSuccess = () => {
+    // Refresh the applications list after successful application
+    fetchRecentApplications()
   }
 
   if (!isAuthenticated || user?.role !== 'candidate') {
@@ -394,13 +415,13 @@ export default function CandidateDashboardPage() {
                         <div key={app._id} className="group p-4 rounded-xl border border-border hover:border-blue-300 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all duration-200 cursor-pointer">
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
-                                                             <p className="font-semibold text-foreground group-hover:text-blue-700 transition-colors">
-                                 {app.job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
-                               </p>
-                                                             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                                 <Building2 className="h-3 w-3" />
-                                 <span>{app.job.company?.name || (locale === 'fr' ? 'Entreprise non spécifiée' : 'Company not specified')}</span>
-                               </div>
+                              <p className="font-semibold text-foreground group-hover:text-blue-700 transition-colors">
+                                {app.job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
+                              </p>
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                                <Building2 className="h-3 w-3" />
+                                <span>{app.job.company?.name || (locale === 'fr' ? 'Entreprise non spécifiée' : 'Company not specified')}</span>
+                              </div>
                               <p className="text-xs text-muted-foreground mt-1">
                                 {locale === 'fr' ? 'Postulé' : 'Applied'} {formatDate(app.createdAt)}
                               </p>
@@ -487,64 +508,77 @@ export default function CandidateDashboardPage() {
                 ) : recommendedJobs.length > 0 ? (
                   <div className="space-y-4">
                     {recommendedJobs.map((job) => (
-                      <div key={job._id} className="group p-4 rounded-xl border border-border hover:border-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all duration-200 cursor-pointer">
+                      <div key={job._id} className="group p-4 rounded-xl border border-border hover:border-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all duration-200">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
-                                                         <p className="font-semibold text-foreground group-hover:text-purple-700 transition-colors">
-                               {job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
-                             </p>
-                                                         <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
-                                                                <span className="flex items-center gap-1">
-                                   <MapPin className="h-3 w-3" />
-                                   {job.address || (locale === 'fr' ? 'Adresse non spécifiée' : 'Address not specified')}
-                                 </span>
-                             </div>
+                            <p className="font-semibold text-foreground group-hover:text-purple-700 transition-colors">
+                              {job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
+                            </p>
+                            <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+                              <span className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                {job.address || (locale === 'fr' ? 'Adresse non spécifiée' : 'Address not specified')}
+                              </span>
+                            </div>
                           </div>
-                                                     <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
-                             {job.matchScore}% {locale === 'fr' ? 'compatible' : 'match'}
-                           </Badge>
+                          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                            {job.matchScore}% {locale === 'fr' ? 'compatible' : 'match'}
+                          </Badge>
                         </div>
-                                                 <div className="flex items-center gap-2">
-                           {job.matchingSkills && job.matchingSkills.length > 0 ? (
-                             <>
-                               {job.matchingSkills.slice(0, 2).map((skill, index) => (
-                                 <Badge key={index} variant="outline" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 border-green-200">
-                                   {skill}
-                                 </Badge>
-                               ))}
-                               {job.matchingSkills.length > 2 && (
-                                 <Badge variant="outline" className="text-xs bg-green-50 text-green-700 dark:bg-green-900/10 dark:text-green-300 border-green-200">
-                                   +{job.matchingSkills.length - 2} {locale === 'fr' ? 'autres' : 'more'}
-                                 </Badge>
-                               )}
-                             </>
-                           ) : null}
-                           
-                           {/* Show missing skills in red */}
-                           {job.skills && job.skills.length > 0 && (
-                             <>
-                               {job.skills
-                                 .filter(skill => !job.matchingSkills?.includes(skill))
-                                 .slice(0, 2)
-                                 .map((skill, index) => (
-                                   <Badge key={`missing-${index}`} variant="outline" className="text-xs bg-red-50 text-red-700 dark:bg-red-900/10 dark:text-red-300 border-red-200">
-                                     {skill}
-                                   </Badge>
-                                 ))}
-                               {job.skills.filter(skill => !job.matchingSkills?.includes(skill)).length > 2 && (
-                                 <Badge variant="outline" className="text-xs bg-red-50 text-red-600 dark:bg-red-900/10 dark:text-red-300 border-red-200">
-                                   +{job.skills.filter(skill => !job.matchingSkills?.includes(skill)).length - 2} {locale === 'fr' ? 'manquantes' : 'missing'}
-                                 </Badge>
-                               )}
-                             </>
-                           )}
-                           
-                           {(!job.matchingSkills || job.matchingSkills.length === 0) && (!job.skills || job.skills.length === 0) && (
-                             <Badge variant="outline" className="text-xs text-muted-foreground">
-                               {locale === 'fr' ? 'Aucune compétence spécifiée' : 'No skills specified'}
-                             </Badge>
-                           )}
-                         </div>
+                        <div className="flex items-center gap-2 mb-3">
+                          {job.matchingSkills && job.matchingSkills.length > 0 ? (
+                            <>
+                              {job.matchingSkills.slice(0, 2).map((skill, index) => (
+                                <Badge key={index} variant="outline" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 border-green-200">
+                                  {skill}
+                                </Badge>
+                              ))}
+                              {job.matchingSkills.length > 2 && (
+                                <Badge variant="outline" className="text-xs bg-green-50 text-green-700 dark:bg-green-900/10 dark:text-green-300 border-green-200">
+                                  +{job.matchingSkills.length - 2} {locale === 'fr' ? 'autres' : 'more'}
+                                </Badge>
+                              )}
+                            </>
+                          ) : null}
+                          
+                          {/* Show missing skills in red */}
+                          {job.skills && job.skills.length > 0 && (
+                            <>
+                              {job.skills
+                                .filter(skill => !job.matchingSkills?.includes(skill))
+                                .slice(0, 2)
+                                .map((skill, index) => (
+                                  <Badge key={`missing-${index}`} variant="outline" className="text-xs bg-red-50 text-red-700 dark:bg-red-900/10 dark:text-red-300 border-red-200">
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              {job.skills.filter(skill => !job.matchingSkills?.includes(skill)).length > 2 && (
+                                <Badge variant="outline" className="text-xs bg-red-50 text-red-600 dark:bg-red-900/10 dark:text-red-300 border-red-200">
+                                  +{job.skills.filter(skill => !job.matchingSkills?.includes(skill)).length - 2} {locale === 'fr' ? 'manquantes' : 'missing'}
+                                </Badge>
+                              )}
+                            </>
+                          )}
+                          
+                          {(!job.matchingSkills || job.matchingSkills.length === 0) && (!job.skills || job.skills.length === 0) && (
+                            <Badge variant="outline" className="text-xs text-muted-foreground">
+                              {locale === 'fr' ? 'Aucune compétence spécifiée' : 'No skills specified'}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {/* Action buttons */}
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 text-purple-600 hover:bg-purple-50 border-purple-200 hover:border-purple-300 group"
+                            onClick={() => openJobDetails(job._id)}
+                          >
+                            <Eye className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
+                            {locale === 'fr' ? 'Voir détails' : 'View Details'}
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -648,6 +682,14 @@ export default function CandidateDashboardPage() {
           </Card>
         </div>
       </div>
+
+      {/* Job Details Modal */}
+      <JobDetailsModal
+        open={jobDetailsModal.open}
+        jobId={jobDetailsModal.jobId}
+        onClose={closeJobDetails}
+        onApplicationSuccess={handleApplicationSuccess}
+      />
     </div>
   )
 }
