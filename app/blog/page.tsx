@@ -143,40 +143,53 @@ export default function BlogPage() {
       <SiteHeader />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-16 relative overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl opacity-30 floating-element"></div>
+        <section className="relative py-16 overflow-hidden">
+          {/* Enhanced Background with better contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 z-0">
+            {/* Dark overlay for text readability */}
+            <div className="absolute inset-0 bg-black/50 z-10"></div>
+            {/* Subtle pattern overlay */}
+            <div
+              className="absolute inset-0 opacity-10 z-5"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23FFFFFF' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
+          </div>
+          
+          {/* Subtle animated shapes */}
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/10 rounded-full filter blur-3xl opacity-30 floating-element"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"
             style={{ animationDelay: "-3s" }}
           ></div>
           
-          <div className="container relative z-10">
-            <div className="inline-block mb-4 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer mx-auto">
+          <div className="container relative z-20">
+            <div className="inline-block mb-4 px-4 py-1.5 bg-primary/20 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer mx-auto border border-white/20">
               <CalendarIcon className="inline-block h-4 w-4 mr-2" />
               {locale === 'fr' ? 'Blog & Ressources' : 'Blog & Resources'}
             </div>
             
-            <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
               <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 {locale === 'fr' ? 'Actualités et perspectives sur le recrutement canadien' : 'Canadian Recruitment News & Insights'}
               </span>
             </h1>
             
-            <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-center text-white/90 mb-8 max-w-2xl mx-auto">
               {locale === 'fr' 
                 ? 'Découvrez les dernières tendances, conseils et informations sur le recrutement, l\'immigration et le marché du travail canadien.'
                 : 'Discover the latest trends, tips, and insights on recruitment, immigration, and the Canadian job market.'}
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-xl mx-auto bg-background/80 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-4">
+            <div className="max-w-xl mx-auto bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-white/30 p-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input 
                   type="text" 
                   placeholder={locale === 'fr' ? "Rechercher des articles..." : "Search articles..."} 
-                  className="pl-10 bg-background/50 backdrop-blur-sm border-white/20 focus:border-primary/50"
+                  className="pl-10 bg-white border-gray-200 focus:border-primary/50"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />

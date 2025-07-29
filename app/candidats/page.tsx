@@ -115,57 +115,68 @@ export default function CandidatsPage() {
       <main className="flex-1">
         {/* Hero Section with Enhanced Design */}
         <section className="relative py-20 md:py-32 overflow-hidden">
-          {/* Background with gradient and pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/80 to-secondary/20 z-0">
+          {/* Enhanced Background with better contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 z-0">
+            {/* Dark overlay for text readability */}
+            <div className="absolute inset-0 bg-black/60 z-10"></div>
+            {/* Subtle pattern overlay */}
             <div
-              className="absolute inset-0 opacity-30"
+              className="absolute inset-0 opacity-10 z-5"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23031F28' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23FFFFFF' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}
             />
           </div>
 
-          {/* Animated shapes */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl opacity-50 floating-element"></div>
+          {/* Subtle animated shapes */}
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/10 rounded-full filter blur-3xl opacity-50 floating-element"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"
             style={{ animationDelay: "-3s" }}
           ></div>
 
-          <div className="container relative z-10">
+          <div className="container relative z-20">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <div className="space-y-8">
-                <div className="inline-block mb-6 px-6 py-2 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer">
+                <div className="inline-block mb-6 px-6 py-2 bg-primary/20 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer border border-white/20">
                   <Users className="inline-block h-4 w-4 mr-2" />
                   {locale === 'fr' ? 'Plateforme Candidats' : 'Candidate Platform'}
                 </div>
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-white">
                   {locale === 'fr' ? 'Trouvez Votre' : 'Find Your'}{" "}
                   <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                     {locale === 'fr' ? 'Carrière Idéale' : 'Dream Career'}
                   </span>
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
+                <p className="text-xl text-white/90 leading-relaxed">
                   {locale === 'fr' 
                     ? 'Découvrez des milliers d\'opportunités d\'emploi, gérez vos candidatures et accélérez votre croissance professionnelle avec notre plateforme intelligente.'
                     : 'Discover thousands of job opportunities, manage your applications, and accelerate your professional growth with our intelligent platform.'}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="magic-button" asChild>
+                  <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0" asChild>
                     <Link href="/candidate/emplois">
-                      <Search className="mr-2 h-5 w-5" />
-                      {locale === 'fr' ? 'Rechercher des Emplois' : 'Search Jobs'}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                      <Search className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                      <span className="relative z-10 font-semibold">
+                        {locale === 'fr' ? 'Rechercher des Emplois' : 'Search Jobs'}
+                      </span>
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
                     </Link>
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
-                    className="rounded-xl border-white/20 backdrop-blur-sm hover:bg-white/10"
+                    className="group relative overflow-hidden bg-white/90 backdrop-blur-sm text-primary border-2 border-primary/20 hover:border-primary/40 hover:bg-white shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl"
                     asChild
                   >
                     <Link href="/register">
-                      {locale === 'fr' ? 'Créer un Compte' : 'Create Account'}
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                      <span className="relative z-10 font-semibold">
+                        {locale === 'fr' ? 'Créer un Compte' : 'Create Account'}
+                      </span>
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-110" />
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl"></div>
                     </Link>
                   </Button>
                 </div>
@@ -306,15 +317,20 @@ export default function CandidatsPage() {
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href="/candidate/emplois"
-                    className="inline-flex items-center text-sm font-medium text-primary group"
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="group relative overflow-hidden bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 text-primary border border-primary/20 hover:border-primary/40 shadow-md hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:scale-105 rounded-xl self-start"
+                    asChild
                   >
-                    <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                      {locale === 'fr' ? 'En savoir plus' : 'Learn More'}
-                    </span>
-                    <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
+                    <Link href="/candidate/emplois">
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <span className="relative z-10 font-medium">
+                        {locale === 'fr' ? 'En savoir plus' : 'Learn More'}
+                      </span>
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-110" />
+                    </Link>
+                  </Button>
                 </div>
               );
               })}
@@ -423,24 +439,31 @@ export default function CandidatsPage() {
                   <div className="flex flex-col sm:flex-row justify-center gap-4">
                     <Button
                       size="lg"
-                      variant="secondary"
-                      className="rounded-xl bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                      className="group relative overflow-hidden bg-gradient-to-r from-white via-white to-white/95 text-primary hover:text-primary/90 shadow-2xl hover:shadow-3xl hover:shadow-white/30 transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 rounded-2xl border-0 font-bold"
                       asChild
                     >
                       <Link href="/register">
-                        <Users className="mr-2 h-5 w-5" />
-                        {locale === 'fr' ? 'Créer un Compte Gratuit' : 'Create Free Account'}
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <Users className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-125" />
+                        <span className="relative z-10">
+                          {locale === 'fr' ? 'Créer un Compte Gratuit' : 'Create Free Account'}
+                        </span>
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white to-white/90 opacity-0 group-hover:opacity-30 transition-opacity duration-300 blur-xl"></div>
                       </Link>
                     </Button>
                     <Button
                       variant="outline"
                       size="lg"
-                      className="rounded-xl bg-transparent text-white border-white/30 hover:bg-white/10 transition-all duration-300"
+                      className="group relative overflow-hidden bg-transparent/10 backdrop-blur-sm text-white border-2 border-white/40 hover:border-white/70 hover:bg-white/20 shadow-xl hover:shadow-2xl hover:shadow-white/20 transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 rounded-2xl font-semibold"
                       asChild
                     >
                       <Link href="/candidate/emplois">
-                        {locale === 'fr' ? 'Parcourir les Emplois' : 'Browse Jobs'}
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <span className="relative z-10">
+                          {locale === 'fr' ? 'Parcourir les Emplois' : 'Browse Jobs'}
+                        </span>
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-2 group-hover:scale-125" />
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/20 opacity-0 group-hover:opacity-30 transition-opacity duration-300 blur-xl"></div>
                       </Link>
                     </Button>
                   </div>

@@ -22,6 +22,11 @@ const config = {
       fontFamily: {
         sans: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"],
       },
+      boxShadow: {
+        '3xl': '0 35px 60px -12px rgba(0, 0, 0, 0.25)',
+        'glow': '0 0 20px rgba(0, 0, 0, 0.15)',
+        'glow-lg': '0 0 40px rgba(0, 0, 0, 0.15)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

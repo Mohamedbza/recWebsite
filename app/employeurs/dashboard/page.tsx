@@ -60,12 +60,39 @@ function DashboardContent() {
         employerApiService.getApplications({ limit: 100 })
       ])
 
-      setDashboardStats(statsData)
+      // Validate stats data structure before setting it
+      if (statsData && typeof statsData === 'object') {
+        // Ensure the stats object has the required structure
+        const validatedStats = {
+          jobs: {
+            total: statsData.jobs?.total ?? 0,
+            active: statsData.jobs?.active ?? 0,
+            draft: statsData.jobs?.draft ?? 0,
+            closed: statsData.jobs?.closed ?? 0,
+          },
+          applications: {
+            total: statsData.applications?.total ?? 0,
+            new: statsData.applications?.new ?? 0,
+            reviewed: statsData.applications?.reviewed ?? 0,
+            interview: statsData.applications?.interview ?? 0,
+            hired: statsData.applications?.hired ?? 0,
+            rejected: statsData.applications?.rejected ?? 0,
+            recent: statsData.applications?.recent ?? 0,
+          },
+          topJobs: Array.isArray(statsData.topJobs) ? statsData.topJobs : [],
+        }
+        setDashboardStats(validatedStats)
+      } else {
+        console.warn('Invalid stats data received:', statsData)
+        setDashboardStats(null)
+      }
+
       setJobs(jobsData.jobs)
       setApplications(applicationsData.applications)
     } catch (err) {
       console.error('Failed to load dashboard data:', err)
       setError(err instanceof Error ? err.message : 'Failed to load data')
+      setDashboardStats(null)
     } finally {
       setIsLoading(false)
     }
@@ -307,8 +334,32 @@ function DashboardContent() {
                 ) : (
                   <>
                     {/* Quick Stats */}
-                    {dashboardStats && (
+                    {dashboardStats ? (
                       <DashboardStats stats={dashboardStats} />
+                    ) : isLoading ? (
+                      <DashboardStats stats={{} as any} isLoading={true} />
+                    ) : error ? (
+                      <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+                        <div className="flex items-center gap-2">
+                          <div className="h-5 w-5 text-red-500">⚠️</div>
+                          <h3 className="font-medium text-red-800">
+                            {locale === 'fr' ? 'Erreur de chargement' : 'Loading Error'}
+                          </h3>
+                        </div>
+                        <p className="mt-1 text-sm text-red-700">
+                          {locale === 'fr' 
+                            ? 'Impossible de charger les statistiques du tableau de bord.'
+                            : 'Unable to load dashboard statistics.'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <p className="text-center text-gray-500">
+                          {locale === 'fr' 
+                            ? 'Aucune donnée statistique disponible.'
+                            : 'No statistical data available.'}
+                        </p>
+                      </div>
                     )}
 
                     {/* Recent Activity */}

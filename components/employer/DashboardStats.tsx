@@ -103,9 +103,29 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
     );
   }
 
-  // Calculate conversion rate
-  const conversionRate = stats.applications.total > 0 
-    ? ((stats.applications.hired / stats.applications.total) * 100).toFixed(1)
+  // Defensive programming: provide default values if stats structure is incomplete
+  const safeStats = {
+    jobs: {
+      total: stats?.jobs?.total ?? 0,
+      active: stats?.jobs?.active ?? 0,
+      draft: stats?.jobs?.draft ?? 0,
+      closed: stats?.jobs?.closed ?? 0,
+    },
+    applications: {
+      total: stats?.applications?.total ?? 0,
+      new: stats?.applications?.new ?? 0,
+      reviewed: stats?.applications?.reviewed ?? 0,
+      interview: stats?.applications?.interview ?? 0,
+      hired: stats?.applications?.hired ?? 0,
+      rejected: stats?.applications?.rejected ?? 0,
+      recent: stats?.applications?.recent ?? 0,
+    },
+    topJobs: stats?.topJobs ?? [],
+  };
+
+  // Calculate conversion rate safely
+  const conversionRate = safeStats.applications.total > 0 
+    ? ((safeStats.applications.hired / safeStats.applications.total) * 100).toFixed(1)
     : '0.0';
 
   return (
@@ -121,11 +141,11 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.jobs.active}</div>
+            <div className="text-2xl font-bold">{safeStats.jobs.active}</div>
             <p className="text-xs text-muted-foreground">
               {locale === 'fr' 
-                ? `${stats.jobs.total} au total`
-                : `${stats.jobs.total} total`
+                ? `${safeStats.jobs.total} au total`
+                : `${safeStats.jobs.total} total`
               }
             </p>
           </CardContent>
@@ -140,11 +160,11 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.applications.total}</div>
+            <div className="text-2xl font-bold">{safeStats.applications.total}</div>
             <p className="text-xs text-muted-foreground">
               {locale === 'fr' 
-                ? `${stats.applications.recent} récentes`
-                : `${stats.applications.recent} recent`
+                ? `${safeStats.applications.recent} récentes`
+                : `${safeStats.applications.recent} recent`
               }
             </p>
           </CardContent>
@@ -159,7 +179,7 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.applications.new}</div>
+            <div className="text-2xl font-bold">{safeStats.applications.new}</div>
             <p className="text-xs text-muted-foreground">
               {locale === 'fr' 
                 ? 'Cette semaine'
@@ -181,8 +201,8 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
             <div className="text-2xl font-bold">{conversionRate}%</div>
             <p className="text-xs text-muted-foreground">
               {locale === 'fr' 
-                ? `${stats.applications.hired} embauchés`
-                : `${stats.applications.hired} hired`
+                ? `${safeStats.applications.hired} embauchés`
+                : `${safeStats.applications.hired} hired`
               }
             </p>
           </CardContent>
@@ -201,7 +221,7 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
           <CardContent>
             <div className="space-y-4">
               {Object.entries(applicationStatusConfig).map(([status, config]) => {
-                const count = stats.applications[status as keyof typeof stats.applications];
+                const count = safeStats.applications[status as keyof typeof safeStats.applications];
                 const Icon = config.icon;
                 
                 return (
@@ -223,8 +243,8 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
                       </div>
                     </div>
                     <Badge variant="secondary">
-                      {stats.applications.total > 0 
-                        ? `${((count / stats.applications.total) * 100).toFixed(1)}%`
+                      {safeStats.applications.total > 0 
+                        ? `${((count / safeStats.applications.total) * 100).toFixed(1)}%`
                         : '0%'
                       }
                     </Badge>
@@ -244,8 +264,8 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {stats.topJobs.length > 0 ? (
-                stats.topJobs.map((job, index) => (
+              {safeStats.topJobs.length > 0 ? (
+                safeStats.topJobs.map((job, index) => (
                   <div key={job._id} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
@@ -262,8 +282,8 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
                       </div>
                     </div>
                     <Badge variant="outline">
-                      {stats.applications.total > 0 
-                        ? `${((job.count / stats.applications.total) * 100).toFixed(1)}%`
+                      {safeStats.applications.total > 0 
+                        ? `${((job.count / safeStats.applications.total) * 100).toFixed(1)}%`
                         : '0%'
                       }
                     </Badge>
@@ -295,26 +315,26 @@ export default function DashboardStats({ stats, isLoading = false }: DashboardSt
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">{stats.jobs.active}</div>
+              <div className="text-2xl font-bold text-green-600">{safeStats.jobs.active}</div>
               <p className="text-sm text-green-700">
                 {locale === 'fr' ? 'Actives' : 'Active'}
               </p>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-600">{stats.jobs.draft}</div>
+              <div className="text-2xl font-bold text-gray-600">{safeStats.jobs.draft}</div>
               <p className="text-sm text-gray-700">
                 {locale === 'fr' ? 'Brouillons' : 'Draft'}
               </p>
             </div>
             <div className="text-center p-4 bg-red-50 rounded-lg">
-              <div className="text-2xl font-bold text-red-600">{stats.jobs.closed}</div>
+              <div className="text-2xl font-bold text-red-600">{safeStats.jobs.closed}</div>
               <p className="text-sm text-red-700">
                 {locale === 'fr' ? 'Fermées' : 'Closed'}
               </p>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
               <div className="text-2xl font-bold text-orange-600">
-                {stats.jobs.total - stats.jobs.active - stats.jobs.draft - stats.jobs.closed}
+                {safeStats.jobs.total - safeStats.jobs.active - safeStats.jobs.draft - safeStats.jobs.closed}
               </div>
               <p className="text-sm text-orange-700">
                 {locale === 'fr' ? 'Autres' : 'Other'}

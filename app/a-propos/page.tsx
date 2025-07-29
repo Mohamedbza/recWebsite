@@ -30,27 +30,30 @@ export default function AProposPage() {
       <main className="flex-1">
         {/* Hero Section with Enhanced Design */}
         <section className="relative py-20 md:py-32 overflow-hidden">
-          {/* Background with gradient and pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/80 to-secondary/20 z-0">
+          {/* Enhanced Background with better contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 z-0">
+            {/* Dark overlay for text readability */}
+            <div className="absolute inset-0 bg-black/60 z-10"></div>
+            {/* Subtle pattern overlay */}
             <div
-              className="absolute inset-0 opacity-30"
+              className="absolute inset-0 opacity-10 z-5"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%230F766E' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23FFFFFF' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}
             />
           </div>
 
-          {/* Animated shapes */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl opacity-50 floating-element"></div>
+          {/* Subtle animated shapes */}
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/10 rounded-full filter blur-3xl opacity-50 floating-element"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"
             style={{ animationDelay: "-3s" }}
           ></div>
 
-          <div className="container relative z-10">
+          <div className="container relative z-20">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <div className="space-y-8">
-                <div className="inline-block mb-6 px-6 py-2 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer">
+                <div className="inline-block mb-6 px-6 py-2 bg-primary/20 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer border border-white/20">
                   <Heart className="inline-block h-4 w-4 mr-2" />
                   {t('about.hero.badge')}
                 </div>
@@ -59,10 +62,10 @@ export default function AProposPage() {
                     {t('about.hero.title')}
                   </span>
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
+                <p className="text-xl text-white/90 leading-relaxed">
                   {t('about.hero.description')}
                 </p>
-                <Button size="lg" className="magic-button">
+                <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0">
                   <Phone className="mr-2 h-5 w-5" />
                   {t('about.hero.contact_button')}
                 </Button>
