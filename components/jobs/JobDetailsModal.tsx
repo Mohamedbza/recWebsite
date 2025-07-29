@@ -82,8 +82,8 @@ export default function JobDetailsModal({
     setError(null)
     
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'
-      const response = await fetch(`${apiUrl}/job-applications/public/jobs/${jobId}`, {
+      const { config } = await import('../../config/environment');
+      const response = await fetch(`${config.apiUrl}/job-applications/public/jobs/${jobId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

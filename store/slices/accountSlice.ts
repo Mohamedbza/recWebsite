@@ -35,11 +35,10 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'
-      const normalizedBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/$/, '')}/api`
+      const { config } = await import('../../config/environment')
       const endpoint = userType === 'candidate' 
-        ? `${normalizedBase}/auth/candidates/login/public`
-        : `${normalizedBase}/auth/companies/login/public`
+        ? `${config.apiUrl}/auth/candidates/login/public`
+        : `${config.apiUrl}/auth/companies/login/public`
 
       const response = await fetch(endpoint, {
         method: 'POST',

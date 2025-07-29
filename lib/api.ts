@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+import { config } from '../config/environment';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -11,7 +11,7 @@ class ApiService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = API_BASE_URL;
+    this.baseUrl = config.apiUrl;
   }
 
   private async request<T>(
@@ -168,8 +168,7 @@ export const searchJobs = async (params: JobSearchParams) => {
   if (params.experienceLevel) queryParams.append('experienceLevel', params.experienceLevel);
   if (params.skills && params.skills.length > 0) queryParams.append('skills', params.skills.join(','));
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-  const response = await fetch(`${apiUrl}/jobs/public?${queryParams.toString()}`);
+  const response = await fetch(`${config.apiUrl}/jobs/public?${queryParams.toString()}`);
   
   if (!response.ok) {
     throw new Error('Failed to fetch jobs');
@@ -187,8 +186,7 @@ export interface JobApplicationData {
 
 // Create job application API function
 export const createJobApplication = async (applicationData: JobApplicationData, token: string) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-  const response = await fetch(`${apiUrl}/job-applications/public`, {
+  const response = await fetch(`${config.apiUrl}/job-applications/public`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -206,8 +204,7 @@ export const createJobApplication = async (applicationData: JobApplicationData, 
 
 // Get candidate's job applications API function
 export const getMyJobApplications = async (token: string, page: number = 1, limit: number = 10) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-  const response = await fetch(`${apiUrl}/job-applications/public/my-applications?page=${page}&limit=${limit}`, {
+  const response = await fetch(`${config.apiUrl}/job-applications/public/my-applications?page=${page}&limit=${limit}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -234,8 +231,7 @@ export const getMyJobApplications = async (token: string, page: number = 1, limi
 
 // Get recommended jobs for candidate based on skills
 export const getRecommendedJobs = async (token: string, limit: number = 5) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-  const response = await fetch(`${apiUrl}/job-applications/public/recommended-jobs?limit=${limit}`, {
+  const response = await fetch(`${config.apiUrl}/job-applications/public/recommended-jobs?limit=${limit}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -261,8 +257,7 @@ export const getRecommendedJobs = async (token: string, limit: number = 5) => {
 
 // Debug function to check jobs and candidates
 export const debugJobsAndCandidates = async (token: string) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-  const response = await fetch(`${apiUrl}/job-applications/public/debug`, {
+  const response = await fetch(`${config.apiUrl}/job-applications/public/debug`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },

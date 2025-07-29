@@ -257,7 +257,8 @@ export default function ProfilePage() {
       setIsSaving(true)
       setError(null)
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/candidate-profile/me`, {
+      const { config } = await import('../../../config/environment');
+      const response = await fetch(`${config.apiUrl}/candidate-profile/me`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
