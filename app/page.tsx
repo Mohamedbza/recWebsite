@@ -1,38 +1,37 @@
 "use client"
 
-import Link from "next/link"
+import { useState } from "react"
 import Image from "next/image"
-import { Search, MapPin, ChevronRight, Phone, ArrowRight, Sparkles } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { ArrowRight, ChevronRight, Search, MapPin, Users, Calendar, Target, Sparkles, CheckCircle, Star, Globe, Building, UserCheck } from "lucide-react"
+import { useLanguage } from "@/contexts/LanguageContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useLanguage } from "@/contexts/LanguageContext"
-import { useRouter } from "next/navigation"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import React from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { heroImage } from "@/config/assets"
 
-export default function Home() {
-  const { t } = useLanguage();
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedLocation, setSelectedLocation] = React.useState("all");
-  const [locations, setLocations] = React.useState<string[]>([]);
+const locations = ["Montreal", "Toronto", "Vancouver", "Calgary", "Ottawa"]
 
-  // Extract locations on mount (client only)
-  React.useEffect(() => {
-    const jobExamplesData = t('candidates.jobs.job_examples');
-    setLocations(Array.isArray(jobExamplesData)
-      ? Array.from(new Set(jobExamplesData.map((job: any) => job.location))).filter(Boolean)
-      : []);
-  }, [t]);
+export default function HomePage() {
+  const { t, locale } = useLanguage()
+  const router = useRouter()
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedLocation, setSelectedLocation] = useState("")
+  const [isLocalModalOpen, setIsLocalModalOpen] = useState(false)
+  const [isNationalModalOpen, setIsNationalModalOpen] = useState(false)
+  const [isInternationalModalOpen, setIsInternationalModalOpen] = useState(false)
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (searchTerm) params.set("q", searchTerm);
-    if (selectedLocation && selectedLocation !== "all") params.set("location", selectedLocation);
-    router.push(`/candidate/emplois?${params.toString()}`);
-  };
+    e.preventDefault()
+    const params = new URLSearchParams()
+    if (searchTerm) params.set('search', searchTerm)
+    if (selectedLocation && selectedLocation !== 'all') params.set('location', selectedLocation)
+    router.push(`/candidats?${params.toString()}`)
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -176,15 +175,128 @@ export default function Home() {
                 <p className="mt-2 text-muted-foreground">
                   {t('services.local.description')}
                 </p>
-                <Link
-                  href="/services/recrutement-local"
-                  className="mt-4 inline-flex items-center text-sm font-medium text-primary group"
-                >
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                    {t('services.more')}
-                  </span>
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                <Dialog open={isLocalModalOpen} onOpenChange={setIsLocalModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="mt-4 inline-flex items-center text-sm font-medium text-primary group"
+                    >
+                      <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
+                        {t('services.more')}
+                      </span>
+                      <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Users className="h-6 w-6 text-primary" />
+                        </div>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
+                          {locale === 'fr' ? 'Local' : 'Local'}
+                        </Badge>
+                      </div>
+                      <DialogTitle className="text-2xl font-bold">
+                        {locale === 'fr' ? 'Recrutement Local' : 'Local Recruitment'}
+                      </DialogTitle>
+                      <DialogDescription className="text-lg">
+                        {locale === 'fr' 
+                          ? 'Accompagnement personnalisé avec aide à la rédaction de CV et préparation aux entretiens.'
+                          : 'Personalized support with resume writing assistance and interview preparation.'}
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* Key Features */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Caractéristiques Principales' : 'Key Features'}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {[
+                            locale === 'fr' ? 'Accompagnement personnalisé' : 'Personalized support',
+                            locale === 'fr' ? 'Aide à la rédaction de CV' : 'Resume writing assistance', 
+                            locale === 'fr' ? 'Préparation aux entretiens' : 'Interview preparation',
+                            locale === 'fr' ? 'Suivi post-placement' : 'Post-placement follow-up',
+                            locale === 'fr' ? 'Coaching professionnel' : 'Professional coaching',
+                            locale === 'fr' ? 'Réseau local d\'employeurs' : 'Local employer network'
+                          ].map((feature, index) => (
+                            <div key={index} className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
+                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+                              <span className="text-sm">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Process Steps */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <Target className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Notre Processus' : 'Our Process'}
+                        </h3>
+                        <div className="space-y-3">
+                          {[
+                            {
+                              step: '1',
+                              title: locale === 'fr' ? 'Évaluation initiale' : 'Initial Assessment',
+                              desc: locale === 'fr' ? 'Analyse de votre profil et de vos objectifs' : 'Analysis of your profile and objectives'
+                            },
+                            {
+                              step: '2', 
+                              title: locale === 'fr' ? 'Optimisation du CV' : 'Resume Optimization',
+                              desc: locale === 'fr' ? 'Amélioration de votre CV pour maximiser vos chances' : 'Enhance your resume to maximize your chances'
+                            },
+                            {
+                              step: '3',
+                              title: locale === 'fr' ? 'Recherche d\'emplois' : 'Job Search',
+                              desc: locale === 'fr' ? 'Identification des opportunités locales pertinentes' : 'Identify relevant local opportunities'
+                            },
+                            {
+                              step: '4',
+                              title: locale === 'fr' ? 'Préparation aux entretiens' : 'Interview Preparation', 
+                              desc: locale === 'fr' ? 'Coaching personnalisé pour réussir vos entretiens' : 'Personalized coaching to ace your interviews'
+                            }
+                          ].map((item) => (
+                            <div key={item.step} className="flex gap-4 p-4 border border-primary/20 rounded-lg">
+                              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm">
+                                {item.step}
+                              </div>
+                              <div>
+                                <h4 className="font-medium">{item.title}</h4>
+                                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* CTA Section */}
+                      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6">
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold mb-2">
+                            {locale === 'fr' ? 'Prêt à commencer?' : 'Ready to get started?'}
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
+                            {locale === 'fr' 
+                              ? 'Contactez-nous dès aujourd\'hui pour débuter votre recherche d\'emploi local.'
+                              : 'Contact us today to begin your local job search journey.'}
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <Button onClick={() => router.push('/contact')} className="bg-primary hover:bg-primary/90">
+                              {locale === 'fr' ? 'Nous Contacter' : 'Contact Us'}
+                            </Button>
+                            <Button variant="outline" onClick={() => setIsLocalModalOpen(false)}>
+                              {locale === 'fr' ? 'Fermer' : 'Close'}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {/* Service Card 2 */}
@@ -211,15 +323,153 @@ export default function Home() {
                 <p className="mt-2 text-muted-foreground">
                   {t('services.national.description')}
                 </p>
-                <Link
-                  href="/services/recrutement-national"
-                  className="mt-4 inline-flex items-center text-sm font-medium text-primary group"
-                >
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                    {t('services.more')}
-                  </span>
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                <Dialog open={isNationalModalOpen} onOpenChange={setIsNationalModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="mt-4 inline-flex items-center text-sm font-medium text-primary group"
+                    >
+                      <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
+                        {t('services.more')}
+                      </span>
+                      <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Building className="h-6 w-6 text-primary" />
+                        </div>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
+                          {locale === 'fr' ? 'National' : 'National'}
+                        </Badge>
+                      </div>
+                      <DialogTitle className="text-2xl font-bold">
+                        {locale === 'fr' ? 'Recrutement National' : 'National Recruitment'}
+                      </DialogTitle>
+                      <DialogDescription className="text-lg">
+                        {locale === 'fr' 
+                          ? 'Service adapté aux besoins professionnels avec une couverture à travers tout le Canada.'
+                          : 'Service adapted to professional needs with coverage throughout Canada.'}
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* Key Features */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Avantages Clés' : 'Key Benefits'}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {[
+                            locale === 'fr' ? 'Couverture nationale complète' : 'Complete national coverage',
+                            locale === 'fr' ? 'Mobilité interrégionale' : 'Interregional mobility', 
+                            locale === 'fr' ? 'Réseau d\'employeurs étendu' : 'Extended employer network',
+                            locale === 'fr' ? 'Opportunités diversifiées' : 'Diversified opportunities',
+                            locale === 'fr' ? 'Support à la relocalisation' : 'Relocation support',
+                            locale === 'fr' ? 'Négociation salariale' : 'Salary negotiation'
+                          ].map((feature, index) => (
+                            <div key={index} className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
+                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+                              <span className="text-sm">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Coverage Areas */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <Globe className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Zones de Couverture' : 'Coverage Areas'}
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {[
+                            { name: 'Québec', cities: ['Montréal', 'Québec', 'Gatineau'] },
+                            { name: 'Ontario', cities: ['Toronto', 'Ottawa', 'Hamilton'] },
+                            { name: 'Alberta', cities: ['Calgary', 'Edmonton', 'Red Deer'] },
+                            { name: 'Colombie-Britannique', cities: ['Vancouver', 'Victoria', 'Surrey'] }
+                          ].map((province, index) => (
+                            <div key={index} className="p-3 border border-primary/20 rounded-lg">
+                              <h4 className="font-medium text-sm mb-2">{province.name}</h4>
+                              <ul className="text-xs text-muted-foreground space-y-1">
+                                {province.cities.map((city, cityIndex) => (
+                                  <li key={cityIndex}>• {city}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Process Steps */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <Target className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Processus National' : 'National Process'}
+                        </h3>
+                        <div className="space-y-3">
+                          {[
+                            {
+                              step: '1',
+                              title: locale === 'fr' ? 'Analyse du marché national' : 'National Market Analysis',
+                              desc: locale === 'fr' ? 'Étude des opportunités à travers le Canada' : 'Study opportunities across Canada'
+                            },
+                            {
+                              step: '2', 
+                              title: locale === 'fr' ? 'Matching géographique' : 'Geographic Matching',
+                              desc: locale === 'fr' ? 'Identification des régions correspondant à vos critères' : 'Identify regions matching your criteria'
+                            },
+                            {
+                              step: '3',
+                              title: locale === 'fr' ? 'Candidatures stratégiques' : 'Strategic Applications',
+                              desc: locale === 'fr' ? 'Soumission ciblée dans les meilleures provinces' : 'Targeted submissions in the best provinces'
+                            },
+                            {
+                              step: '4',
+                              title: locale === 'fr' ? 'Support à la transition' : 'Transition Support', 
+                              desc: locale === 'fr' ? 'Accompagnement pour votre déménagement si nécessaire' : 'Support for your move if necessary'
+                            }
+                          ].map((item) => (
+                            <div key={item.step} className="flex gap-4 p-4 border border-primary/20 rounded-lg">
+                              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm">
+                                {item.step}
+                              </div>
+                              <div>
+                                <h4 className="font-medium">{item.title}</h4>
+                                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* CTA Section */}
+                      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6">
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold mb-2">
+                            {locale === 'fr' ? 'Explorez le Canada!' : 'Explore Canada!'}
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
+                            {locale === 'fr' 
+                              ? 'Découvrez des opportunités partout au Canada avec notre service national.'
+                              : 'Discover opportunities across Canada with our national service.'}
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <Button onClick={() => router.push('/contact')} className="bg-primary hover:bg-primary/90">
+                              {locale === 'fr' ? 'Commencer' : 'Get Started'}
+                            </Button>
+                            <Button variant="outline" onClick={() => setIsNationalModalOpen(false)}>
+                              {locale === 'fr' ? 'Fermer' : 'Close'}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {/* Service Card 3 */}
@@ -246,15 +496,191 @@ export default function Home() {
                 <p className="mt-2 text-muted-foreground">
                   {t('services.international.description')}
                 </p>
-                <Link
-                  href="/services/recrutement-international"
-                  className="mt-4 inline-flex items-center text-sm font-medium text-primary group"
-                >
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                    {t('services.more')}
-                  </span>
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                <Dialog open={isInternationalModalOpen} onOpenChange={setIsInternationalModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="mt-4 inline-flex items-center text-sm font-medium text-primary group"
+                    >
+                      <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
+                        {t('services.more')}
+                      </span>
+                      <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Globe className="h-6 w-6 text-primary" />
+                        </div>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
+                          {locale === 'fr' ? 'International' : 'International'}
+                        </Badge>
+                      </div>
+                      <DialogTitle className="text-2xl font-bold">
+                        {locale === 'fr' ? 'Recrutement International' : 'International Recruitment'}
+                      </DialogTitle>
+                      <DialogDescription className="text-lg">
+                        {locale === 'fr' 
+                          ? 'Accompagnement pour les procédures d\'immigration et aide à l\'intégration au Canada.'
+                          : 'Support for immigration procedures and assistance with integration in Canada.'}
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* Key Features */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Services Spécialisés' : 'Specialized Services'}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {[
+                            locale === 'fr' ? 'Support immigration complète' : 'Complete immigration support',
+                            locale === 'fr' ? 'Aide à l\'intégration' : 'Integration assistance', 
+                            locale === 'fr' ? 'Pré-sélection rigoureuse' : 'Rigorous pre-selection',
+                            locale === 'fr' ? 'Partenaires internationaux' : 'International partners',
+                            locale === 'fr' ? 'Support multiculturel' : 'Multicultural support',
+                            locale === 'fr' ? 'Validation des diplômes' : 'Credential validation'
+                          ].map((feature, index) => (
+                            <div key={index} className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
+                              <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+                              <span className="text-sm">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Immigration Programs */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <UserCheck className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Programmes d\'Immigration' : 'Immigration Programs'}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {[
+                            { 
+                              name: locale === 'fr' ? 'Entrée Express' : 'Express Entry',
+                              desc: locale === 'fr' ? 'Système fédéral de sélection' : 'Federal selection system',
+                              processing: '6-8 ' + (locale === 'fr' ? 'mois' : 'months')
+                            },
+                            { 
+                              name: locale === 'fr' ? 'Programme des Candidats Provinciaux' : 'Provincial Nominee Program',
+                              desc: locale === 'fr' ? 'Nomination provinciale' : 'Provincial nomination',
+                              processing: '12-18 ' + (locale === 'fr' ? 'mois' : 'months')
+                            },
+                            { 
+                              name: locale === 'fr' ? 'Travailleur Qualifié Québec' : 'Quebec Skilled Worker',
+                              desc: locale === 'fr' ? 'Programme du Québec' : 'Quebec program',
+                              processing: '10-14 ' + (locale === 'fr' ? 'mois' : 'months')
+                            },
+                            { 
+                              name: locale === 'fr' ? 'Permis de Travail' : 'Work Permit',
+                              desc: locale === 'fr' ? 'Autorisation temporaire' : 'Temporary authorization',
+                              processing: '2-4 ' + (locale === 'fr' ? 'mois' : 'months')
+                            }
+                          ].map((program, index) => (
+                            <div key={index} className="p-4 border border-primary/20 rounded-lg">
+                              <h4 className="font-medium mb-1">{program.name}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">{program.desc}</p>
+                              <Badge variant="outline" className="text-xs">
+                                {locale === 'fr' ? 'Traitement: ' : 'Processing: '}{program.processing}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Global Reach */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <Star className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Portée Internationale' : 'Global Reach'}
+                        </h3>
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-3 text-center">
+                          {[
+                            { flag: '🇫🇷', country: 'France' },
+                            { flag: '🇺🇸', country: 'États-Unis' },
+                            { flag: '🇬🇧', country: 'Royaume-Uni' },
+                            { flag: '🇩🇪', country: 'Allemagne' },
+                            { flag: '🇮🇳', country: 'Inde' },
+                            { flag: '🇧🇷', country: 'Brésil' }
+                          ].map((location, index) => (
+                            <div key={index} className="p-3 bg-primary/5 rounded-lg">
+                              <div className="text-2xl mb-1">{location.flag}</div>
+                              <div className="text-xs font-medium">{location.country}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Process Steps */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          <Target className="h-5 w-5 text-primary" />
+                          {locale === 'fr' ? 'Processus International' : 'International Process'}
+                        </h3>
+                        <div className="space-y-3">
+                          {[
+                            {
+                              step: '1',
+                              title: locale === 'fr' ? 'Évaluation d\'éligibilité' : 'Eligibility Assessment',
+                              desc: locale === 'fr' ? 'Analyse de votre profil pour l\'immigration' : 'Analysis of your profile for immigration'
+                            },
+                            {
+                              step: '2', 
+                              title: locale === 'fr' ? 'Préparation des documents' : 'Document Preparation',
+                              desc: locale === 'fr' ? 'Compilation et validation de tous les documents requis' : 'Compilation and validation of all required documents'
+                            },
+                            {
+                              step: '3',
+                              title: locale === 'fr' ? 'Soumission de candidature' : 'Application Submission',
+                              desc: locale === 'fr' ? 'Dépôt officiel auprès des autorités canadiennes' : 'Official submission to Canadian authorities'
+                            },
+                            {
+                              step: '4',
+                              title: locale === 'fr' ? 'Intégration au Canada' : 'Integration in Canada', 
+                              desc: locale === 'fr' ? 'Support pour votre installation et recherche d\'emploi' : 'Support for your settlement and job search'
+                            }
+                          ].map((item) => (
+                            <div key={item.step} className="flex gap-4 p-4 border border-primary/20 rounded-lg">
+                              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm">
+                                {item.step}
+                              </div>
+                              <div>
+                                <h4 className="font-medium">{item.title}</h4>
+                                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* CTA Section */}
+                      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6">
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold mb-2">
+                            {locale === 'fr' ? 'Votre Nouveau Départ au Canada!' : 'Your New Beginning in Canada!'}
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
+                            {locale === 'fr' 
+                              ? 'Commencez votre parcours d\'immigration avec notre expertise internationale.'
+                              : 'Start your immigration journey with our international expertise.'}
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <Button onClick={() => router.push('/contact')} className="bg-primary hover:bg-primary/90">
+                              {locale === 'fr' ? 'Consultation Gratuite' : 'Free Consultation'}
+                            </Button>
+                            <Button variant="outline" onClick={() => setIsInternationalModalOpen(false)}>
+                              {locale === 'fr' ? 'Fermer' : 'Close'}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
