@@ -118,11 +118,24 @@ export default function EmployeursPage() {
                   "from-pink-500/20 to-pink-600/20"
                 ];
                 const color = colors[index % colors.length];
+                
+                // Industry-specific images for employers/recruiters perspective
+                const industryImages = [
+                  "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Technology team collaboration
+                  "https://images.unsplash.com/photo-1538108149393-fbbd81895907?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Healthcare professionals team
+                  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Finance business meeting
+                  "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Education classroom setting
+                  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Marketing team strategy
+                  "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Engineering team at work
+                  "https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Design team collaboration
+                  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"  // Sales team presentation
+                ];
+                
                 return (
                 <div key={index} className="magic-card group overflow-hidden">
                   <div className={`h-48 bg-gradient-to-br ${color} relative`}>
                     <Image
-                      src="/placeholder.svg?height=300&width=400"
+                      src={industryImages[index % industryImages.length]}
                       alt={industry}
                       width={400}
                       height={300}
@@ -158,12 +171,12 @@ export default function EmployeursPage() {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {/* Solution 1 */}
+              {/* Solution 1 - Local Recruitment */}
               <div className="magic-card p-8 group">
                 <div className="mb-6 relative">
                   <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                     <Image
-                      src="/placeholder.svg?height=300&width=500"
+                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                       alt={t('employers.solutions.service_types.local.title')}
                       width={500}
                       height={300}
@@ -197,12 +210,12 @@ export default function EmployeursPage() {
                 </Link>
               </div>
 
-              {/* Solution 2 */}
+              {/* Solution 2 - National Recruitment */}
               <div className="magic-card p-8 group">
                 <div className="mb-6 relative">
                   <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                     <Image
-                      src="/placeholder.svg?height=300&width=500"
+                      src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                       alt={t('employers.solutions.service_types.national.title')}
                       width={500}
                       height={300}
@@ -236,12 +249,12 @@ export default function EmployeursPage() {
                 </Link>
               </div>
 
-              {/* Solution 3 */}
+              {/* Solution 3 - International Recruitment */}
               <div className="magic-card p-8 group">
                 <div className="mb-6 relative">
                   <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                     <Image
-                      src="/placeholder.svg?height=300&width=500"
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                       alt={t('employers.solutions.service_types.international.title')}
                       width={500}
                       height={300}

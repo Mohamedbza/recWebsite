@@ -9,6 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext"
 import { useRouter } from "next/navigation"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import React from "react"
+import { heroImage } from "@/config/assets"
 
 export default function Home() {
   const { t } = useLanguage();
@@ -36,47 +37,62 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        {/* Hero Section with Gradient Background */}
+        {/* Hero Section with Video Background */}
         <section className="relative py-28 md:py-44 overflow-hidden">
-          {/* Background with gradient and pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/80 to-secondary/20 z-0">
-            <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%230F766E' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}
-            />
+          {/* Hero Background Video */}
+          <div className="absolute inset-0 z-0">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              poster="/images/hero-background.png"
+            >
+              <source src="https://videos.pexels.com/video-files/853870/853870-hd_1920_1080_25fps.mp4" type="video/mp4" />
+              {/* Fallback for browsers that don't support video */}
+              <Image
+                src={heroImage}
+                alt="Hero Background"
+                fill
+                className="object-cover object-center"
+                priority
+                quality={100}
+              />
+            </video>
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40 z-10"></div>
           </div>
 
           {/* Animated shapes */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl opacity-50 floating-element"></div>
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-white/10 rounded-full filter blur-3xl opacity-30 floating-element z-20"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/10 rounded-full filter blur-3xl opacity-50 floating-element"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-white/10 rounded-full filter blur-3xl opacity-30 floating-element z-20"
             style={{ animationDelay: "-3s" }}
           ></div>
           <div
-            className="absolute top-1/3 right-1/4 w-32 h-32 bg-primary/5 rounded-full filter blur-xl opacity-30 floating-element"
+            className="absolute top-1/3 right-1/4 w-32 h-32 bg-white/5 rounded-full filter blur-xl opacity-20 floating-element z-20"
             style={{ animationDelay: "-1.5s" }}
           ></div>
           <div
-            className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-secondary/5 rounded-full filter blur-xl opacity-30 floating-element"
+            className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-white/5 rounded-full filter blur-xl opacity-20 floating-element z-20"
             style={{ animationDelay: "-4.5s" }}
           ></div>
 
-          <div className="container relative z-10 flex flex-col items-center text-center">
-            <div className="inline-block mb-6 px-6 py-2 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer">
+          <div className="container relative z-30 flex flex-col items-center text-center">
+            <div className="inline-block mb-6 px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer">
               <Sparkles className="inline-block h-4 w-4 mr-2" />
               Recrutement innovant et personnalisé
             </div>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6">
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
                 {t('home.hero.title')}
               </span>
             </h1>
-            <p className="mt-4 max-w-3xl text-lg text-muted-foreground mb-8">
+            <p className="mt-4 max-w-3xl text-lg text-white/90 mb-8">
               {t('home.hero.subtitle')}
             </p>
-            <div className="magic-card w-full max-w-3xl p-4 shadow-2xl">
+            <div className="magic-card w-full max-w-3xl p-4 shadow-2xl bg-white/95 backdrop-blur-sm">
               <form onSubmit={handleSearch}>
                 <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
                   <div className="relative">
@@ -109,7 +125,7 @@ export default function Home() {
             </div>
             <Button
               variant="outline"
-              className="mt-6 gap-1 rounded-full border-white/20 backdrop-blur-sm hover:bg-white/10"
+              className="mt-6 gap-1 rounded-full border-white/40 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-900 hover:text-gray-900"
             >
               {t('home.hero.learn_more')}
               <ChevronRight className="h-4 w-4" />

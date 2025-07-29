@@ -2,7 +2,23 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { MapPin, Phone, Mail, Sparkles, Users, Award, Target, Heart, Shield, Zap, Globe } from "lucide-react"
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Sparkles, 
+  Users, 
+  Award, 
+  Target, 
+  Heart, 
+  Shield, 
+  Zap, 
+  Globe,
+  Building2,
+  CheckCircle,
+  Calendar,
+  Star
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { Badge } from "@/components/ui/badge"
@@ -303,33 +319,42 @@ export default function AProposPage() {
                 { 
                   number: t('about.stats.stats.0.number'), 
                   label: t('about.stats.stats.0.label'), 
-                  icon: t('about.stats.stats.0.icon')
+                  icon: Building2,
+                  color: "from-blue-500/20 to-blue-600/20"
                 },
                 { 
                   number: t('about.stats.stats.1.number'), 
                   label: t('about.stats.stats.1.label'), 
-                  icon: t('about.stats.stats.1.icon')
+                  icon: CheckCircle,
+                  color: "from-green-500/20 to-green-600/20"
                 },
                 { 
                   number: t('about.stats.stats.2.number'), 
                   label: t('about.stats.stats.2.label'), 
-                  icon: t('about.stats.stats.2.icon')
+                  icon: Calendar,
+                  color: "from-purple-500/20 to-purple-600/20"
                 },
                 { 
                   number: t('about.stats.stats.3.number'), 
                   label: t('about.stats.stats.3.label'), 
-                  icon: t('about.stats.stats.3.icon')
+                  icon: Star,
+                  color: "from-yellow-500/20 to-yellow-600/20"
                 },
-              ].map((stat, index) => (
-                <div
-                  key={index}
-                  className="text-center backdrop-blur-sm p-6 rounded-2xl border border-white/10 shadow-lg magic-card"
-                >
-                  <div className="text-3xl mb-2">{stat.icon}</div>
-                  <div className="text-4xl font-bold mb-2">{stat.number}</div>
-                  <div className="text-sm opacity-90">{stat.label}</div>
-                </div>
-              ))}
+              ].map((stat, index) => {
+                const IconComponent = stat.icon;
+                return (
+                  <div
+                    key={index}
+                    className="text-center backdrop-blur-sm p-6 rounded-2xl border border-white/10 shadow-lg magic-card group"
+                  >
+                    <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="text-4xl font-bold mb-2">{stat.number}</div>
+                    <div className="text-sm opacity-90">{stat.label}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

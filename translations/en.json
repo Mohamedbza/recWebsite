@@ -724,51 +724,65 @@
       "stats": [
         {
           "number": "500+",
-          "label": "Companies served",
-          "icon": "🏢"
+          "label": "Companies served"
         },
         {
           "number": "5000+",
-          "label": "Successful placements",
-          "icon": "✅"
+          "label": "Successful placements"
         },
         {
           "number": "15+",
-          "label": "Years of experience",
-          "icon": "📅"
+          "label": "Years of experience"
         },
         {
           "number": "98%",
-          "label": "Satisfaction rate",
-          "icon": "⭐"
+          "label": "Satisfaction rate"
+        }
+      ]
+    },
+    "branch_offices": {
+      "badge": "Our Offices",
+      "title": "Our Branches",
+      "description": "Present in major cities around the world to better serve you.",
+      "employees": "Employees",
+      "services": "Services",
+      "offices": [
+        {
+          "services": "Local and international recruitment - Headquarters"
+        },
+        {
+          "services": "Europe and Middle East recruitment - Technical specialties"
+        },
+        {
+          "services": "Middle East and Asia recruitment - Emerging sectors"
         }
       ]
     },
     "locations": {
       "badge": "Our Offices",
       "title": "Our Branches",
-      "description": "Present in the major cities of Canada to better serve you.",
+      "description": "Present in major cities around the world to better serve you.",
+      "view_map": "View on map",
       "locations": [
         {
-          "city": "Montreal (Headquarters)",
-          "address": "123 Main Street, Montreal, QC H3Z 2Y7",
+          "city": "Montreal (Canada)",
+          "address": "123 Main Street, Montreal, QC H3Z 2Y7, Canada",
           "phone": "+1 (514) 123-4567",
           "email": "montreal@recruitmentplus.ca"
         },
         {
-          "city": "Quebec City",
-          "address": "456 Des Forges Blvd, Quebec City, QC G1K 7P4",
-          "phone": "+1 (418) 987-6543",
-          "email": "quebec@recruitmentplus.ca"
+          "city": "Istanbul (Turkey)",
+          "address": "Maslak Mahallesi, Büyükdere Cd. No:255, 34398 Şişli/Istanbul, Turkey",
+          "phone": "+90 (212) 345-6789",
+          "email": "istanbul@recruitmentplus.com"
         },
         {
-          "city": "Toronto",
-          "address": "789 Bay Street, Toronto, ON M5G 2N8",
-          "phone": "+1 (416) 555-7890",
-          "email": "toronto@recruitmentplus.ca"
+          "city": "Dubai (UAE)",
+          "address": "Sheikh Zayed Road, Business Bay, Dubai, United Arab Emirates",
+          "phone": "+971 (4) 567-8900",
+          "email": "dubai@recruitmentplus.ae"
         }
-      ],
-      "view_map": "View on Map"
+      ]
     },
     "contact": {
       "title": "Let's Talk",

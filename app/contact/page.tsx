@@ -12,7 +12,15 @@ import {
   User, 
   MapPin, 
   Building, 
-  CheckCircle2 
+  CheckCircle2,
+  Clock,
+  Globe,
+  Zap,
+  ArrowRight,
+  Star,
+  Users,
+  Calendar,
+  Headphones
 } from "lucide-react"
 import Link from "next/link"
 
@@ -38,7 +46,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import {
   Select,
   SelectContent,
@@ -113,6 +120,42 @@ export default function ContactPage() {
     }, 5000)
   }
 
+  // Contact methods data
+  const contactMethods = [
+    {
+      icon: Phone,
+      title: locale === 'fr' ? 'Appelez-nous' : 'Call Us',
+      description: locale === 'fr' ? 'Lun-Ven: 9h-17h' : 'Mon-Fri: 9am-5pm',
+      contact: '+1 (514) 123-4567',
+      action: 'tel:+15141234567',
+      color: 'from-blue-500 to-blue-600'
+    },
+    {
+      icon: Mail,
+      title: locale === 'fr' ? 'Écrivez-nous' : 'Email Us',
+      description: locale === 'fr' ? 'Réponse sous 24h' : 'Response within 24h',
+      contact: 'contact@recruitmentplus.ca',
+      action: 'mailto:contact@recruitmentplus.ca',
+      color: 'from-emerald-500 to-emerald-600'
+    },
+    {
+      icon: MessageSquare,
+      title: locale === 'fr' ? 'Chat en direct' : 'Live Chat',
+      description: locale === 'fr' ? 'Support instantané' : 'Instant support',
+      contact: locale === 'fr' ? 'Disponible maintenant' : 'Available now',
+      action: '#',
+      color: 'from-purple-500 to-purple-600'
+    },
+    {
+      icon: Calendar,
+      title: locale === 'fr' ? 'Rendez-vous' : 'Book Meeting',
+      description: locale === 'fr' ? 'Consultation gratuite' : 'Free consultation',
+      contact: locale === 'fr' ? 'Planifier maintenant' : 'Schedule now',
+      action: '#',
+      color: 'from-orange-500 to-orange-600'
+    }
+  ]
+
   // Office locations
   const officeLocations = [
     {
@@ -121,381 +164,436 @@ export default function ContactPage() {
         ? '123 Rue Principale, Montréal, QC H3Z 2Y7'
         : '123 Main Street, Montreal, QC H3Z 2Y7',
       phone: '+1 (514) 123-4567',
-      email: 'montreal@recruitmentplus.ca'
+      email: 'montreal@recruitmentplus.ca',
+      flag: '🇨🇦',
+      timezone: 'EST'
     },
     {
-      city: locale === 'fr' ? 'Québec' : 'Quebec City',
-      address: locale === 'fr'
-        ? '456 Boulevard des Forges, Québec, QC G1K 7P4'
-        : '456 Des Forges Blvd, Quebec City, QC G1K 7P4',
-      phone: '+1 (418) 987-6543',
-      email: 'quebec@recruitmentplus.ca'
+      city: 'Istanbul',
+      address: 'Levent Mahallesi, İstanbul, Turkey',
+      phone: '+90 212 123-4567',
+      email: 'istanbul@recruitmentplus.ca',
+      flag: '🇹🇷',
+      timezone: 'TRT'
     },
     {
-      city: 'Toronto',
-      address: '789 Bay Street, Toronto, ON M5G 2N8',
-      phone: '+1 (416) 555-7890',
-      email: 'toronto@recruitmentplus.ca'
+      city: 'Dubai',
+      address: 'Business Bay, Dubai, UAE',
+      phone: '+971 4 123-4567',
+      email: 'dubai@recruitmentplus.ca',
+      flag: '🇦🇪',
+      timezone: 'GST'
     }
   ]
 
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        {/* Hero Section with Enhanced Design */}
-        <section className="relative py-16 md:py-20 overflow-hidden">
-          {/* Background with animated gradient and pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-background/90 to-primary/15 z-0">
-            <div
-              className="absolute inset-0 opacity-10"
+        {/* Revolutionary Hero Section */}
+        <section className="relative py-24 md:py-32 overflow-hidden">
+          {/* Dynamic Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-secondary">
+            <div 
+              className="absolute inset-0 opacity-20"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23031F28' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3Ccircle cx='50' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
               }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 animate-pulse" style={{ animationDuration: '10s' }} />
+            ></div>
+            
+            {/* Floating Elements */}
+            <div className="absolute top-1/4 left-10 w-72 h-72 bg-white/10 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
+            <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-white/5 rounded-full filter blur-3xl opacity-40 animate-pulse" style={{ animationDelay: "-2s" }}></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full filter blur-3xl opacity-30 animate-pulse" style={{ animationDelay: "-4s" }}></div>
           </div>
 
           <div className="container relative z-10">
-            <div className="text-center mb-10">
-              <Badge variant="outline" className="px-4 py-1 mb-4 border-primary/50 bg-primary/5 text-primary font-medium">
-                {locale === 'fr' ? 'Discutons ensemble' : 'Let\'s Talk'}
-              </Badge>
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {locale === 'fr' ? 'Contactez-nous' : 'Contact Us'}
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium">
+                <Zap className="h-4 w-4" />
+                <span className="text-sm">
+                  {locale === 'fr' ? '⚡ Réponse garantie sous 2 heures' : '⚡ Response guaranteed within 2 hours'}
+                </span>
+              </div>
+              
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight">
+                {locale === 'fr' ? 'Parlons de vos' : 'Let\'s Talk About'}<br />
+                <span className="bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-transparent">
+                  {locale === 'fr' ? 'Ambitions' : 'Your Vision'}
+                </span>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              
+              <p className="text-xl md:text-2xl text-white/90 mb-10 leading-relaxed max-w-3xl mx-auto">
                 {locale === 'fr' 
-                  ? 'Vous avez des questions ou souhaitez discuter de vos besoins spécifiques? Nous sommes là pour vous aider.' 
-                  : 'Have questions or want to discuss your specific needs? We\'re here to help you.'}
+                  ? 'Que vous soyez candidat ou employeur, nous sommes là pour transformer vos objectifs en réussites concrètes.'
+                  : 'Whether you\'re a candidate or employer, we\'re here to transform your goals into concrete successes.'}
               </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button size="lg" className="bg-white/90 hover:bg-white text-primary hover:text-primary/90 px-8 py-4 rounded-xl font-semibold text-lg shadow-2xl hover:shadow-white/25 transition-all duration-300 transform hover:scale-105">
+                  <Users className="mr-2 h-5 w-5" />
+                  {locale === 'fr' ? 'Démarrer maintenant' : 'Get Started Now'}
+                </Button>
+                <Button variant="outline" size="lg" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold text-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  {locale === 'fr' ? 'Prendre rendez-vous' : 'Book a Meeting'}
+                </Button>
+              </div>
             </div>
+          </div>
+        </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {/* Contact Information */}
-              <div className="lg:col-span-1">
-                <Card className="bg-background/90 backdrop-blur-xl shadow-xl border border-white/20 h-full">
-                  <CardHeader>
-                    <CardTitle className="text-2xl flex items-center">
-                      <Phone className="mr-2 h-6 w-6 text-primary" />
-                      {locale === 'fr' ? 'Nos Coordonnées' : 'Our Contact Details'}
-                    </CardTitle>
-                    <CardDescription>
-                      {locale === 'fr' 
-                        ? 'Plusieurs façons de nous joindre' 
-                        : 'Multiple ways to reach us'}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <Mail className="h-5 w-5 text-primary mt-0.5" />
-                        <div>
-                          <h3 className="font-medium">{locale === 'fr' ? 'Email' : 'Email'}</h3>
-                          <p className="text-sm text-muted-foreground">info@recruitmentplus.ca</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <Phone className="h-5 w-5 text-primary mt-0.5" />
-                        <div>
-                          <h3 className="font-medium">{locale === 'fr' ? 'Téléphone' : 'Phone'}</h3>
-                          <p className="text-sm text-muted-foreground">+1 (514) 123-4567</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Building className="h-5 w-5 text-primary mt-0.5" />
-                        <div>
-                          <h3 className="font-medium">{locale === 'fr' ? 'Heures d\'ouverture' : 'Office Hours'}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {locale === 'fr' 
-                              ? 'Lun - Ven: 9h à 17h' 
-                              : 'Mon - Fri: 9am to 5pm'}
-                          </p>
-                        </div>
-                      </div>
+        {/* Contact Methods Grid */}
+        <section className="py-20 relative">
+          <div className="container">
+            <div className="text-center mb-16">
+              <Badge variant="outline" className="px-4 py-2 mb-6 border-primary/30 bg-primary/5 text-primary font-medium">
+                {locale === 'fr' ? 'Plusieurs façons de nous joindre' : 'Multiple Ways to Reach Us'}
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {locale === 'fr' ? 'Choisissez votre méthode préférée' : 'Choose Your Preferred Method'}
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+              {contactMethods.map((method, index) => (
+                <Card key={index} className="group cursor-pointer border-0 bg-gradient-to-br from-background/80 to-background/40 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
+                  <CardContent className="p-8 text-center">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${method.color} mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <method.icon className="h-8 w-8 text-white" />
                     </div>
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                      {method.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {method.description}
+                    </p>
+                    <p className="font-semibold text-primary">
+                      {method.contact}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                    <Separator />
+        {/* Main Content */}
+        <section className="py-16 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-muted/30 to-muted/10"></div>
+          <div className="container relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 max-w-7xl mx-auto">
+              
+              {/* Contact Form - Taking More Space */}
+              <div className="lg:col-span-3">
+                <Card className="bg-background/95 backdrop-blur-xl shadow-2xl border-0 rounded-3xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-1">
+                    <div className="bg-background rounded-3xl">
+                      <CardHeader className="p-8 pb-4">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-3 bg-primary/10 rounded-xl">
+                            <MessageSquare className="h-6 w-6 text-primary" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-2xl">
+                              {locale === 'fr' ? 'Envoyez-nous un message' : 'Send Us a Message'}
+                            </CardTitle>
+                            <CardDescription className="text-base mt-1">
+                              {locale === 'fr' 
+                                ? 'Décrivez votre projet et recevez une réponse personnalisée' 
+                                : 'Describe your project and receive a personalized response'}
+                            </CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      <CardContent className="p-8 pt-4">
+                        {formSuccess ? (
+                          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 rounded-2xl p-8 text-center">
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500 mb-6">
+                              <CheckCircle2 className="h-8 w-8 text-white" />
+                            </div>
+                            <h3 className="text-2xl font-bold mb-3 text-emerald-700 dark:text-emerald-300">
+                              {locale === 'fr' ? 'Message envoyé avec succès!' : 'Message sent successfully!'}
+                            </h3>
+                            <p className="text-emerald-600 dark:text-emerald-400 text-lg">
+                              {locale === 'fr' 
+                                ? 'Notre équipe vous contactera dans les 2 prochaines heures.'
+                                : 'Our team will contact you within the next 2 hours.'}
+                            </p>
+                          </div>
+                        ) : (
+                          <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                  control={form.control}
+                                  name="name"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-base font-semibold">
+                                        {locale === 'fr' ? 'Nom complet' : 'Full Name'}
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input 
+                                          placeholder={locale === 'fr' ? 'Votre nom' : 'Your name'} 
+                                          className="h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all duration-300"
+                                          {...field} 
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
 
-                    <div>
-                      <h3 className="font-medium mb-3 flex items-center">
-                        <MapPin className="mr-2 h-4 w-4 text-primary" />
-                        {locale === 'fr' ? 'Nos Bureaux' : 'Our Offices'}
-                      </h3>
-                      <div className="space-y-4">
-                        {officeLocations.map((location, index) => (
-                          <div key={index} className="rounded-lg bg-primary/5 p-3">
-                            <h4 className="font-medium text-sm">{location.city}</h4>
-                            <p className="text-xs text-muted-foreground mt-1">{location.address}</p>
-                            <div className="flex items-center gap-3 mt-2">
-                              <div className="text-xs flex items-center">
-                                <Phone className="h-3 w-3 mr-1 text-primary" />
-                                {location.phone}
+                                <FormField
+                                  control={form.control}
+                                  name="email"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-base font-semibold">
+                                        {locale === 'fr' ? 'Email' : 'Email'}
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input 
+                                          placeholder={locale === 'fr' ? 'votre@email.com' : 'your@email.com'} 
+                                          className="h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all duration-300"
+                                          type="email"
+                                          {...field} 
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
                               </div>
-                              <div className="text-xs flex items-center">
-                                <Mail className="h-3 w-3 mr-1 text-primary" />
-                                {location.email}
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                  control={form.control}
+                                  name="phone"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-base font-semibold">
+                                        {locale === 'fr' ? 'Téléphone (optionnel)' : 'Phone (optional)'}
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input 
+                                          placeholder={locale === 'fr' ? 'Votre numéro' : 'Your phone number'} 
+                                          className="h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all duration-300"
+                                          {...field} 
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+
+                                <FormField
+                                  control={form.control}
+                                  name="userType"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-base font-semibold">
+                                        {locale === 'fr' ? 'Vous êtes' : 'You are'}
+                                      </FormLabel>
+                                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                          <SelectTrigger className="h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl">
+                                            <SelectValue placeholder={locale === 'fr' ? 'Sélectionnez' : 'Select'} />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectItem value="candidate">
+                                            {locale === 'fr' ? 'Candidat' : 'Candidate'}
+                                          </SelectItem>
+                                          <SelectItem value="employer">
+                                            {locale === 'fr' ? 'Employeur' : 'Employer'}
+                                          </SelectItem>
+                                          <SelectItem value="other">
+                                            {locale === 'fr' ? 'Autre' : 'Other'}
+                                          </SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+
+                              <FormField
+                                control={form.control}
+                                name="officeLocation"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-base font-semibold">
+                                      {locale === 'fr' ? 'Bureau à contacter' : 'Office to contact'}
+                                    </FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                      <FormControl>
+                                        <SelectTrigger className="h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl">
+                                          <SelectValue placeholder={locale === 'fr' ? 'Sélectionnez un bureau' : 'Select an office'} />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {officeLocations.map((office, index) => (
+                                          <SelectItem key={index} value={office.city}>
+                                            {office.flag} {office.city}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
+                              <FormField
+                                control={form.control}
+                                name="subject"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-base font-semibold">
+                                      {locale === 'fr' ? 'Sujet' : 'Subject'}
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input 
+                                        placeholder={locale === 'fr' ? 'Sujet de votre message' : 'Subject of your message'} 
+                                        className="h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all duration-300"
+                                        {...field} 
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
+                              <FormField
+                                control={form.control}
+                                name="message"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-base font-semibold">
+                                      {locale === 'fr' ? 'Message' : 'Message'}
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Textarea 
+                                        placeholder={locale === 'fr' ? 'Décrivez votre projet, vos besoins et objectifs...' : 'Describe your project, needs and objectives...'} 
+                                        className="min-h-32 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl resize-none transition-all duration-300"
+                                        {...field} 
+                                      />
+                                    </FormControl>
+                                    <FormDescription className="text-sm text-muted-foreground">
+                                      {locale === 'fr' 
+                                        ? 'Plus vous serez précis, mieux nous pourrons vous aider.' 
+                                        : 'The more specific you are, the better we can help you.'}
+                                    </FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
+                              <Button 
+                                type="submit" 
+                                className="w-full h-14 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                              >
+                                <Send className="mr-3 h-5 w-5" />
+                                {locale === 'fr' ? 'Envoyer le message' : 'Send Message'}
+                                <ArrowRight className="ml-3 h-5 w-5" />
+                              </Button>
+                            </form>
+                          </Form>
+                        )}
+                      </CardContent>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Sidebar Information */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* Global Offices */}
+                <Card className="bg-background/90 backdrop-blur-xl shadow-xl border-0 rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 p-6">
+                    <CardTitle className="flex items-center text-xl">
+                      <Globe className="mr-3 h-6 w-6 text-primary" />
+                      {locale === 'fr' ? 'Nos Bureaux Internationaux' : 'Our Global Offices'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-6">
+                      {officeLocations.map((location, index) => (
+                        <div key={index} className="group p-4 rounded-xl border border-muted/30 hover:border-primary/30 bg-gradient-to-r from-background to-muted/20 hover:from-primary/5 hover:to-secondary/5 transition-all duration-300">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <span className="text-2xl">{location.flag}</span>
+                              <div>
+                                <h4 className="font-bold text-lg group-hover:text-primary transition-colors">
+                                  {location.city}
+                                </h4>
+                                <p className="text-sm text-muted-foreground">{location.timezone}</p>
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    <div>
-                      <h3 className="font-medium mb-3">{locale === 'fr' ? 'Suivez-nous' : 'Follow Us'}</h3>
-                      <div className="flex gap-3">
-                        <Button variant="outline" size="icon" className="rounded-full bg-background/50 backdrop-blur-sm border-input/50">
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                          </svg>
-                        </Button>
-                        <Button variant="outline" size="icon" className="rounded-full bg-background/50 backdrop-blur-sm border-input/50">
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.03 10.03 0 01-3.127 1.196 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.16a4.93 4.93 0 001.52 6.575 4.868 4.868 0 01-2.228-.616v.06a4.925 4.925 0 003.95 4.828 4.95 4.95 0 01-2.224.084 4.935 4.935 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.9 13.9 0 007.548 2.209c9.054 0 14.004-7.5 14.004-14.001 0-.21 0-.42-.015-.63A9.936 9.936 0 0024 4.59z" />
-                          </svg>
-                        </Button>
-                        <Button variant="outline" size="icon" className="rounded-full bg-background/50 backdrop-blur-sm border-input/50">
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.454C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
-                          </svg>
-                        </Button>
-                        <Button variant="outline" size="icon" className="rounded-full bg-background/50 backdrop-blur-sm border-input/50">
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" />
-                          </svg>
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Contact Form */}
-              <div className="lg:col-span-2">
-                <Card className="bg-background/90 backdrop-blur-xl shadow-xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle className="text-2xl flex items-center">
-                      <MessageSquare className="mr-2 h-6 w-6 text-primary" />
-                      {locale === 'fr' ? 'Envoyez-nous un message' : 'Send Us a Message'}
-                    </CardTitle>
-                    <CardDescription>
-                      {locale === 'fr' 
-                        ? 'Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais' 
-                        : 'Fill out the form below and we\'ll get back to you as soon as possible'}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {formSuccess ? (
-                      <div className="bg-primary/10 rounded-xl p-6 text-center">
-                        <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-primary/20 mb-4">
-                          <CheckCircle2 className="h-6 w-6 text-primary" />
+                          <p className="text-sm text-muted-foreground mb-3">{location.address}</p>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Phone className="h-4 w-4 text-primary" />
+                              <span className="font-medium">{location.phone}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="h-4 w-4 text-primary" />
+                              <span className="font-medium">{location.email}</span>
+                            </div>
+                          </div>
                         </div>
-                        <h3 className="text-xl font-medium mb-2">
-                          {locale === 'fr' ? 'Message envoyé!' : 'Message sent!'}
-                        </h3>
-                        <p className="text-muted-foreground">
-                          {locale === 'fr' 
-                            ? 'Merci de nous avoir contactés. Nous vous répondrons dans les plus brefs délais.'
-                            : 'Thank you for contacting us. We\'ll get back to you as soon as possible.'}
-                        </p>
-                      </div>
-                    ) : (
-                      <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <FormField
-                              control={form.control}
-                              name="name"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-base">
-                                    <User className="mr-2 h-4 w-4 text-primary" />
-                                    {locale === 'fr' ? 'Nom complet' : 'Full Name'}
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      placeholder={locale === 'fr' ? 'Votre nom' : 'Your name'} 
-                                      className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-                                      {...field} 
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                            <FormField
-                              control={form.control}
-                              name="email"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-base">
-                                    <Mail className="mr-2 h-4 w-4 text-primary" />
-                                    {locale === 'fr' ? 'Email' : 'Email'}
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      placeholder={locale === 'fr' ? 'votre@email.com' : 'your@email.com'} 
-                                      className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-                                      type="email"
-                                      {...field} 
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                {/* Why Choose Us */}
+                <Card className="bg-background/90 backdrop-blur-xl shadow-xl border-0 rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 p-6">
+                    <CardTitle className="flex items-center text-xl">
+                      <Star className="mr-3 h-6 w-6 text-primary" />
+                      {locale === 'fr' ? 'Pourquoi nous choisir?' : 'Why Choose Us?'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      {[
+                        {
+                          icon: Headphones,
+                          title: locale === 'fr' ? 'Support 24/7' : '24/7 Support',
+                          desc: locale === 'fr' ? 'Toujours là pour vous' : 'Always there for you'
+                        },
+                        {
+                          icon: Users,
+                          title: locale === 'fr' ? 'Experts dédiés' : 'Dedicated Experts',
+                          desc: locale === 'fr' ? 'Équipe spécialisée' : 'Specialized team'
+                        },
+                        {
+                          icon: Globe,
+                          title: locale === 'fr' ? 'Portée internationale' : 'Global Reach',
+                          desc: locale === 'fr' ? 'Présence mondiale' : 'Worldwide presence'
+                        },
+                        {
+                          icon: Clock,
+                          title: locale === 'fr' ? 'Réponse rapide' : 'Quick Response',
+                          desc: locale === 'fr' ? 'Sous 2 heures' : 'Within 2 hours'
+                        }
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/30 transition-colors">
+                          <div className="p-2 bg-primary/10 rounded-lg">
+                            <item.icon className="h-5 w-5 text-primary" />
                           </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <FormField
-                              control={form.control}
-                              name="phone"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-base">
-                                    <Phone className="mr-2 h-4 w-4 text-primary" />
-                                    {locale === 'fr' ? 'Téléphone (optionnel)' : 'Phone (optional)'}
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      placeholder={locale === 'fr' ? 'Votre numéro de téléphone' : 'Your phone number'} 
-                                      className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-                                      {...field} 
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            <FormField
-                              control={form.control}
-                              name="officeLocation"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-base">
-                                    <MapPin className="mr-2 h-4 w-4 text-primary" />
-                                    {locale === 'fr' ? 'Bureau à contacter' : 'Office to contact'}
-                                  </FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50">
-                                        <SelectValue placeholder={locale === 'fr' ? 'Sélectionnez un bureau' : 'Select an office'} />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {officeLocations.map((office, index) => (
-                                        <SelectItem key={index} value={office.city}>
-                                          {office.city}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormDescription>
-                                    {locale === 'fr' 
-                                      ? 'Sélectionnez le bureau que vous souhaitez contacter' 
-                                      : 'Select the office you want to contact'}
-                                  </FormDescription>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                          <div>
+                            <h5 className="font-semibold">{item.title}</h5>
+                            <p className="text-sm text-muted-foreground">{item.desc}</p>
                           </div>
-
-                          <FormField
-                            control={form.control}
-                            name="userType"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-base">
-                                  <User className="mr-2 h-4 w-4 text-primary" />
-                                  {locale === 'fr' ? 'Vous êtes' : 'You are'}
-                                </FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50">
-                                      <SelectValue placeholder={locale === 'fr' ? 'Sélectionnez une option' : 'Select an option'} />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="candidate">
-                                      {locale === 'fr' ? 'Candidat' : 'Candidate'}
-                                    </SelectItem>
-                                    <SelectItem value="employer">
-                                      {locale === 'fr' ? 'Employeur' : 'Employer'}
-                                    </SelectItem>
-                                    <SelectItem value="other">
-                                      {locale === 'fr' ? 'Autre' : 'Other'}
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="subject"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-base">
-                                  <MessageSquare className="mr-2 h-4 w-4 text-primary" />
-                                  {locale === 'fr' ? 'Sujet' : 'Subject'}
-                                </FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    placeholder={locale === 'fr' ? 'Sujet de votre message' : 'Subject of your message'} 
-                                    className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-                                    {...field} 
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="message"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-base">
-                                  <MessageSquare className="mr-2 h-4 w-4 text-primary" />
-                                  {locale === 'fr' ? 'Message' : 'Message'}
-                                </FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    placeholder={locale === 'fr' ? 'Votre message...' : 'Your message...'} 
-                                    className="min-h-32 bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-                                    {...field} 
-                                  />
-                                </FormControl>
-                                <FormDescription>
-                                  {locale === 'fr' 
-                                    ? 'Veuillez inclure tous les détails pertinents pour que nous puissions mieux vous aider.' 
-                                    : 'Please include all relevant details so we can better assist you.'}
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <Button 
-                            type="submit" 
-                            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white mt-6"
-                          >
-                            <Send className="mr-2 h-4 w-4" />
-                            {locale === 'fr' ? 'Envoyer le message' : 'Send Message'}
-                          </Button>
-                        </form>
-                      </Form>
-                    )}
+                        </div>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -503,50 +601,35 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Google Maps Embed */}
-        <section className="py-12 relative">
-          <div className="container max-w-6xl">
-            <div className="rounded-xl overflow-hidden shadow-xl border border-white/20 h-[400px]">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d178784.32285048092!2d-73.99038534179685!3d45.55856668105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc91a541c64b70d%3A0x654e3138211fefef!2sMontreal%2C%20QC!5e0!3m2!1sen!2sca!4v1654195420431!5m2!1sen!2sca" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Office Location Map"
-              ></iframe>
+        {/* Interactive Map Section */}
+        <section className="py-16 bg-gradient-to-r from-muted/20 to-muted/10">
+          <div className="container">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {locale === 'fr' ? 'Trouvez-nous facilement' : 'Find Us Easily'}
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                {locale === 'fr' 
+                  ? 'Nos bureaux sont stratégiquement situés pour mieux vous servir à travers le monde.'
+                  : 'Our offices are strategically located to better serve you worldwide.'}
+              </p>
             </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-12 bg-primary/5">
-          <div className="container max-w-4xl text-center">
-            <h2 className="text-2xl font-bold mb-4">
-              {locale === 'fr' ? 'Rejoignez notre réseau' : 'Join Our Network'}
-            </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              {locale === 'fr' 
-                ? 'Inscrivez-vous à notre newsletter pour recevoir nos dernières offres d\'emploi et conseils de carrière.'
-                : 'Subscribe to our newsletter to receive our latest job offers and career advice.'}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-              <Input 
-                placeholder={locale === 'fr' ? 'Votre adresse email' : 'Your email address'} 
-                className="bg-background/50 backdrop-blur-sm border-input/50 focus-visible:ring-primary/50"
-              />
-              <Button className="bg-primary hover:bg-primary/90 text-white">
-                {locale === 'fr' ? 'S\'inscrire' : 'Subscribe'}
-              </Button>
+            
+            <div className="max-w-6xl mx-auto">
+              <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/20 h-[500px] group">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d178784.32285048092!2d-73.99038534179685!3d45.55856668105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc91a541c64b70d%3A0x654e3138211fefef!2sMontreal%2C%20QC!5e0!3m2!1sen!2sca!4v1654195420431!5m2!1sen!2sca" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen={true} 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Office Location Map"
+                  className="transition-all duration-300 group-hover:scale-105"
+                ></iframe>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-3">
-              {locale === 'fr' ? 'En vous inscrivant, vous acceptez notre ' : 'By subscribing, you accept our '}
-              <Link href="/privacy" className="text-primary hover:underline">
-                {locale === 'fr' ? 'politique de confidentialité' : 'privacy policy'}
-              </Link>
-            </p>
           </div>
         </section>
       </main>

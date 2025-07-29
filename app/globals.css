@@ -225,7 +225,7 @@ body {
 
   .glow::after {
     content: "";
-    @apply absolute inset-0 rounded-inherit bg-gradient-to-r from-primary/20 to-secondary/20 blur-xl opacity-0 transition-opacity duration-500 -z-10;
+    @apply absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-secondary/20 blur-xl opacity-0 transition-opacity duration-500 -z-10;
   }
 
   .glow:hover::after {
@@ -259,7 +259,7 @@ body {
   }
 
   .magic-border-content {
-    @apply relative z-10 bg-background rounded-[inherit] p-6;
+    @apply relative z-10 bg-background rounded-2xl p-6;
   }
 
   /* Custom scrollbar styles */
@@ -290,4 +290,243 @@ body {
   .form-scroll-container {
     overscroll-behavior: contain;
   }
+
+  /* Enhanced Navbar Animations */
+  .navbar-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Stagger effect for mobile menu items */
+  .mobile-menu-item {
+    animation: slideInLeft 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  @keyframes slideInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Enhanced hover glow effect */
+  .nav-glow {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .nav-glow::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, hsl(var(--primary)) 0%, transparent 50%, hsl(var(--primary)) 100%);
+    border-radius: 0.75rem;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    filter: blur(8px);
+  }
+
+  .nav-glow:hover::before {
+    opacity: 0.3;
+  }
+
+  /* Smooth logo rotation */
+  .logo-rotate {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .logo-rotate:hover {
+    transform: rotate(5deg) scale(1.05);
+  }
+
+  /* Enhanced dropdown animation */
+  .dropdown-enter {
+    animation: dropdownSlide 0.2s ease-out forwards;
+    transform-origin: top;
+  }
+
+  @keyframes dropdownSlide {
+    from {
+      opacity: 0;
+      transform: scaleY(0.95) translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+
+  /* Improved mobile menu animation */
+  .mobile-menu-slide {
+    animation: mobileSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes mobileSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Enhanced button hover effects */
+  .btn-enhanced {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .btn-enhanced::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .btn-enhanced:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Icon rotation animations */
+  .icon-rotate-hover {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .icon-rotate-hover:hover {
+    transform: rotate(15deg) scale(1.1);
+  }
+
+  /* Smooth underline animation */
+  .nav-underline {
+    position: relative;
+  }
+
+  .nav-underline::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: hsl(var(--primary));
+    transition: width 0.3s ease;
+  }
+
+  .nav-underline:hover::after {
+    width: 100%;
+  }
+
+  /* Enhanced backdrop blur for better glassmorphism */
+  .glass-effect {
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Improved scroll indicator */
+  .scroll-indicator {
+    background: linear-gradient(90deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--primary)) var(--scroll-progress, 0%), 
+      transparent var(--scroll-progress, 0%)
+    );
+  }
+}
+
+/* Search animation styles */
+.search-expand {
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+.search-expand-enter {
+  animation: searchExpandIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.search-expand-exit {
+  animation: searchExpandOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes searchExpandIn {
+  from {
+    width: auto;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+  to {
+    width: 20rem;
+    background-color: hsl(var(--background) / 0.9);
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.1);
+  }
+}
+
+@keyframes searchExpandOut {
+  from {
+    width: 20rem;
+    background-color: hsl(var(--background) / 0.9);
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.1);
+  }
+  to {
+    width: auto;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+/* Search input focus animation */
+.search-input-focus {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-focus:focus {
+  transform: scale(1.01);
+}
+
+/* Search glow effect */
+.search-glow {
+  position: relative;
+}
+
+.search-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, hsl(var(--primary) / 0.3), hsl(var(--secondary) / 0.3));
+  border-radius: 0.75rem;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  filter: blur(8px);
+}
+
+.search-glow:focus-within::before {
+  opacity: 1;
 }

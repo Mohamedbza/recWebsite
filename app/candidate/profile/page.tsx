@@ -14,11 +14,61 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { 
   User, Briefcase, GraduationCap,
   Edit, Save, X, Plus, Download,
-  Star,
+  Star, Search,
   Loader2, Zap, Target
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { apiService } from "@/lib/api"
+
+// Available Skills Database
+const AVAILABLE_SKILLS = [
+  // Programming Languages
+  'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'Node.js', 'Python', 'Java', 'C#', 'C++', 'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin',
+  
+  // Frontend Technologies
+  'HTML', 'CSS', 'Sass', 'Less', 'Tailwind CSS', 'Bootstrap', 'Material-UI', 'Ant Design', 'Chakra UI', 'Styled Components', 'Next.js', 'Nuxt.js', 'Gatsby',
+  
+  // Backend & Databases
+  'MongoDB', 'PostgreSQL', 'MySQL', 'SQLite', 'Redis', 'Elasticsearch', 'DynamoDB', 'Firebase', 'Express.js', 'Django', 'Flask', 'Spring Boot', 'Laravel',
+  
+  // Cloud & DevOps
+  'Docker', 'Kubernetes', 'AWS', 'Azure', 'Google Cloud', 'Heroku', 'Vercel', 'Netlify', 'Terraform', 'Jenkins', 'GitHub Actions', 'CircleCI',
+  
+  // Tools & Collaboration
+  'Git', 'GitHub', 'GitLab', 'Bitbucket', 'CI/CD', 'JIRA', 'Confluence', 'Trello', 'Asana', 'Notion', 'Slack', 'Microsoft Teams',
+  
+  // API & Architecture
+  'REST API', 'GraphQL', 'gRPC', 'WebSocket', 'Microservices', 'Serverless', 'JWT', 'OAuth', 'API Design', 'System Architecture',
+  
+  // Data & AI
+  'Machine Learning', 'Data Science', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy', 'R', 'SQL', 'Data Analysis', 'Statistics',
+  
+  // Design & UX
+  'UI/UX Design', 'Figma', 'Adobe XD', 'Sketch', 'InVision', 'Prototyping', 'User Research', 'Wireframing', 'Design Systems', 'Adobe Creative Suite',
+  
+  // Project Management
+  'Agile', 'Scrum', 'Kanban', 'Project Management', 'Team Leadership', 'Mentoring', 'Code Review', 'Technical Writing', 'Product Management',
+  
+  // Testing & Quality
+  'Testing', 'Jest', 'Cypress', 'Selenium', 'Unit Testing', 'Integration Testing', 'E2E Testing', 'TDD', 'Quality Assurance',
+  
+  // Marketing & Analytics
+  'Performance Optimization', 'SEO', 'Analytics', 'Google Analytics', 'Mixpanel', 'Hotjar', 'Digital Marketing', 'Content Marketing', 'Social Media Marketing',
+  
+  // Soft Skills
+  'Communication', 'Leadership', 'Problem Solving', 'Critical Thinking', 'Creativity', 'Adaptability', 'Time Management', 'Teamwork', 'Negotiation', 'Public Speaking'
+];
+
+// Skill Categories for better organization
+const SKILL_CATEGORIES = {
+  'Programming': ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'C++', 'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin'],
+  'Frontend': ['React', 'Vue.js', 'Angular', 'HTML', 'CSS', 'Sass', 'Tailwind CSS', 'Bootstrap', 'Next.js', 'Nuxt.js'],
+  'Backend': ['Node.js', 'Express.js', 'Django', 'Flask', 'Spring Boot', 'Laravel', 'MongoDB', 'PostgreSQL', 'MySQL'],
+  'Cloud & DevOps': ['Docker', 'Kubernetes', 'AWS', 'Azure', 'Google Cloud', 'CI/CD', 'Jenkins', 'GitHub Actions'],
+  'Design': ['UI/UX Design', 'Figma', 'Adobe XD', 'Sketch', 'Prototyping', 'User Research', 'Design Systems'],
+  'Data & AI': ['Machine Learning', 'Data Science', 'TensorFlow', 'PyTorch', 'SQL', 'Data Analysis', 'Statistics'],
+  'Soft Skills': ['Communication', 'Leadership', 'Problem Solving', 'Critical Thinking', 'Teamwork', 'Project Management']
+};
 
 interface Candidate {
   _id: string
@@ -99,10 +149,70 @@ export default function ProfilePage() {
     endDate: ''
   })
   const [newSkill, setNewSkill] = useState('')
+  const [skillSearch, setSkillSearch] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [showSkillSuggestions, setShowSkillSuggestions] = useState(false)
+  const [selectedSkillsForBatch, setSelectedSkillsForBatch] = useState<string[]>([])
   const [showExperienceForm, setShowExperienceForm] = useState(false)
   const [showEducationForm, setShowEducationForm] = useState(false)
   const [editingExperienceIndex, setEditingExperienceIndex] = useState<number | null>(null)
   const [editingEducationIndex, setEditingEducationIndex] = useState<number | null>(null)
+
+  // Filter available skills based on search and category
+  const getFilteredSkills = () => {
+    let skills = AVAILABLE_SKILLS;
+    
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      skills = SKILL_CATEGORIES[selectedCategory as keyof typeof SKILL_CATEGORIES] || [];
+    }
+    
+    // Filter by search term
+    if (skillSearch) {
+      skills = skills.filter(skill => 
+        skill.toLowerCase().includes(skillSearch.toLowerCase())
+      );
+    }
+    
+    // Filter out already selected skills
+    if (candidate) {
+      skills = skills.filter(skill => !candidate.skills.includes(skill));
+    }
+    
+    return skills;
+  }
+
+  // Toggle skill selection for batch adding
+  const toggleSkillSelection = (skill: string) => {
+    setSelectedSkillsForBatch(prev => {
+      if (prev.includes(skill)) {
+        return prev.filter(s => s !== skill);
+      } else {
+        return [...prev, skill];
+      }
+    });
+  }
+
+  // Add multiple selected skills at once
+  const handleAddSelectedSkills = () => {
+    if (!candidate || selectedSkillsForBatch.length === 0) return;
+    
+    const newSkills = [...candidate.skills, ...selectedSkillsForBatch];
+    updateCandidate({ skills: newSkills });
+    setSelectedSkillsForBatch([]);
+  }
+
+  // Clear selected skills
+  const clearSelectedSkills = () => {
+    setSelectedSkillsForBatch([]);
+  }
+
+  // Select all visible skills
+  const selectAllVisibleSkills = () => {
+    const filteredSkills = getFilteredSkills();
+    const skillsToAdd = filteredSkills.filter(skill => !selectedSkillsForBatch.includes(skill));
+    setSelectedSkillsForBatch(prev => [...prev, ...skillsToAdd.slice(0, 20)]); // Limit to 20 for performance
+  }
 
   // Fetch candidate data
   const fetchCandidateData = async () => {
@@ -248,12 +358,20 @@ export default function ProfilePage() {
     setEditingEducationIndex(null)
   }
 
-  const handleAddSkill = () => {
-    if (!candidate || !newSkill.trim()) return
+  const handleAddSkill = (skill?: string) => {
+    if (!candidate) return
     
-    const newSkills = [...candidate.skills, newSkill.trim()]
+    const skillToAdd = skill || newSkill.trim()
+    if (!skillToAdd) return
+    
+    // Check if skill already exists
+    if (candidate.skills.includes(skillToAdd)) return
+    
+    const newSkills = [...candidate.skills, skillToAdd]
     updateCandidate({ skills: newSkills })
     setNewSkill('')
+    setSkillSearch('')
+    setShowSkillSuggestions(false)
   }
 
   const handleRemoveSkill = (skillToRemove: string) => {
@@ -846,42 +964,200 @@ export default function ProfilePage() {
               </div>
             </TabsContent>
 
-            {/* Skills Tab */}
+            {/* Enhanced Skills Tab */}
             <TabsContent value="skills" className="space-y-6">
               {/* Skills Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {locale === 'fr' ? 'Compétences professionnelles' : 'Professional Skills'}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    {locale === 'fr' 
-                      ? 'Ajoutez vos compétences pour améliorer votre profil'
-                      : 'Add your skills to enhance your profile'
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {locale === 'fr' ? 'Compétences professionnelles' : 'Professional Skills'}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      {locale === 'fr' 
+                        ? 'Ajoutez vos compétences pour améliorer votre profil'
+                        : 'Add your skills to enhance your profile'
+                      }
+                    </p>
+                  </div>
+                  
+                  {/* Browse Skills Button */}
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      if (showSkillSuggestions) {
+                        // Clear selections when closing
+                        setSelectedSkillsForBatch([]);
+                      }
+                      setShowSkillSuggestions(!showSkillSuggestions);
+                    }}
+                    className="w-full sm:w-auto"
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    {showSkillSuggestions 
+                      ? (locale === 'fr' ? 'Fermer' : 'Close')
+                      : (locale === 'fr' ? 'Parcourir les compétences' : 'Browse Skills')
                     }
-                  </p>
+                    {selectedSkillsForBatch.length > 0 && showSkillSuggestions && (
+                      <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">
+                        {selectedSkillsForBatch.length}
+                      </Badge>
+                    )}
+                  </Button>
                 </div>
                 
-                {/* Add Skill Form */}
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <div className="relative">
-                    <Input 
-                      value={newSkill}
-                      onChange={(e) => setNewSkill(e.target.value)}
-                      placeholder={locale === 'fr' ? 'Ex: JavaScript, React, Python...' : 'Ex: JavaScript, React, Python...'}
-                      className="w-full sm:w-64 pr-10"
-                      onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
-                    />
-                    <button 
-                      onClick={handleAddSkill}
-                      disabled={!newSkill.trim()}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <Plus className="h-4 w-4 text-primary" />
-                    </button>
-                  </div>
-                </div>
+                {/* Manual Skill Input */}
+                <Card className="border-0 shadow-lg">
+                  <CardContent className="p-4">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="relative flex-1">
+                        <Input 
+                          value={newSkill}
+                          onChange={(e) => setNewSkill(e.target.value)}
+                          placeholder={locale === 'fr' ? 'Ajouter une compétence manuellement...' : 'Add a skill manually...'}
+                          className="pr-10"
+                          onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
+                        />
+                        <button 
+                          onClick={() => handleAddSkill()}
+                          disabled={!newSkill.trim()}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label={locale === 'fr' ? 'Ajouter la compétence' : 'Add skill'}
+                        >
+                          <Plus className="h-4 w-4 text-primary" />
+                        </button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
+              
+              {/* Skills Browser */}
+              {showSkillSuggestions && (
+                <Card className="border-0 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Search className="h-5 w-5 text-primary" />
+                      {locale === 'fr' ? 'Parcourir les technologies' : 'Browse Technologies'}
+                    </CardTitle>
+                    <CardDescription>
+                      {locale === 'fr' 
+                        ? 'Sélectionnez parmi une liste de compétences prédéfinies'
+                        : 'Select from a list of predefined skills'
+                      }
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Search and Filter */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={skillSearch}
+                          onChange={(e) => setSkillSearch(e.target.value)}
+                          placeholder={locale === 'fr' ? 'Rechercher des compétences...' : 'Search skills...'}
+                          className="pl-10"
+                        />
+                      </div>
+                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                        <SelectTrigger className="sm:w-48">
+                          <SelectValue placeholder="Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">{locale === 'fr' ? 'Toutes les catégories' : 'All Categories'}</SelectItem>
+                          {Object.keys(SKILL_CATEGORIES).map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        size="sm"
+                        onClick={selectAllVisibleSkills}
+                        disabled={getFilteredSkills().length === 0}
+                        className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                      >
+                        <Plus className="h-3 w-3 mr-1" />
+                        {locale === 'fr' ? 'Tout sélectionner' : 'Select All'}
+                      </Button>
+                    </div>
+                    
+                    {/* Skills Grid */}
+                    <div className="border rounded-lg p-4 max-h-64 overflow-y-auto">
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        {getFilteredSkills().slice(0, 50).map((skill) => (
+                          <button
+                            key={skill}
+                            onClick={() => toggleSkillSelection(skill)}
+                            className={`px-3 py-2 text-sm rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary border border-gray-200 hover:border-primary/30 text-left ${
+                              selectedSkillsForBatch.includes(skill) ? 'bg-primary/10 text-primary border-primary/20' : ''
+                            }`}
+                          >
+                            {skill}
+                          </button>
+                        ))}
+                      </div>
+                      {getFilteredSkills().length === 0 && (
+                        <p className="text-center text-gray-500 py-4">
+                          {locale === 'fr' ? 'Aucune compétence trouvée' : 'No skills found'}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Selected Skills for Batch Add */}
+                    {selectedSkillsForBatch.length > 0 && (
+                      <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-medium text-primary">
+                            {locale === 'fr' 
+                              ? `${selectedSkillsForBatch.length} compétence(s) sélectionnée(s)` 
+                              : `${selectedSkillsForBatch.length} skill(s) selected`
+                            }
+                          </h4>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={handleAddSelectedSkills}
+                              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                            >
+                              <Plus className="h-3 w-3 mr-1" />
+                              {locale === 'fr' ? 'Ajouter tout' : 'Add All'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={clearSelectedSkills}
+                              className="text-gray-600 hover:text-gray-800"
+                            >
+                              <X className="h-3 w-3 mr-1" />
+                              {locale === 'fr' ? 'Effacer' : 'Clear'}
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedSkillsForBatch.map((skill) => (
+                            <Badge 
+                              key={skill} 
+                              variant="secondary" 
+                              className="bg-primary/10 text-primary border-primary/30 text-xs"
+                            >
+                              {skill}
+                              <button
+                                onClick={() => toggleSkillSelection(skill)}
+                                className="ml-1 hover:text-red-600 transition-colors"
+                                aria-label={locale === 'fr' ? `Retirer ${skill} de la sélection` : `Remove ${skill} from selection`}
+                              >
+                                <X className="h-2 w-2" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
               
               {/* Skills Stats */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
@@ -955,6 +1231,7 @@ export default function ProfilePage() {
                           <button 
                             onClick={() => handleRemoveSkill(skill)}
                             className="ml-2 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                            aria-label={locale === 'fr' ? `Supprimer ${skill}` : `Remove ${skill}`}
                           >
                             <X className="h-3 w-3" />
                           </button>

@@ -37,8 +37,8 @@
       "companies": "500+ Entreprises servies",
       "placements": "5000+ Placements réussis",
       "experience": "15+ Années d'expérience",
-      "satisfaction": "98% Taux de satisfaction"
-    },
+              "satisfaction": "98% Taux de satisfaction"
+      },
     "newsletter": {
       "badge": "Restez informé",
       "title": "Newsletter",
@@ -724,51 +724,65 @@
       "stats": [
         {
           "number": "500+",
-          "label": "Entreprises servies",
-          "icon": "🏢"
+          "label": "Entreprises servies"
         },
         {
           "number": "5000+",
-          "label": "Placements réussis",
-          "icon": "✅"
+          "label": "Placements réussis"
         },
         {
           "number": "15+",
-          "label": "Années d'expérience",
-          "icon": "📅"
+          "label": "Années d'expérience"
         },
         {
           "number": "98%",
-          "label": "Taux de satisfaction",
-          "icon": "⭐"
+          "label": "Taux de satisfaction"
+        }
+      ]
+    },
+    "branch_offices": {
+      "badge": "Nos Bureaux",
+      "title": "Nos succursales",
+      "description": "Présents dans les principales villes du monde pour mieux vous servir.",
+      "employees": "Employés",
+      "services": "Services",
+      "offices": [
+        {
+          "services": "Recrutement local et international - Siège social"
+        },
+        {
+          "services": "Recrutement Europe et Moyen-Orient - Spécialités techniques"
+        },
+        {
+          "services": "Recrutement Moyen-Orient et Asie - Secteurs émergents"
         }
       ]
     },
     "locations": {
       "badge": "Nos Bureaux",
       "title": "Nos succursales",
-      "description": "Présents dans les principales villes du Canada pour mieux vous servir.",
+      "description": "Présents dans les principales villes du monde pour mieux vous servir.",
+      "view_map": "Voir sur la carte",
       "locations": [
         {
-          "city": "Montréal (Siège social)",
-          "address": "123 Rue Principale, Montréal, QC H3Z 2Y7",
+          "city": "Montréal (Canada)",
+          "address": "123 Rue Principale, Montréal, QC H3Z 2Y7, Canada",
           "phone": "+1 (514) 123-4567",
           "email": "montreal@recruitmentplus.ca"
         },
         {
-          "city": "Québec",
-          "address": "456 Boulevard des Forges, Québec, QC G1K 7P4",
-          "phone": "+1 (418) 987-6543",
-          "email": "quebec@recruitmentplus.ca"
+          "city": "Istanbul (Turquie)",
+          "address": "Maslak Mahallesi, Büyükdere Cd. No:255, 34398 Şişli/Istanbul, Turquie",
+          "phone": "+90 (212) 345-6789",
+          "email": "istanbul@recruitmentplus.com"
         },
         {
-          "city": "Toronto",
-          "address": "789 Bay Street, Toronto, ON M5G 2N8",
-          "phone": "+1 (416) 555-7890",
-          "email": "toronto@recruitmentplus.ca"
+          "city": "Dubaï (EAU)",
+          "address": "Sheikh Zayed Road, Business Bay, Dubai, Émirats Arabes Unis",
+          "phone": "+971 (4) 567-8900",
+          "email": "dubai@recruitmentplus.ae"
         }
-      ],
-      "view_map": "Voir sur la carte"
+      ]
     },
     "contact": {
       "title": "Discutons ensemble",

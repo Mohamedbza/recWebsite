@@ -173,7 +173,7 @@ export default function CandidatsPage() {
               <div className="relative">
                 <div className="magic-card p-2 overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=400&width=600"
+                    src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2326&q=80"
                     alt="Candidat professionnel"
                     width={600}
                     height={400}
@@ -217,11 +217,23 @@ export default function CandidatsPage() {
                   "from-pink-500/20 to-pink-600/20"
                 ];
                 const color = colors[index % colors.length];
+                
+                const industryImages = [
+                  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Technology - Developer coding
+                  "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Healthcare - Medical professionals
+                  "https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Finance - Financial analysis
+                  "https://images.unsplash.com/photo-1491841573337-20c23e0b30b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Education - Teacher in classroom
+                  "https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Marketing - Digital marketing workspace
+                  "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Engineering - Engineers with blueprints
+                  "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Design - Graphic designer at work
+                  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"  // Sales - Business meeting/presentation
+                ];
+                
                 return (
                 <div key={index} className="magic-card group overflow-hidden">
                   <div className={`h-48 bg-gradient-to-br ${color} relative`}>
                     <Image
-                      src="/placeholder.svg?height=300&width=400"
+                      src={industryImages[index % industryImages.length]}
                       alt={industry}
                       width={400}
                       height={300}
@@ -259,12 +271,19 @@ export default function CandidatsPage() {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, index) => (
+              {services.map((service, index) => {
+                const serviceImages = [
+                  "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2344&q=80", // Advanced Job Search - Person searching jobs online
+                  "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80", // Profile Management - Resume/CV writing and creation
+                  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"  // Application Tracking - Dashboard and analytics
+                ];
+                
+                return (
                 <div key={index} className="magic-card p-8 group">
                   <div className="mb-6 relative">
                     <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                       <Image
-                        src="/placeholder.svg?height=300&width=500"
+                        src={serviceImages[index % serviceImages.length]}
                         alt={service.title}
                         width={500}
                         height={300}
@@ -297,7 +316,8 @@ export default function CandidatsPage() {
                     <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         </section>
