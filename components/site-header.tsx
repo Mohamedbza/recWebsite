@@ -189,10 +189,10 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-2 md:px-4">
+    <header className="fixed top-0 left-0 right-0 z-50 px-2 md:px-6">
       <div
         className={`
-          mx-auto max-w-7xl rounded-2xl transition-all duration-700 ease-out mt-2 group
+          mx-auto max-w-[1920px] rounded-2xl transition-all duration-700 ease-out mt-2 group
           ${
             isScrolled
               ? "bg-background/80 backdrop-blur-xl shadow-2xl border border-white/30 transform scale-[0.98]"
@@ -200,8 +200,8 @@ export function SiteHeader() {
           }
         `}
       >
-        <div className="flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center gap-8">
+        <div className="flex h-16 items-center justify-between px-6 md:px-8 lg:px-12">
+          <div className="flex items-center gap-12">
             {/* Enhanced Logo with Hover Animation */}
             <Link href="/" className="flex items-center group/logo transition-all duration-300 hover:scale-105">
               <div className="relative">
@@ -223,7 +223,7 @@ export function SiteHeader() {
             </Link>
 
             {/* Enhanced Navigation with Better Animations */}
-            <nav className="hidden lg:flex gap-1">
+            <nav className="hidden lg:flex gap-2">
               {/* Candidats Link */}
               <Link
                 href="/candidats"
