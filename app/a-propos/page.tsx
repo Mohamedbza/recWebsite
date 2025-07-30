@@ -65,7 +65,11 @@ export default function AProposPage() {
                 <p className="text-xl text-white/90 leading-relaxed">
                   {t('about.hero.description')}
                 </p>
-                <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0">
+                <Button 
+                  size="lg" 
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0"
+                  onClick={() => window.location.href = '/contact'}
+                >
                   <Phone className="mr-2 h-5 w-5" />
                   {t('about.hero.contact_button')}
                 </Button>
@@ -484,6 +488,7 @@ export default function AProposPage() {
                     size="lg"
                     variant="secondary"
                     className="rounded-xl bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                    onClick={() => window.location.href = '/contact'}
                   >
                     <Phone className="mr-2 h-5 w-5" />
                     {t('about.contact.contact_button')}

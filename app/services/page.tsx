@@ -62,7 +62,11 @@ export default function ServicesPage() {
               <p className="text-xl text-white/95 mb-8 leading-relaxed drop-shadow-md">
                 {t('services.hero.description')}
               </p>
-              <Button size="lg" className="group relative overflow-hidden bg-white/95 text-slate-900 hover:bg-white shadow-xl hover:shadow-2xl hover:shadow-white/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0 font-bold">
+              <Button 
+                size="lg" 
+                className="group relative overflow-hidden bg-white/95 text-slate-900 hover:bg-white shadow-xl hover:shadow-2xl hover:shadow-white/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0 font-bold"
+                onClick={() => window.location.href = '/contact'}
+              >
                 <Users className="mr-2 h-5 w-5" />
                 {t('services.hero.contact_button')}
               </Button>
@@ -329,6 +333,7 @@ export default function ServicesPage() {
                       size="lg"
                       variant="secondary"
                       className="rounded-xl bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                      onClick={() => window.location.href = '/contact'}
                     >
                       <Users className="mr-2 h-5 w-5" />
                       {t('services.cta.consultation_button')}
