@@ -120,7 +120,7 @@ const statusLabels = {
 
 export default function ApplicationsPage() {
   const { locale } = useLanguage()
-  const { user, isAuthenticated, token } = useAppSelector((state) => state.account)
+  const { user, isAuthenticated, token, isLoading: authLoading } = useAppSelector((state) => state.account)
   const router = useRouter()
   
   const [applications, setApplications] = useState<JobApplication[]>([])
@@ -262,6 +262,22 @@ export default function ApplicationsPage() {
   const stats = getStats()
 
   // Authentication check
+  // Show loading state while auth is being initialized
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
+        <div className="max-w-md w-full mx-auto p-8 rounded-2xl bg-background/80 backdrop-blur-xl border border-white/20 shadow-2xl">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p className="text-muted-foreground text-center">
+              {locale === 'fr' ? 'Chargement...' : 'Loading...'}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (!isAuthenticated || user?.role !== 'candidate') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">

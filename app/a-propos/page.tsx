@@ -222,7 +222,7 @@ export default function AProposPage() {
                   address: t('about.locations.locations.0.address'),
                   phone: t('about.locations.locations.0.phone'),
                   email: t('about.locations.locations.0.email'),
-                  image: "/placeholder.jpg",
+                  image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
                   employees: "15+",
                   services: t('about.branch_offices.offices.0.services') || "Recrutement local et national"
                 },
@@ -231,7 +231,7 @@ export default function AProposPage() {
                   address: t('about.locations.locations.1.address'),
                   phone: t('about.locations.locations.1.phone'),
                   email: t('about.locations.locations.1.email'),
-                  image: "/placeholder.jpg",
+                  image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
                   employees: "10+",
                   services: t('about.branch_offices.offices.1.services') || "Recrutement spécialisé aérospatial"
                 },
@@ -240,7 +240,7 @@ export default function AProposPage() {
                   address: t('about.locations.locations.2.address'),
                   phone: t('about.locations.locations.2.phone'),
                   email: t('about.locations.locations.2.email'),
-                  image: "/placeholder.jpg",
+                  image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
                   employees: "8+",
                   services: t('about.branch_offices.offices.2.services') || "Recrutement international"
                 },

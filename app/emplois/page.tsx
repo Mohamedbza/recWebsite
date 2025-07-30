@@ -10,18 +10,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { useAuth } from '@/contexts/EmployerAuthContext'
-import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   Search, Briefcase, MapPin, AlertCircle, X, 
   Star, DollarSign, Clock, 
   Zap, Eye, Bookmark, Share2,
-  Target, Code, Sparkles, Activity, Loader2, User
+  Target, Code, Sparkles, Activity, Loader2, User, LogIn
 } from 'lucide-react'
 import JobDetailModal, { JobDetail } from "@/components/jobs/JobDetailModal";
-import ApplyJobModal from "@/components/jobs/ApplyJobModal";
 
 interface Job {
   _id: string;
@@ -98,10 +95,8 @@ const JobCardSkeleton = () => {
   );
 };
 
-export default function JobsPage() {
+export default function PublicJobsPage() {
   const { locale } = useLanguage();
-  const { user, token } = useAuth();
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.account);
   const searchParams = useSearchParams();
   const router = useRouter();
   
@@ -119,22 +114,10 @@ export default function JobsPage() {
   
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [applyOpen, setApplyOpen] = useState(false);
-  const [applyJobId, setApplyJobId] = useState<string | null>(null);
 
   const openDetails = (job: Job) => {
     setSelectedJob(job);
     setDetailOpen(true);
-  };
-
-  const handleApplyFromDetails = (job: JobDetail) => {
-    setApplyJobId(job._id);
-    setApplyOpen(true);
-  };
-
-  const handleApplyButton = (jobId: string) => {
-    setApplyJobId(jobId);
-    setApplyOpen(true);
   };
 
   const addSkill = (skill: string) => {
@@ -161,20 +144,14 @@ export default function JobsPage() {
     try {
       const params: JobSearchParams = {
         search: searchQuery,
-        location: user?.location || locationQuery,
-        limit: 10,
+        location: locationQuery,
+        limit: 20,
         page: 1,
         skills: skillsQuery
       };
       
       const response = await searchJobs(params);
       let fetchedJobs: Job[] = response.jobs;
-      
-      // Client-side filtering by location if necessary
-      const selectedLocation = user?.location || locationQuery;
-      if (selectedLocation) {
-        fetchedJobs = fetchedJobs.filter(job => job.location === selectedLocation);
-      }
       
       // Apply additional filters
       if (jobTypeFilter !== 'all') {
@@ -208,7 +185,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     fetchJobs();
-  }, [searchQuery, locationQuery, skillsQuery, user?.location, jobTypeFilter, sortBy]);
+  }, [searchQuery, locationQuery, skillsQuery, jobTypeFilter, sortBy]);
 
   const handleSearch = () => {
     fetchJobs();
@@ -244,46 +221,6 @@ export default function JobsPage() {
     return date.toLocaleDateString();
   };
 
-  // Show loading state while auth is being initialized
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
-        <div className="max-w-md w-full mx-auto p-8 rounded-2xl bg-background/80 backdrop-blur-xl border border-white/20 shadow-2xl">
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <p className="text-muted-foreground text-center">
-              {locale === 'fr' ? 'Chargement...' : 'Loading...'}
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Authentication check
-  if (!isAuthenticated || user?.role !== 'candidate') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
-        <div className="max-w-md w-full mx-auto p-8 rounded-2xl bg-background/80 backdrop-blur-xl border border-white/20 shadow-2xl">
-          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-center">
-            {locale === 'fr' ? 'Connexion requise' : 'Login required'}
-          </h2>
-          <p className="mb-6 text-muted-foreground text-center">
-            {locale === 'fr'
-              ? "Vous devez être connecté en tant que candidat pour accéder aux offres d'emploi."
-              : "You must be logged in as a candidate to access job offers."}
-          </p>
-          <Button 
-            onClick={() => router.push('/login')} 
-            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20"
-          >
-            {locale === 'fr' ? 'Se connecter' : 'Log In'}
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-8 p-6">
       {/* Enhanced Header */}
@@ -297,22 +234,22 @@ export default function JobsPage() {
               </h1>
               <p className="text-primary-foreground/80 text-lg">
                 {locale === 'fr' 
-                  ? 'Découvrez des opportunités passionnantes qui correspondent à vos compétences'
-                  : 'Discover exciting opportunities that match your skills and aspirations'
+                  ? 'Découvrez des opportunités passionnantes dans votre domaine'
+                  : 'Discover exciting opportunities in your field'
                 }
               </p>
             </div>
             <div className="flex gap-3">
               <Button variant="secondary" asChild className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/30">
-                <Link href="/candidate/applications">
-                  <Briefcase className="h-4 w-4 mr-2" />
-                  {locale === 'fr' ? 'Mes candidatures' : 'My Applications'}
+                <Link href="/login">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  {locale === 'fr' ? 'Se connecter' : 'Log In'}
                 </Link>
               </Button>
               <Button variant="secondary" asChild className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/30">
-                <Link href="/candidate/profile">
+                <Link href="/register">
                   <User className="h-4 w-4 mr-2" />
-                  {locale === 'fr' ? 'Mon profil' : 'My Profile'}
+                  {locale === 'fr' ? 'S\'inscrire' : 'Register'}
                 </Link>
               </Button>
             </div>
@@ -321,30 +258,6 @@ export default function JobsPage() {
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary-foreground/10 rounded-full -translate-y-16 translate-x-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-foreground/5 rounded-full translate-y-12 -translate-x-12"></div>
       </div>
-
-      {/* Location Filter Info */}
-      {user?.location && (
-        <Card className="mb-6 border-0 shadow-lg bg-gradient-to-r from-primary/5 to-primary/10">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-primary">
-                <MapPin className="h-6 w-6 mr-3" />
-                <div>
-                  <span className="font-semibold text-lg">
-                    {locale === 'fr' ? 'Emplois dans votre région' : 'Jobs in your region'}
-                  </span>
-                  <p className="text-sm text-primary/80">
-                    {getLocationDisplayName(user.location)}
-                  </p>
-                </div>
-              </div>
-              <Badge variant="secondary" className="bg-primary/20 text-primary">
-                {jobs.length} {locale === 'fr' ? 'emplois' : 'jobs'}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Enhanced Search Section */}
       <Card className="mb-8 border-0 shadow-lg">
@@ -378,12 +291,11 @@ export default function JobsPage() {
               <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={user?.location ? getLocationDisplayName(user.location) : (locale === 'fr' ? 'Localisation...' : 'Location...')}
+                placeholder={locale === 'fr' ? 'Localisation...' : 'Location...'}
                 className="pl-10"
-                value={user?.location ? getLocationDisplayName(user.location) : locationQuery}
-                onChange={(e) => !user?.location && setLocationQuery(e.target.value)}
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                disabled={!!user?.location}
               />
             </div>
             <Button onClick={handleSearch} disabled={loading} className="bg-primary hover:bg-primary/90">
@@ -493,42 +405,33 @@ export default function JobsPage() {
           </Card>
         )}
 
-        {!user && (
-          <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
-            <CardContent className="p-4">
+        {/* Login CTA for better experience */}
+        <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center text-blue-700 dark:text-blue-400">
                 <Star className="h-5 w-5 mr-2" />
-                <span className="font-medium">
-                  {locale === 'fr' ? 'Obtenez des recommandations personnalisées' : 'Get personalized job recommendations'}
-                </span>
+                <div>
+                  <span className="font-medium">
+                    {locale === 'fr' ? 'Obtenez une expérience personnalisée' : 'Get a personalized experience'}
+                  </span>
+                  <p className="text-sm text-blue-600 dark:text-blue-300">
+                    {locale === 'fr' 
+                      ? 'Connectez-vous pour postuler aux emplois et recevoir des recommandations personnalisées'
+                      : 'Log in to apply for jobs and receive personalized recommendations'
+                    }
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-blue-600 dark:text-blue-300 mt-1">
-                <a href="/login" className="underline hover:no-underline">
-                  {locale === 'fr' ? 'Connectez-vous' : 'Log in'}
-                </a> {locale === 'fr' ? 'pour voir des emplois spécifiques à votre localisation et obtenir de meilleures correspondances.' : 'to see jobs specifically for your location and get better matches.'}
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {user && !token && (
-          <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20">
-            <CardContent className="p-4">
-              <div className="flex items-center text-yellow-700 dark:text-yellow-400">
-                <AlertCircle className="h-5 w-5 mr-2" />
-                <span className="font-medium">
-                  {locale === 'fr' ? 'Authentification requise' : 'Authentication required'}
-                </span>
-              </div>
-              <p className="text-sm text-yellow-600 dark:text-yellow-300 mt-1">
-                {locale === 'fr' ? 'Veuillez vous' : 'Please'} 
-                <a href="/login" className="underline hover:no-underline ml-1">
-                  {locale === 'fr' ? 'reconnecter' : 'log in again'}
-                </a> {locale === 'fr' ? 'pour postuler aux emplois.' : 'to apply for jobs.'}
-              </p>
-            </CardContent>
-          </Card>
-        )}
+              <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
+                <Link href="/login">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  {locale === 'fr' ? 'Se connecter' : 'Log In'}
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {loading ? (
           <div className="space-y-6">
@@ -547,15 +450,9 @@ export default function JobsPage() {
                 {locale === 'fr' ? 'Aucun emploi trouvé' : 'No jobs found'}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                {user?.location 
-                  ? (locale === 'fr' 
-                      ? `Aucun emploi trouvé dans ${getLocationDisplayName(user.location)} correspondant à vos critères.`
-                      : `No jobs found in ${getLocationDisplayName(user.location)} matching your criteria.`
-                    )
-                  : (locale === 'fr' 
-                      ? 'Aucun emploi trouvé correspondant à vos critères.'
-                      : 'No jobs found matching your criteria.'
-                    )
+                {locale === 'fr' 
+                  ? 'Aucun emploi trouvé correspondant à vos critères.'
+                  : 'No jobs found matching your criteria.'
                 }
               </p>
               <Button onClick={clearFilters} variant="outline">
@@ -574,11 +471,6 @@ export default function JobsPage() {
                     {jobs.length} {locale === 'fr' ? 'emplois trouvés' : 'jobs found'}
                   </span>
                 </div>
-                {user?.location && (
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
-                    {getLocationDisplayName(user.location)}
-                  </Badge>
-                )}
               </div>
               
               <div className="flex items-center gap-2">
@@ -617,7 +509,9 @@ export default function JobsPage() {
                         <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
                           {job.title}
                         </h3>
-                        
+                        <p className="text-sm text-muted-foreground">
+                          {job.companyId?.name || 'Company Name'}
+                        </p>
                       </div>
                       
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -704,11 +598,13 @@ export default function JobsPage() {
                         </Button>
                         <Button 
                           size="sm"
+                          asChild
                           className="bg-primary hover:bg-primary/90 hover:shadow-lg transition-all duration-300"
-                          onClick={() => handleApplyButton(job._id)}
                         >
-                          <Zap className="h-4 w-4 mr-2" />
-                          {locale === 'fr' ? 'Postuler' : 'Apply'}
+                          <Link href="/login">
+                            <Zap className="h-4 w-4 mr-2" />
+                            {locale === 'fr' ? 'Postuler' : 'Apply'}
+                          </Link>
                         </Button>
                       </div>
                     </div>
@@ -724,14 +620,11 @@ export default function JobsPage() {
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
         job={selectedJob}
-        onApply={handleApplyFromDetails}
-      />
-
-      <ApplyJobModal
-        open={applyOpen}
-        onClose={() => setApplyOpen(false)}
-        jobId={applyJobId}
+        onApply={() => {
+          setDetailOpen(false);
+          router.push('/login');
+        }}
       />
     </div>
   );
-}
+} 

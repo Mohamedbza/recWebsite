@@ -211,7 +211,7 @@ export default function ContactPage() {
               <div className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium">
                 <Zap className="h-4 w-4" />
                 <span className="text-sm">
-                  {locale === 'fr' ? '⚡ Réponse garantie sous 2 heures' : '⚡ Response guaranteed within 2 hours'}
+                  {locale === 'fr' ? ' Réponse garantie sous 2 heures' : ' Response guaranteed within 2 hours'}
                 </span>
               </div>
               

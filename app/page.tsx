@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { heroImage } from "@/config/assets"
 
-const locations = ["Montreal", "Toronto", "Vancouver", "Calgary", "Ottawa"]
+const locations = ["Canada (National)", "United Emirates Arab (Internatoinal)", "Turkey (International)"]
 
 export default function HomePage() {
   const { t, locale } = useLanguage()
@@ -28,9 +28,9 @@ export default function HomePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     const params = new URLSearchParams()
-    if (searchTerm) params.set('search', searchTerm)
+    if (searchTerm) params.set('q', searchTerm)
     if (selectedLocation && selectedLocation !== 'all') params.set('location', selectedLocation)
-    router.push(`/candidats?${params.toString()}`)
+    router.push(`/emplois?${params.toString()}`)
   }
 
   return (
@@ -123,11 +123,14 @@ export default function HomePage() {
               </form>
             </div>
             <Button
+              asChild
               variant="outline"
               className="mt-6 gap-1 rounded-full border-white/40 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-900 hover:text-gray-900"
             >
-              {t('home.hero.learn_more')}
-              <ChevronRight className="h-4 w-4" />
+              <a href="/a-propos">
+                {t('home.hero.learn_more')}
+                <ChevronRight className="h-4 w-4" />
+              </a>
             </Button>
           </div>
         </section>

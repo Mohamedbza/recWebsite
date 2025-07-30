@@ -47,7 +47,7 @@ interface RecommendedJob {
 
 export default function CandidateDashboardPage() {
   const { locale } = useLanguage()
-  const { user, isAuthenticated, token } = useAppSelector((state) => state.account)
+  const { user, isAuthenticated, token, isLoading } = useAppSelector((state) => state.account)
   const router = useRouter()
 
   // State for real data
@@ -197,6 +197,22 @@ export default function CandidateDashboardPage() {
   const handleApplicationSuccess = () => {
     // Refresh the applications list after successful application
     fetchRecentApplications()
+  }
+
+  // Show loading state while auth is being initialized
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
+        <div className="max-w-md w-full mx-auto p-8 rounded-2xl bg-background/80 backdrop-blur-xl border border-white/20 shadow-2xl">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p className="text-muted-foreground text-center">
+              {locale === 'fr' ? 'Chargement...' : 'Loading...'}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!isAuthenticated || user?.role !== 'candidate') {

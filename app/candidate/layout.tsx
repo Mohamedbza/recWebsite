@@ -67,20 +67,29 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { locale } = useLanguage()
-  const { user, isAuthenticated } = useAppSelector((state) => state.account)
+  const { user, isAuthenticated, isLoading } = useAppSelector((state) => state.account)
   const dispatch = useAppDispatch()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Check if user is authenticated and has candidate role
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'candidate') {
+    if (!isLoading && !isAuthenticated || user?.role !== 'candidate') {
       router.push('/login')
     }
-  }, [isAuthenticated, user, router])
+  }, [isAuthenticated, user, router, isLoading])
 
   const handleLogout = async () => {
     await dispatch(logoutUser())
     router.push('/')
+  }
+
+  // Show loading state while auth is being initialized
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+        <div className="animate-spin rounded-full h-32 w-32 border-4 border-primary/20 border-t-primary"></div>
+      </div>
+    )
   }
 
   // Don't render layout if user is not authenticated or not a candidate

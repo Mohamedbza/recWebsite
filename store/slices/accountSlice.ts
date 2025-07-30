@@ -50,7 +50,19 @@ export const loginUser = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.message || 'Login failed')
+        
+        // Handle specific HTTP status codes
+        if (response.status === 401) {
+          throw new Error('Invalid email or password. Please check your credentials.')
+        } else if (response.status === 404) {
+          throw new Error('User not found. Please check your email address.')
+        } else if (response.status === 422) {
+          throw new Error(errorData.message || 'Invalid input data. Please check your information.')
+        } else if (response.status >= 500) {
+          throw new Error('Server error. Please try again later.')
+        } else {
+          throw new Error(errorData.message || `Login failed (${response.status})`)
+        }
       }
 
       const data = await response.json()

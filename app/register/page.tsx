@@ -108,14 +108,47 @@ export default function RegisterPage() {
   const validateCandidateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
     
-    if (!candidateForm.firstName.trim()) newErrors.firstName = 'First name is required'
-    if (!candidateForm.lastName.trim()) newErrors.lastName = 'Last name is required'
-    if (!candidateForm.email.trim()) newErrors.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(candidateForm.email)) newErrors.email = 'Email is invalid'
-    if (!candidateForm.password) newErrors.password = 'Password is required'
-    else if (candidateForm.password.length < 6) newErrors.password = 'Password must be at least 6 characters'
-    if (!candidateForm.phone.trim()) newErrors.phone = 'Phone number is required'
-    if (!candidateForm.location) newErrors.location = 'Location is required'
+    // First name validation
+    if (!candidateForm.firstName.trim()) {
+      newErrors.firstName = 'First name is required'
+    } else if (candidateForm.firstName.trim().length < 2) {
+      newErrors.firstName = 'First name must be at least 2 characters'
+    }
+    
+    // Last name validation
+    if (!candidateForm.lastName.trim()) {
+      newErrors.lastName = 'Last name is required'
+    } else if (candidateForm.lastName.trim().length < 2) {
+      newErrors.lastName = 'Last name must be at least 2 characters'
+    }
+    
+    // Email validation
+    if (!candidateForm.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidateForm.email.trim())) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    // Password validation
+    if (!candidateForm.password) {
+      newErrors.password = 'Password is required'
+    } else if (candidateForm.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters'
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(candidateForm.password)) {
+      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    }
+    
+    // Phone validation
+    if (!candidateForm.phone.trim()) {
+      newErrors.phone = 'Phone number is required'
+    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(candidateForm.phone.trim().replace(/[\s\-\(\)]/g, ''))) {
+      newErrors.phone = 'Please enter a valid phone number'
+    }
+    
+    // Location validation
+    if (!candidateForm.location) {
+      newErrors.location = 'Location is required'
+    }
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -124,14 +157,47 @@ export default function RegisterPage() {
   const validateCompanyForm = (): boolean => {
     const newErrors: Record<string, string> = {}
     
-    if (!companyForm.name.trim()) newErrors.name = 'Company name is required'
-    if (!companyForm.industry.trim()) newErrors.industry = 'Industry is required'
-    if (!companyForm.email.trim()) newErrors.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(companyForm.email)) newErrors.email = 'Email is invalid'
-    if (!companyForm.password) newErrors.password = 'Password is required'
-    else if (companyForm.password.length < 6) newErrors.password = 'Password must be at least 6 characters'
-    if (!companyForm.phone.trim()) newErrors.phone = 'Phone number is required'
-    if (!companyForm.location) newErrors.location = 'Location is required'
+    // Company name validation
+    if (!companyForm.name.trim()) {
+      newErrors.name = 'Company name is required'
+    } else if (companyForm.name.trim().length < 2) {
+      newErrors.name = 'Company name must be at least 2 characters'
+    }
+    
+    // Industry validation
+    if (!companyForm.industry.trim()) {
+      newErrors.industry = 'Industry is required'
+    } else if (companyForm.industry.trim().length < 2) {
+      newErrors.industry = 'Industry must be at least 2 characters'
+    }
+    
+    // Email validation
+    if (!companyForm.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(companyForm.email.trim())) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    // Password validation
+    if (!companyForm.password) {
+      newErrors.password = 'Password is required'
+    } else if (companyForm.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters'
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(companyForm.password)) {
+      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    }
+    
+    // Phone validation
+    if (!companyForm.phone.trim()) {
+      newErrors.phone = 'Phone number is required'
+    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(companyForm.phone.trim().replace(/[\s\-\(\)]/g, ''))) {
+      newErrors.phone = 'Please enter a valid phone number'
+    }
+    
+    // Location validation
+    if (!companyForm.location) {
+      newErrors.location = 'Location is required'
+    }
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -177,11 +243,45 @@ export default function RegisterPage() {
         throw new Error(response.error || "Registration failed")
       }
     } catch (error) {
-      toast({
-        title: "Registration Failed",
-        description: error instanceof Error ? error.message : "An error occurred during registration",
-        variant: "destructive",
-      })
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during registration"
+      
+      // Handle specific error types
+      if (errorMessage.toLowerCase().includes('email already exists') || 
+          errorMessage.toLowerCase().includes('duplicate email') ||
+          errorMessage.toLowerCase().includes('email is already taken')) {
+        toast({
+          title: "Email Already Exists",
+          description: "An account with this email address already exists. Please use a different email or try logging in.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('validation') || 
+                 errorMessage.toLowerCase().includes('invalid')) {
+        toast({
+          title: "Invalid Information",
+          description: "Please check your information and make sure all required fields are filled correctly.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('network') || 
+                 errorMessage.toLowerCase().includes('connection')) {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to the server. Please check your internet connection and try again.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('password') && 
+                 errorMessage.toLowerCase().includes('weak')) {
+        toast({
+          title: "Weak Password",
+          description: "Your password is too weak. Please use a stronger password with at least 8 characters.",
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: errorMessage,
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsLoading(false)
     }
@@ -226,11 +326,52 @@ export default function RegisterPage() {
         throw new Error(response.error || "Registration failed")
       }
     } catch (error) {
-      toast({
-        title: "Registration Failed",
-        description: error instanceof Error ? error.message : "An error occurred during registration",
-        variant: "destructive",
-      })
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during registration"
+      
+      // Handle specific error types
+      if (errorMessage.toLowerCase().includes('email already exists') || 
+          errorMessage.toLowerCase().includes('duplicate email') ||
+          errorMessage.toLowerCase().includes('email is already taken')) {
+        toast({
+          title: "Email Already Exists",
+          description: "A company account with this email address already exists. Please use a different email or try logging in.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('company name') && 
+                 errorMessage.toLowerCase().includes('already exists')) {
+        toast({
+          title: "Company Name Already Exists",
+          description: "A company with this name already exists. Please use a different company name.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('validation') || 
+                 errorMessage.toLowerCase().includes('invalid')) {
+        toast({
+          title: "Invalid Information",
+          description: "Please check your company information and make sure all required fields are filled correctly.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('network') || 
+                 errorMessage.toLowerCase().includes('connection')) {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to the server. Please check your internet connection and try again.",
+          variant: "destructive",
+        })
+      } else if (errorMessage.toLowerCase().includes('password') && 
+                 errorMessage.toLowerCase().includes('weak')) {
+        toast({
+          title: "Weak Password",
+          description: "Your password is too weak. Please use a stronger password with at least 8 characters.",
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: errorMessage,
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsLoading(false)
     }

@@ -27,10 +27,24 @@ export default function LoginPage() {
     e.preventDefault()
 
     // Validate inputs
-    if (!email || !password) {
+    if (!email.trim() || !password) {
+      const missingFields = []
+      if (!email.trim()) missingFields.push('email')
+      if (!password) missingFields.push('password')
+      
       toast({
-        title: "Error",
-        description: "Please enter both email and password",
+        title: "Missing Information",
+        description: `Please enter your ${missingFields.join(' and ')}`,
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
         variant: "destructive",
       })
       return
@@ -56,18 +70,39 @@ export default function LoginPage() {
         } else {
           router.push("/candidate/dashboard")
         }
-      } else {
-        // Handle login failure
-        toast({
-          title: "Error",
-          description: result.payload as string || "An error occurred while signing in.",
-          variant: "destructive",
-        })
+      } else if (loginUser.rejected.match(result)) {
+        // Handle login failure with specific error messages
+        const errorMessage = result.payload as string
+        
+        if (errorMessage?.toLowerCase().includes('401') || 
+            errorMessage?.toLowerCase().includes('unauthorized') ||
+            errorMessage?.toLowerCase().includes('invalid credentials') ||
+            errorMessage?.toLowerCase().includes('wrong password') ||
+            errorMessage?.toLowerCase().includes('user not found')) {
+          toast({
+            title: "Authentication Failed",
+            description: "Invalid email or password. Please check your credentials and try again.",
+            variant: "destructive",
+          })
+        } else if (errorMessage?.toLowerCase().includes('network') || 
+                   errorMessage?.toLowerCase().includes('connection')) {
+          toast({
+            title: "Connection Error",
+            description: "Unable to connect to the server. Please check your internet connection and try again.",
+            variant: "destructive",
+          })
+        } else {
+          toast({
+            title: "Login Error",
+            description: errorMessage || "An error occurred while signing in. Please try again.",
+            variant: "destructive",
+          })
+        }
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred.",
+        title: "Unexpected Error",
+        description: "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       })
     }

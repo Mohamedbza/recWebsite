@@ -323,7 +323,7 @@ export default function CandidatsPage() {
                     className="group relative overflow-hidden bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 text-primary border border-primary/20 hover:border-primary/40 shadow-md hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:scale-105 rounded-xl self-start"
                     asChild
                   >
-                    <Link href="/candidate/emplois">
+                    <Link href={index === 0 ? "/candidate/emplois" : index === 1 ? "/candidate/profile" : "/candidate/applications"}>
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       <span className="relative z-10 font-medium">
                         {locale === 'fr' ? 'En savoir plus' : 'Learn More'}

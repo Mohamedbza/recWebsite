@@ -32,9 +32,24 @@ class ApiService {
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle specific HTTP status codes with better error messages
+        let errorMessage = data.message || data.error || `HTTP error! status: ${response.status}`;
+        
+        if (response.status === 400) {
+          errorMessage = data.message || 'Invalid request data. Please check your information.';
+        } else if (response.status === 401) {
+          errorMessage = 'Invalid email or password. Please check your credentials.';
+        } else if (response.status === 409) {
+          errorMessage = data.message || 'Email already exists. Please use a different email address.';
+        } else if (response.status === 422) {
+          errorMessage = data.message || 'Validation error. Please check your input data.';
+        } else if (response.status >= 500) {
+          errorMessage = 'Server error. Please try again later.';
+        }
+        
         return {
           success: false,
-          error: data.message || `HTTP error! status: ${response.status}`,
+          error: errorMessage,
         };
       }
 

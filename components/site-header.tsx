@@ -19,6 +19,8 @@ import {
   Building2,
   Phone,
   ArrowRight,
+  Info,
+  Settings,
 } from "lucide-react"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { LanguageSwitcher } from "./LanguageSwitcher"
@@ -46,7 +48,7 @@ export function SiteHeader() {
   const [searchQuery, setSearchQuery] = useState("")
   const pathname = usePathname()
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
   const dispatch = useAppDispatch()
   const { user, isAuthenticated } = useAppSelector((state) => state.account)
   
@@ -257,12 +259,13 @@ export function SiteHeader() {
               {/* About Link */}
               <Link
                 href="/a-propos"
-                className={`group/nav px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                   isActive("/a-propos")
                     ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
                     : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
                 }`}
               >
+                <Info className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
                 <span className="relative">
                   {t('navigation.about')}
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -272,14 +275,31 @@ export function SiteHeader() {
               {/* Services Link */}
               <Link
                 href="/services"
-                className={`group/nav px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                   isActive("/services")
                     ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
                     : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
                 }`}
               >
+                <Settings className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
                 <span className="relative">
                   {t('navigation.services')}
+                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </span>
+              </Link>
+
+              {/* Jobs Link */}
+              <Link
+                href="/emplois"
+                className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                  isActive("/emplois")
+                    ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
+                    : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
+                }`}
+              >
+                <Briefcase className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
+                <span className="relative">
+                  {locale === 'fr' ? 'Emplois' : 'Jobs'}
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </span>
               </Link>
@@ -577,6 +597,22 @@ export function SiteHeader() {
                 <div className="flex-1">
                   <div className="font-semibold">{t('navigation.services')}</div>
                   <div className="text-xs text-muted-foreground">Nos solutions complètes</div>
+                </div>
+                <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
+              </Link>
+
+              <Link
+                href="/emplois"
+                className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ animationDelay: '225ms' }}
+              >
+                <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
+                  <Briefcase className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold">{locale === 'fr' ? 'Emplois' : 'Jobs'}</div>
+                  <div className="text-xs text-muted-foreground">Parcourir les offres d&apos;emploi</div>
                 </div>
                 <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
               </Link>

@@ -62,17 +62,26 @@ export default function EmployeursPage() {
                   {t('employers.hero.description')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0">
-                    <Users className="mr-2 h-5 w-5" />
-                    {t('employers.hero.post_job_button')}
+                  <Button
+                    asChild
+                    size="lg"
+                    className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0"
+                  >
+                    <a href="/employeurs/dashboard">
+                      <Users className="mr-2 h-5 w-5" />
+                      {t('employers.hero.post_job_button')}
+                    </a>
                   </Button>
                   <Button
+                    asChild
                     variant="outline"
                     size="lg"
                     className="group relative overflow-hidden bg-white/90 backdrop-blur-sm text-slate-900 border-2 border-white/40 hover:border-white/70 hover:bg-white shadow-lg hover:shadow-xl hover:shadow-white/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl font-semibold"
                   >
-                    {t('employers.hero.services_button')}
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <a href="/services">
+                      {t('employers.hero.services_button')}
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -202,15 +211,7 @@ export default function EmployeursPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/employeurs/recrutement-local"
-                  className="inline-flex items-center text-sm font-medium text-primary group"
-                >
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                    {t('employers.solutions.learn_more')}
-                  </span>
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                 
               </div>
 
               {/* Solution 2 - National Recruitment */}
@@ -241,15 +242,7 @@ export default function EmployeursPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/employeurs/recrutement-national"
-                  className="inline-flex items-center text-sm font-medium text-primary group"
-                >
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                    {t('employers.solutions.learn_more')}
-                  </span>
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                
               </div>
 
               {/* Solution 3 - International Recruitment */}
@@ -280,15 +273,7 @@ export default function EmployeursPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/employeurs/recrutement-international"
-                  className="inline-flex items-center text-sm font-medium text-primary group"
-                >
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
-                    {t('employers.solutions.learn_more')}
-                  </span>
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                
               </div>
             </div>
           </div>
@@ -389,6 +374,7 @@ export default function EmployeursPage() {
                       size="lg"
                       variant="secondary"
                       className="rounded-xl bg-white/90 text-secondary hover:bg-white transition-all duration-300"
+                      onClick={() => window.location.href = "/employeurs/dashboard"}
                     >
                       <Users className="mr-2 h-5 w-5" />
                       {t('employers.cta.post_job_button')}
