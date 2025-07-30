@@ -73,6 +73,14 @@ class ApiService {
     });
   }
 
+  // Candidate Authentication
+  async candidateLogin(email: string, password: string) {
+    return this.request('/auth/candidates/login/public', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
   // Candidate Registration
   async registerCandidate(candidateData: {
     firstName: string;
