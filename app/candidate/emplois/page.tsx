@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { useAuth } from '@/contexts/EmployerAuthContext'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -100,8 +99,7 @@ const JobCardSkeleton = () => {
 
 export default function JobsPage() {
   const { locale } = useLanguage();
-  const { user, token } = useAuth();
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.account);
+  const { user, token, isAuthenticated, isLoading } = useAppSelector((state) => state.account);
   const searchParams = useSearchParams();
   const router = useRouter();
   
@@ -256,6 +254,15 @@ export default function JobsPage() {
             </p>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  // Show loading while auth is being initialized
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-4 border-primary/20 border-t-primary"></div>
       </div>
     )
   }
@@ -511,24 +518,6 @@ export default function JobsPage() {
           </Card>
         )}
 
-        {user && !token && (
-          <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20">
-            <CardContent className="p-4">
-              <div className="flex items-center text-yellow-700 dark:text-yellow-400">
-                <AlertCircle className="h-5 w-5 mr-2" />
-                <span className="font-medium">
-                  {locale === 'fr' ? 'Authentification requise' : 'Authentication required'}
-                </span>
-              </div>
-              <p className="text-sm text-yellow-600 dark:text-yellow-300 mt-1">
-                {locale === 'fr' ? 'Veuillez vous' : 'Please'} 
-                <a href="/login" className="underline hover:no-underline ml-1">
-                  {locale === 'fr' ? 'reconnecter' : 'log in again'}
-                </a> {locale === 'fr' ? 'pour postuler aux emplois.' : 'to apply for jobs.'}
-              </p>
-            </CardContent>
-          </Card>
-        )}
 
         {loading ? (
           <div className="space-y-6">
