@@ -83,6 +83,14 @@ export default function PublicJobsPage() {
   
   // Redux state
   const { jobs, loading, loadingMore, error, filters, pagination } = useAppSelector(state => state.jobs);
+  const { user, isAuthenticated } = useAppSelector((state) => state.account);
+  
+  // Redirect signed-in candidates to candidate/emplois
+  useEffect(() => {
+    if (isAuthenticated && user && user.role === 'candidate') {
+      router.replace('/candidate/emplois');
+    }
+  }, [isAuthenticated, user, router]);
   
   // Check if we're using demo data
   const isDemoData = jobs.length > 0 && jobs.some(job => job._id?.startsWith('sample-'));
@@ -146,9 +154,9 @@ export default function PublicJobsPage() {
   // Get location display name
   const getLocationDisplayName = (location: string) => {
     const locationMap: { [key: string]: string } = {
-      'montreal': 'Montreal, Canada',
-      'dubai': 'Dubai, UAE',
-      'turkey': 'Istanbul, Turkey'
+      'montreal': 'Canada',
+      'dubai': 'United Arab Emirates',
+      'turkey': 'Turkey'
     };
     return locationMap[location] || location;
   };
@@ -232,16 +240,6 @@ export default function PublicJobsPage() {
                 className="pl-10 h-11"
                 value={filters.search}
                 onChange={(e) => dispatch(setSearchFilter(e.target.value))}
-              />
-            </div>
-            <div className="flex-1 relative">
-              <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                type="text"
-                placeholder={t('candidates.jobs.search.location')}
-                className="pl-10 h-11"
-                value={filters.location}
-                onChange={(e) => dispatch(setLocationFilter(e.target.value))}
               />
             </div>
             <Button 
@@ -479,7 +477,7 @@ export default function PublicJobsPage() {
                                 {job.title}
                               </h3>
                               <p className="text-gray-600">
-                                {job.companyId?.name || 'Company Name'}
+                              {getLocationDisplayName(job.location)}
                               </p>
                             </div>
                           </div>
@@ -492,7 +490,7 @@ export default function PublicJobsPage() {
                         <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-600">
                           <span className="flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
-                            {getLocationDisplayName(job.location)}
+                            { job.address}
                           </span>
                           <span className="flex items-center gap-1">
                             <Briefcase className="h-4 w-4" />

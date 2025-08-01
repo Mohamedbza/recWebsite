@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAuth } from "@/contexts/EmployerAuthContext"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { logoutUser } from "@/store/slices/accountSlice"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -274,11 +275,18 @@ function DashboardContent() {
 
   // Redirect to login if not authenticated (instead of showing login required message)
   useEffect(() => {
-    if (!authLoading && !isLoggedIn) {
-      // Redirect to login page
-      router.push('/login')
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        router.push('/login')
+      } else if (authUser?.role === 'candidate') {
+        // If user is a candidate trying to access employer routes, logout and redirect
+        dispatch(logoutUser())
+        router.push('/login')
+      } else if (authUser?.role !== 'employer') {
+        router.push('/login')
+      }
     }
-  }, [authLoading, isLoggedIn, router])
+  }, [authLoading, isAuthenticated, authUser, router, dispatch])
 
   // Don't render anything if not logged in (will redirect)
   if (!isLoggedIn) {

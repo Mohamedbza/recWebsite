@@ -6,7 +6,6 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import {
   Search,
-  Globe,
   Menu,
   X,
   ChevronDown,
@@ -32,15 +31,50 @@ import { logoutUser } from "@/store/slices/accountSlice"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import React from "react"
 
-// Define dropdown item types
-type DropdownItem = {
-  href: string
-  icon: React.ReactNode
-  title: string
-  description: string
-}
+  // Define dropdown item types
+  type DropdownItem = {
+    href: string
+    icon: React.ReactNode
+    title: string
+    description: string
+  }
 
 export function SiteHeader() {
+  const { t, locale } = useLanguage()
+  const dispatch = useAppDispatch()
+  const { user, isAuthenticated } = useAppSelector((state) => state.account)
+  
+  // Define dropdown content
+  const candidatsDropdown: DropdownItem[] = [
+    {
+      href: "/candidats",
+      icon: <Sparkles className="h-4 w-4 text-primary" />,
+      title: t('navigation.overview'),
+      description: t('navigation.overview_desc'),
+    },
+    {
+      href: "/emplois",
+      icon: <Briefcase className="h-4 w-4 text-primary" />,
+      title: t('navigation.job_offers'),
+      description: t('navigation.job_offers_desc'),
+    },
+  ]
+
+  const employeursDropdown: DropdownItem[] = [
+    {
+      href: "/employeurs",
+      icon: <Building2 className="h-4 w-4 text-primary" />,
+      title: t('navigation.overview'),
+      description: t('navigation.overview_desc'),
+    },
+    {
+      href: "/employeurs/dashboard",
+      icon: <Users className="h-4 w-4 text-primary" />,
+      title: t('navigation.dashboard'),
+      description: t('navigation.dashboard_desc'),
+    },
+  ]
+
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -48,13 +82,11 @@ export function SiteHeader() {
   const [searchQuery, setSearchQuery] = useState("")
   const pathname = usePathname()
   const router = useRouter()
-  const { t, locale } = useLanguage()
-  const dispatch = useAppDispatch()
-  const { user, isAuthenticated } = useAppSelector((state) => state.account)
   
   // Refs for dropdowns and search
   const accountRef = useRef<HTMLDivElement>(null)
   const candidatsRef = useRef<HTMLDivElement>(null)
+  const employeursRef = useRef<HTMLDivElement>(null)
   const languageRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -126,6 +158,12 @@ export function SiteHeader() {
         activeDropdown === "candidats" &&
         candidatsRef.current &&
         !candidatsRef.current.contains(e.target as Node)
+      ) {
+        setActiveDropdown(null)
+      } else if (
+        activeDropdown === "employeurs" &&
+        employeursRef.current &&
+        !employeursRef.current.contains(e.target as Node)
       ) {
         setActiveDropdown(null)
       } else if (
@@ -257,55 +295,91 @@ export function SiteHeader() {
 
                 {/* Candidats Dropdown Menu */}
                 {activeDropdown === "candidats" && (
-                  <div className="absolute top-full left-0 mt-3 w-64 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/30 shadow-2xl overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
-                    <div className="p-1">
-                      <button
-                        onClick={() => handleDropdownItemClick("/candidats")}
-                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-all duration-200 group/item cursor-pointer text-left"
-                      >
-                        <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all duration-200">
-                          <Sparkles className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-medium">{t('navigation.discover') || 'Découvrir'}</div>
-                          <div className="text-xs text-muted-foreground">{t('navigation.discover_desc') || 'Explorez nos services'}</div>
-                        </div>
-                        <ArrowRight className="h-4 w-4 opacity-0 group-hover/item:opacity-100 transition-all duration-200" />
-                      </button>
-                      
-                      <button
-                        onClick={() => handleDropdownItemClick("/emplois")}
-                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-all duration-200 group/item cursor-pointer text-left"
-                      >
-                        <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all duration-200">
-                          <Briefcase className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-medium">{t('navigation.jobs') || 'Emplois'}</div>
-                          <div className="text-xs text-muted-foreground">{t('navigation.jobs_desc') || 'Parcourir les offres'}</div>
-                        </div>
-                        <ArrowRight className="h-4 w-4 opacity-0 group-hover/item:opacity-100 transition-all duration-200" />
-                      </button>
+                  <div className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden z-50">
+                    <div className="p-6">
+                      <div className="mb-4">
+                        <h3 className="font-bold text-lg mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                          {t('navigation.candidates_header')}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{t('navigation.candidates_subtitle')}</p>
+                      </div>
+                      <div className="space-y-3">
+                        {candidatsDropdown.map((item, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleDropdownItemClick(item.href)}
+                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
+                          >
+                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                              {item.icon}
+                            </div>
+                            <div>
+                              <div className="font-medium">{item.title}</div>
+                              <div className="text-xs text-muted-foreground">{item.description}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Employeurs Link */}
-              <Link
-                href="/employeurs"
-                className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
-                  isActive("/employeurs")
-                    ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
-                    : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
-                }`}
-              >
-                <Building2 className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
-                <span className="relative">
-                  {t('navigation.employers')}
-                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </span>
-              </Link>
+              {/* Employeurs Dropdown */}
+              <div className="relative" ref={employeursRef}>
+                <button
+                  onClick={() => toggleDropdown("employeurs")}
+                  className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                    isActive("/employeurs") || activeDropdown === "employeurs"
+                      ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
+                      : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
+                  }`}
+                >
+                  <Building2 className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
+                  <span className="relative">
+                    {t('navigation.employers')}
+                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
+                  </span>
+                  <ChevronDown
+                    className={`h-3 w-3 transition-all duration-300 ${
+                      activeDropdown === "employeurs" 
+                        ? "rotate-180 text-primary" 
+                        : "group-hover/nav:rotate-180"
+                    }`}
+                  />
+                </button>
+
+                {/* Employeurs Dropdown Menu */}
+                {activeDropdown === "employeurs" && (
+                  <div className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden z-50">
+                    <div className="p-6">
+                      <div className="mb-4">
+                        <h3 className="font-bold text-lg mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                          {t('navigation.employers_header')}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{t('navigation.employers_subtitle')}</p>
+                      </div>
+                      <div className="space-y-3">
+                        {employeursDropdown.map((item, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleDropdownItemClick(item.href)}
+                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-300 group cursor-pointer text-left"
+                          >
+                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                              {item.icon}
+                            </div>
+                            <div>
+                              <div className="font-medium">{item.title}</div>
+                              <div className="text-xs text-muted-foreground">{item.description}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* About Link */}
               <Link
@@ -569,54 +643,47 @@ export function SiteHeader() {
               </div>
               <div className="space-y-1">
                 <div className="text-xs font-semibold text-primary px-4 py-1">{t('navigation.candidates')}</div>
-                <Link
-                  href="/candidats"
-                  className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02] ml-4"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ animationDelay: '50ms' }}
-                >
-                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
-                    <Sparkles className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold">{t('navigation.discover') || 'Découvrir'}</div>
-                    <div className="text-xs text-muted-foreground">{t('navigation.discover_desc') || 'Explorez nos services'}</div>
-                  </div>
-                  <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
-                </Link>
-                
-                <Link
-                  href="/emplois"
-                  className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02] ml-4"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ animationDelay: '75ms' }}
-                >
-                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
-                    <Briefcase className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold">{t('navigation.jobs') || 'Emplois'}</div>
-                    <div className="text-xs text-muted-foreground">{t('navigation.jobs_desc') || 'Parcourir les offres'}</div>
-                  </div>
-                  <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
-                </Link>
+                {candidatsDropdown.map((item, index) => (
+                  <Link
+                    key={index}
+                    href={item.href}
+                    className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02] ml-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ animationDelay: `${50 + index * 25}ms` }}
+                  >
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
+                      {item.icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-semibold">{item.title}</div>
+                      <div className="text-xs text-muted-foreground">{item.description}</div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
+                  </Link>
+                ))}
               </div>
 
-              <Link
-                href="/employeurs"
-                className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
-                onClick={() => setIsMobileMenuOpen(false)}
-                style={{ animationDelay: '100ms' }}
-              >
-                <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
-                  <Building2 className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="font-semibold">{t('navigation.employers')}</div>
-                  <div className="text-xs text-muted-foreground">Solutions de recrutement</div>
-                </div>
-                <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
-              </Link>
+              <div className="space-y-1">
+                <div className="text-xs font-semibold text-primary px-4 py-1">{t('navigation.employers')}</div>
+                {employeursDropdown.map((item, index) => (
+                  <Link
+                    key={index}
+                    href={item.href}
+                    className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02] ml-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ animationDelay: `${100 + index * 25}ms` }}
+                  >
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
+                      {item.icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-semibold">{item.title}</div>
+                      <div className="text-xs text-muted-foreground">{item.description}</div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Secondary Navigation - Enhanced */}

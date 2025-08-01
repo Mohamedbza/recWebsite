@@ -67,7 +67,17 @@
     "discover": "Découvrir",
     "discover_desc": "Explorez nos services",
     "jobs": "Emplois",
-    "jobs_desc": "Parcourir les offres"
+    "jobs_desc": "Parcourir les offres",
+    "candidates_header": "Pour les Candidats",
+    "candidates_subtitle": "Explorez vos opportunités de carrière",
+    "employers_header": "Pour les Employeurs",
+    "employers_subtitle": "Solutions de recrutement sur mesure",
+    "overview": "Vue d'ensemble",
+    "overview_desc": "Découvrez nos services",
+    "job_offers": "Offres d'emploi",
+    "job_offers_desc": "Trouvez votre emploi idéal",
+    "dashboard": "Tableau de bord",
+    "dashboard_desc": "Gérer vos offres"
   },
   "candidates": {
     "dropdown": {

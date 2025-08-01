@@ -67,7 +67,17 @@
     "discover": "Discover",
     "discover_desc": "Explore our services",
     "jobs": "Jobs",
-    "jobs_desc": "Browse job offers"
+    "jobs_desc": "Browse job offers",
+    "candidates_header": "For Candidates",
+    "candidates_subtitle": "Explore your career opportunities",
+    "employers_header": "For Employers",
+    "employers_subtitle": "Custom recruitment solutions",
+    "overview": "Overview",
+    "overview_desc": "Discover our services",
+    "job_offers": "Job Offers",
+    "job_offers_desc": "Find your ideal job",
+    "dashboard": "Dashboard",
+    "dashboard_desc": "Manage your job postings"
   },
   "candidates": {
     "dropdown": {

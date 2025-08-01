@@ -181,7 +181,7 @@ export default function CandidateDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      <div className="py-12">
+      <div className="py-6">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
           {/* Modern Header Section */}
@@ -437,12 +437,12 @@ export default function CandidateDashboardPage() {
             </Card>
 
             {/* Recommended Jobs */}
-            <Card className="border-0 bg-gradient-to-br from-white/90 via-white/80 to-purple-50/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-purple-950/50 backdrop-blur-xl shadow-2xl shadow-purple-500/10">
+            <Card className="border-0 bg-gradient-to-br from-white/90 via-white/80 to-emerald-50/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-emerald-950/50 backdrop-blur-xl shadow-2xl shadow-emerald-500/10">
               <CardHeader className="pb-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 flex items-center justify-center shadow-lg">
-                      <Star className="h-7 w-7 text-purple-600" />
+                    <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 flex items-center justify-center shadow-lg">
+                      <Star className="h-7 w-7 text-emerald-600" />
                     </div>
                     <div>
                       <CardTitle className="text-xl">
@@ -457,13 +457,13 @@ export default function CandidateDashboardPage() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="text-purple-600 hover:bg-purple-50 rounded-xl" 
+                      className="text-emerald-600 hover:bg-emerald-50 rounded-xl" 
                       onClick={handleRefreshRecommendations}
                       disabled={isLoadingRecommendations}
                     >
                       <RefreshCw className={`h-4 w-4 ${isLoadingRecommendations ? 'animate-spin' : ''}`} />
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-purple-600 hover:bg-purple-50 rounded-xl group" asChild>
+                    <Button variant="ghost" size="sm" className="text-emerald-600 hover:bg-emerald-50 rounded-xl group" asChild>
                       <Link href="/candidate/emplois">
                         {locale === 'fr' ? 'Voir plus' : 'View More'}
                         <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -475,7 +475,7 @@ export default function CandidateDashboardPage() {
               <CardContent>
                 {isLoadingRecommendations ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                    <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
                     <span className="ml-2 text-muted-foreground">
                       {locale === 'fr' ? 'Chargement...' : 'Loading...'}
                     </span>
@@ -493,10 +493,10 @@ export default function CandidateDashboardPage() {
                 ) : recommendedJobs.length > 0 ? (
                   <div className="space-y-4">
                     {recommendedJobs.map((job) => (
-                      <div key={job._id} className="group p-4 rounded-xl border border-border hover:border-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all duration-200">
+                      <div key={job._id} className="group p-4 rounded-xl border border-border hover:border-emerald-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 transition-all duration-200">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
-                            <p className="font-semibold text-foreground group-hover:text-purple-700 transition-colors">
+                            <p className="font-semibold text-foreground group-hover:text-emerald-700 transition-colors">
                               {job.title || (locale === 'fr' ? 'Titre non spécifié' : 'Title not specified')}
                             </p>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
@@ -557,7 +557,7 @@ export default function CandidateDashboardPage() {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="flex-1 text-purple-600 hover:bg-purple-50 border-purple-200 hover:border-purple-300 group"
+                            className="flex-1 text-emerald-600 hover:bg-emerald-50 border-emerald-200 hover:border-emerald-300 group"
                             onClick={() => openJobDetails(job._id)}
                           >
                             <Eye className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />

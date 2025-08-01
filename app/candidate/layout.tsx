@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { SiteHeader } from "@/components/site-header"
 
 interface CandidateLayoutProps {
   children: React.ReactNode
@@ -64,10 +65,18 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
 
   // Check if user is authenticated and has candidate role
   useEffect(() => {
-    if (!isLoading && !isAuthenticated || user?.role !== 'candidate') {
-      router.push('/login')
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        router.push('/login')
+      } else if (user?.role === 'employer') {
+        // If user is an employer trying to access candidate routes, logout and redirect
+        dispatch(logoutUser())
+        router.push('/login')
+      } else if (user?.role !== 'candidate') {
+        router.push('/login')
+      }
     }
-  }, [isAuthenticated, user, router, isLoading])
+  }, [isAuthenticated, user, router, isLoading, dispatch])
 
   const handleLogout = async () => {
     await dispatch(logoutUser())
@@ -94,6 +103,9 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+      {/* Site Header */}
+      <SiteHeader />
+      
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
@@ -104,7 +116,7 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed left-0 top-0 z-50 h-full w-72 transform bg-gradient-to-b from-white/95 via-white/90 to-primary/5 dark:from-gray-900/95 dark:via-gray-800/90 dark:to-primary/10 backdrop-blur-xl border-r border-white/20 dark:border-gray-700/20 shadow-2xl shadow-primary/10 transition-transform duration-300 ease-in-out lg:translate-x-0",
+        "fixed left-0 top-20 z-50 h-[calc(100vh-5rem)] w-72 transform bg-gradient-to-b from-white/95 via-white/90 to-primary/5 dark:from-gray-900/95 dark:via-gray-800/90 dark:to-primary/10 backdrop-blur-xl border-r border-white/20 dark:border-gray-700/20 shadow-2xl shadow-primary/10 transition-transform duration-300 ease-in-out lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="flex h-full flex-col">
@@ -218,12 +230,12 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className="lg:pl-72">
+      <div className="lg:pl-72 pt-20">
         {/* Mobile Menu Button - Fixed Position */}
         <Button
           variant="ghost"
           size="sm"
-          className="fixed top-4 left-4 z-40 lg:hidden hover:bg-white/20 rounded-xl bg-white/80 backdrop-blur-sm shadow-lg"
+          className="fixed top-24 left-4 z-40 lg:hidden hover:bg-white/20 rounded-xl bg-white/80 backdrop-blur-sm shadow-lg"
           onClick={() => setSidebarOpen(true)}
         >
           <Menu className="h-5 w-5" />
