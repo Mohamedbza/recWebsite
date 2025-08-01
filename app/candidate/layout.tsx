@@ -10,7 +10,6 @@ import {
   LayoutDashboard, 
   Search, 
   User, 
-  FileText,
   Settings,
   Briefcase,
   Calendar,
@@ -54,14 +53,6 @@ const navigationItems = [
   }
 ]
 
-const toolsItems = [
-  {
-    title: { en: "My Resume", fr: "Mon CV" },
-    href: "/candidate/resume",
-    icon: FileText,
-    gradient: "from-blue-500 to-blue-600"
-  }, 
-]
 
 export default function CandidateLayout({ children }: CandidateLayoutProps) {
   const pathname = usePathname()
@@ -198,44 +189,6 @@ export default function CandidateLayout({ children }: CandidateLayoutProps) {
               </nav>
             </div>
 
-            {/* Tools Section */}
-            <div>
-              <h3 className="px-3 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">
-                {locale === 'fr' ? 'Outils' : 'Tools'}
-              </h3>
-              <nav className="space-y-2">
-                {toolsItems.map((item) => {
-                  const isActive = pathname === item.href
-                  const Icon = item.icon
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300",
-                        isActive
-                          ? "bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent text-secondary shadow-lg shadow-secondary/10 border border-secondary/20"
-                          : "text-muted-foreground hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-foreground hover:shadow-md hover:scale-105"
-                      )}
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      <div className={cn(
-                        "h-7 w-7 rounded-xl flex items-center justify-center mr-3 transition-all duration-300",
-                        isActive 
-                          ? `bg-gradient-to-br ${item.gradient} shadow-lg` 
-                          : "bg-muted/50 group-hover:bg-muted"
-                      )}>
-                        <Icon className={cn(
-                          "h-3.5 w-3.5 transition-all duration-300",
-                          isActive ? "text-white" : "text-muted-foreground group-hover:text-foreground"
-                        )} />
-                      </div>
-                      {item.title[locale]}
-                    </Link>
-                  )
-                })}
-              </nav>
-            </div>
           </div>
 
           {/* Settings & Logout */}

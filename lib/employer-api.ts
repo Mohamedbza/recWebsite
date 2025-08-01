@@ -144,7 +144,8 @@ class EmployerApiService {
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    retries: number = 2
   ): Promise<T> {
     const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
     const user = typeof window !== 'undefined' ? localStorage.getItem('auth_user') : null;
@@ -157,24 +158,66 @@ class EmployerApiService {
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
         ...options.headers,
       },
       ...options,
     };
 
-    const response = await fetch(url, config);
-    const data = await response.json();
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+    
+    config.signal = controller.signal;
 
-    if (!response.ok) {
-      throw new Error(data.message || `HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch(url, config);
+      clearTimeout(timeoutId);
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        throw new Error('Invalid JSON response from server');
+      }
+
+      if (!response.ok) {
+        // Handle specific HTTP status codes
+        if (response.status === 401) {
+          throw new Error('Authentication failed - please login again');
+        } else if (response.status === 408 || response.status === 504) {
+          throw new Error('Request timeout - server is taking too long to respond');
+        } else if (response.status === 503) {
+          throw new Error('Service temporarily unavailable - please try again later');
+        } else if (response.status >= 500) {
+          throw new Error('Server error - please try again later');
+        }
+        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (error.name === 'AbortError') {
+        throw new Error('Request timeout - server is taking too long to respond');
+      }
+      
+      // Retry logic for network errors
+      if (retries > 0 && (error.message.includes('timeout') || error.message.includes('network') || error.message.includes('fetch'))) {
+        // Wait a bit before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return this.request(endpoint, options, retries - 1);
+      }
+      
+      throw error;
     }
-
-    return data;
   }
 
   private async publicRequest<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    retries: number = 2
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const config: RequestInit = {
@@ -185,14 +228,52 @@ class EmployerApiService {
       ...options,
     };
 
-    const response = await fetch(url, config);
-    const data = await response.json();
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+    
+    config.signal = controller.signal;
 
-    if (!response.ok) {
-      throw new Error(data.message || `HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch(url, config);
+      clearTimeout(timeoutId);
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        throw new Error('Invalid JSON response from server');
+      }
+
+      if (!response.ok) {
+        // Handle specific HTTP status codes
+        if (response.status === 408 || response.status === 504) {
+          throw new Error('Request timeout - server is taking too long to respond');
+        } else if (response.status === 503) {
+          throw new Error('Service temporarily unavailable - please try again later');
+        } else if (response.status >= 500) {
+          throw new Error('Server error - please try again later');
+        }
+        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (error.name === 'AbortError') {
+        throw new Error('Request timeout - server is taking too long to respond');
+      }
+      
+      // Retry logic for network errors
+      if (retries > 0 && (error.message.includes('timeout') || error.message.includes('network') || error.message.includes('fetch'))) {
+        // Wait a bit before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return this.publicRequest(endpoint, options, retries - 1);
+      }
+      
+      throw error;
     }
-
-    return data;
   }
 
   private getCompanyId(): string {

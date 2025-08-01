@@ -25,40 +25,40 @@ export default function EmployeursPage() {
       <main className="flex-1">
         {/* Hero Section with Enhanced Design */}
         <section className="relative py-20 md:py-32 overflow-hidden">
-          {/* Enhanced Background with better contrast */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 z-0">
-            {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/60 z-10"></div>
-            {/* Subtle pattern overlay */}
+          {/* Enhanced Background with better contrast - Theme Aware */}
+          <div className="absolute inset-0 bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 z-0">
+            {/* Dark overlay for text readability - Only in dark mode */}
+            <div className="absolute inset-0 bg-transparent dark:bg-black/60 z-10"></div>
+            {/* Subtle pattern overlay - Theme Aware */}
             <div
-              className="absolute inset-0 opacity-10 z-5"
+              className="absolute inset-0 opacity-15 dark:opacity-10 z-5"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23FFFFFF' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%2310b981' fillOpacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}
             />
           </div>
 
-          {/* Subtle animated shapes */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-secondary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"></div>
+          {/* Subtle animated shapes - Theme Aware */}
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-secondary/20 dark:bg-secondary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-primary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-primary/20 dark:bg-primary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"
             style={{ animationDelay: "-3s" }}
           ></div>
 
           <div className="container relative z-20">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <div className="space-y-8">
-                <div className="inline-block mb-6 px-6 py-2 bg-secondary/20 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer border border-white/20">
+                <div className="inline-block mb-6 px-6 py-2 bg-primary/10 dark:bg-secondary/20 backdrop-blur-sm rounded-full text-primary dark:text-white font-medium text-sm shimmer border border-primary/20 dark:border-white/20">
                   <Building2 className="inline-block h-4 w-4 mr-2" />
                   {t('employers.hero.badge')}
                 </div>
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-white">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-gray-900 dark:text-white">
                   {t('employers.hero.title')}{" "}
                   <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
                     {t('employers.hero.subtitle')}
                   </span>
                 </h1>
-                <p className="text-xl text-white/90 leading-relaxed">
+                <p className="text-xl text-gray-700 dark:text-white/90 leading-relaxed">
                   {t('employers.hero.description')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -67,7 +67,7 @@ export default function EmployeursPage() {
                     size="lg"
                     className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0"
                   >
-                    <a href="/employeurs/dashboard">
+                    <a href="/login">
                       <Users className="mr-2 h-5 w-5" />
                       {t('employers.hero.post_job_button')}
                     </a>
@@ -76,7 +76,7 @@ export default function EmployeursPage() {
                     asChild
                     variant="outline"
                     size="lg"
-                    className="group relative overflow-hidden bg-white/90 backdrop-blur-sm text-slate-900 border-2 border-white/40 hover:border-white/70 hover:bg-white shadow-lg hover:shadow-xl hover:shadow-white/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl font-semibold"
+                    className="group relative overflow-hidden bg-background/90 dark:bg-white/90 backdrop-blur-sm text-foreground dark:text-slate-900 border-2 border-primary/40 dark:border-white/40 hover:border-primary/70 dark:hover:border-white/70 hover:bg-background dark:hover:bg-white shadow-lg hover:shadow-xl hover:shadow-primary/20 dark:hover:shadow-white/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl font-semibold"
                   >
                     <a href="/services">
                       {t('employers.hero.services_button')}
@@ -172,46 +172,69 @@ export default function EmployeursPage() {
             <div className="text-center mb-16">
               <div className="inline-block mb-4 px-4 py-1.5 bg-secondary/10 backdrop-blur-sm rounded-full text-secondary font-medium text-sm shimmer">
                 <Zap className="inline-block h-4 w-4 mr-2" />
-                {t('employers.solutions.badge')}
+                Nos Services Spécialisés
               </div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
-                {t('employers.solutions.title')}
+                Solutions de Recrutement Complètes
               </h2>
               <p className="max-w-2xl mx-auto text-muted-foreground">
-                {t('employers.solutions.description')}
+                Des services adaptés à tous vos besoins en recrutement, du local à l'international
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
               {/* Solution 1 - Local Recruitment */}
               <div className="magic-card p-8 group">
                 <div className="mb-6 relative">
                   <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                     <Image
                       src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
-                      alt={t('employers.solutions.service_types.local.title')}
+                      alt="Recrutement Local"
                       width={500}
                       height={300}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                   <div className="absolute top-4 left-4 px-3 py-1 bg-primary/90 text-white text-xs font-medium rounded-full">
-                    {t('employers.solutions.service_types.local.badge')}
+                    Local
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{t('employers.solutions.service_types.local.title')}</h3>
-                <p className="text-muted-foreground mb-6">
-                  {t('employers.solutions.service_types.local.description')}
+                <h3 className="text-xl font-bold mb-4">Services de Recrutement Local</h3>
+                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                  Chez Recrutement Plus, nous sommes profondément ancrés dans notre communauté. Nous accompagnons les employeurs locaux dans leur recherche de talents qualifiés tout en aidant les candidats à décrocher des postes stables et valorisants.
                 </p>
-                <ul className="space-y-3 mb-6">
-                  {t('employers.solutions.service_types.local.features').map((item, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm">{item}</span>
+                
+                <div className="mb-4">
+                  <h4 className="font-semibold text-sm mb-2">Pourquoi nous confier votre recrutement local ?</h4>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Valider la pertinence et l'exactitude de vos offres d'emploi</span>
                     </li>
-                  ))}
-                </ul>
-                 
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Identifier et recruter les meilleurs profils pour chaque poste</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Assurer une transition harmonieuse avec les personnes en poste</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Anticiper et planifier vos besoins futurs en recrutement</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-primary/5 rounded-lg p-3 border border-primary/10">
+                  <h4 className="font-semibold text-xs mb-2">Notre expertise :</h4>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>• Années d'expertise terrain</li>
+                    <li>• Vaste réseau de candidats locaux et actifs</li>
+                    <li>• Veille constante des tendances du marché</li>
+                    <li>• Processus de présélection rigoureux et rapide</li>
+                  </ul>
+                </div>
               </div>
 
               {/* Solution 2 - National Recruitment */}
@@ -220,29 +243,52 @@ export default function EmployeursPage() {
                   <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                     <Image
                       src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
-                      alt={t('employers.solutions.service_types.national.title')}
+                      alt="Recrutement National"
                       width={500}
                       height={300}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                   <div className="absolute top-4 left-4 px-3 py-1 bg-secondary/90 text-white text-xs font-medium rounded-full">
-                    {t('employers.solutions.service_types.national.badge')}
+                    National
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{t('employers.solutions.service_types.national.title')}</h3>
-                <p className="text-muted-foreground mb-6">
-                  {t('employers.solutions.service_types.national.description')}
+                <h3 className="text-xl font-bold mb-4">Service de Recrutement National</h3>
+                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                  Recrutement Plus vous accompagne dans la recherche de talents à travers tout le Canada. Grâce à notre réseau étendu et à notre expertise multisectorielle, nous vous aidons à pourvoir vos postes clés rapidement et efficacement.
                 </p>
-                <ul className="space-y-3 mb-6">
-                  {t('employers.solutions.service_types.national.features').map((item, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm">{item}</span>
-                    </li>
-                  ))}
-                </ul>
                 
+                <div className="mb-4">
+                  <h4 className="font-semibold text-sm mb-2">Avantages du recrutement national :</h4>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Accéder à un bassin de candidats plus vaste et diversifié</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Trouver les compétences spécifiques dont votre entreprise a besoin</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Assurer une meilleure adéquation entre le poste et la personne</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Réduire les délais d'embauche et les coûts liés au roulement</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-secondary/5 rounded-lg p-3 border border-secondary/10">
+                  <h4 className="font-semibold text-xs mb-2">Nos atouts :</h4>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>• Réseau national de talents actifs et qualifiés</li>
+                    <li>• Technologies de présélection avancées</li>
+                    <li>• Conseils sur la mobilité et l'intégration</li>
+                    <li>• Accompagnement humain personnalisé</li>
+                  </ul>
+                </div>
               </div>
 
               {/* Solution 3 - International Recruitment */}
@@ -251,29 +297,52 @@ export default function EmployeursPage() {
                   <div className="w-full h-48 rounded-xl overflow-hidden mb-4">
                     <Image
                       src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
-                      alt={t('employers.solutions.service_types.international.title')}
+                      alt="Recrutement International"
                       width={500}
                       height={300}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                   <div className="absolute top-4 left-4 px-3 py-1 bg-gradient-to-r from-primary to-secondary text-white text-xs font-medium rounded-full">
-                    {t('employers.solutions.service_types.international.badge')}
+                    International
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{t('employers.solutions.service_types.international.title')}</h3>
-                <p className="text-muted-foreground mb-6">
-                  {t('employers.solutions.service_types.international.description')}
+                <h3 className="text-xl font-bold mb-4">Recrutement International - TET</h3>
+                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                  Recrutement Plus est une agence accréditée par la CNESST (Québec), spécialisée dans le recrutement de travailleurs étrangers temporaires. Notre équipe vous accompagne de l'analyse des besoins jusqu'à l'intégration du personnel.
                 </p>
-                <ul className="space-y-3 mb-6">
-                  {t('employers.solutions.service_types.international.features').map((item, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm">{item}</span>
-                    </li>
-                  ))}
-                </ul>
                 
+                <div className="mb-4">
+                  <h4 className="font-semibold text-sm mb-2">Notre réseau international :</h4>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start gap-2">
+                      <Globe className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Afrique du Nord (Maroc, Tunisie)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Globe className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Émirats arabes unis</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Globe className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Turquie</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Globe className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-xs">Réseau étendu en Amérique latine</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-lg p-3 border border-primary/10">
+                  <h4 className="font-semibold text-xs mb-2">Pourquoi nous choisir :</h4>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>🔹 Expertise complète en immigration et conformité</li>
+                    <li>🔹 Partenariats avec agences internationales certifiées</li>
+                    <li>🔹 Sélection minutieuse et ciblée</li>
+                    <li>🔹 Suivi post-intégration pour la stabilité</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -374,7 +443,7 @@ export default function EmployeursPage() {
                       size="lg"
                       variant="secondary"
                       className="rounded-xl bg-white/90 text-secondary hover:bg-white transition-all duration-300"
-                      onClick={() => window.location.href = "/employeurs/dashboard"}
+                      onClick={() => window.location.href = "/login"}
                     >
                       <Users className="mr-2 h-5 w-5" />
                       {t('employers.cta.post_job_button')}
@@ -383,6 +452,7 @@ export default function EmployeursPage() {
                       variant="outline"
                       size="lg"
                       className="rounded-xl bg-transparent text-white border-white/30 hover:bg-white/10 transition-all duration-300"
+                      onClick={() => window.location.href = "/contact"}
                     >
                       {t('employers.cta.contact_button')}
                       <ArrowRight className="ml-2 h-4 w-4" />

@@ -23,7 +23,10 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Recruitment Plus",
   description: "Solutions de recrutement personnalisées pour employeurs et candidats",
-  generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: {
+    icon: '/images/logoC.png',
+  }
 }
 
 export default function RootLayout({

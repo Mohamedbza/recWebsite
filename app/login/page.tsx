@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Lock, Mail, User, Building } from "lucide-react"
@@ -16,15 +16,42 @@ export default function LoginPage() {
   const { toast } = useToast()
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { isLoading, error } = useAppSelector((state) => state.account)
+  const { isLoading, error, isAuthenticated, user } = useAppSelector((state) => state.account)
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [userType, setUserType] = useState<'candidate' | 'employer'>('candidate')
 
+  // Check if user is already authenticated and redirect to appropriate dashboard
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === 'employer') {
+        router.push("/employeurs/dashboard")
+      } else if (user.role === 'candidate') {
+        router.push("/candidate/dashboard")
+      }
+    }
+  }, [isAuthenticated, user, router])
+
+  // Show loading state while checking authentication or during redirect
+  if (isAuthenticated && user) {
+    return (
+      <div className="container relative flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center py-24 mt-16">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-primary"></div>
+          <p className="text-muted-foreground">
+            Redirecting to your dashboard...
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   // Handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    console.log('Login attempt:', { email, userType })
 
     // Validate inputs
     if (!email.trim() || !password) {
@@ -54,10 +81,16 @@ export default function LoginPage() {
       // Clear any previous errors
       dispatch(clearError())
 
+      console.log('Dispatching login action...')
+
       // Call the login function from Redux
-      const result = await dispatch(loginUser({ email, password, userType }))
+      const result = await dispatch(loginUser({ email: email.trim(), password, userType }))
+
+      console.log('Login result:', result)
 
       if (loginUser.fulfilled.match(result)) {
+        console.log('Login successful:', result.payload)
+        
         // Success notification
         toast({
           title: "Success",
@@ -66,26 +99,38 @@ export default function LoginPage() {
 
         // Redirect based on user type
         if (userType === 'employer') {
+          console.log('Redirecting to employer dashboard')
           router.push("/employeurs/dashboard")
         } else {
+          console.log('Redirecting to candidate dashboard')
           router.push("/candidate/dashboard")
         }
       } else if (loginUser.rejected.match(result)) {
+        console.log('Login failed:', result.payload)
+        
         // Handle login failure with specific error messages
         const errorMessage = result.payload as string
         
-        if (errorMessage?.toLowerCase().includes('401') || 
+        if (errorMessage?.toLowerCase().includes('timeout')) {
+          toast({
+            title: "Request Timeout",
+            description: "The server is taking too long to respond. Please try again.",
+            variant: "destructive",
+          })
+        } else if (errorMessage?.toLowerCase().includes('401') || 
             errorMessage?.toLowerCase().includes('unauthorized') ||
             errorMessage?.toLowerCase().includes('invalid credentials') ||
             errorMessage?.toLowerCase().includes('wrong password') ||
-            errorMessage?.toLowerCase().includes('user not found')) {
+            errorMessage?.toLowerCase().includes('user not found') ||
+            errorMessage?.toLowerCase().includes('invalid email or password')) {
           toast({
             title: "Authentication Failed",
             description: "Invalid email or password. Please check your credentials and try again.",
             variant: "destructive",
           })
         } else if (errorMessage?.toLowerCase().includes('network') || 
-                   errorMessage?.toLowerCase().includes('connection')) {
+                   errorMessage?.toLowerCase().includes('connection') ||
+                   errorMessage?.toLowerCase().includes('fetch')) {
           toast({
             title: "Connection Error",
             description: "Unable to connect to the server. Please check your internet connection and try again.",
@@ -100,6 +145,7 @@ export default function LoginPage() {
         }
       }
     } catch (error) {
+      console.error('Unexpected login error:', error)
       toast({
         title: "Unexpected Error",
         description: "An unexpected error occurred. Please try again later.",

@@ -180,7 +180,7 @@ export interface JobSearchParams {
 }
 
 // Job search API function
-export const searchJobs = async (params: JobSearchParams) => {
+export const searchJobs = async (params: JobSearchParams, retries: number = 2) => {
   const queryParams = new URLSearchParams();
   
   if (params.search) queryParams.append('search', params.search);
@@ -191,13 +191,95 @@ export const searchJobs = async (params: JobSearchParams) => {
   if (params.experienceLevel) queryParams.append('experienceLevel', params.experienceLevel);
   if (params.skills && params.skills.length > 0) queryParams.append('skills', params.skills.join(','));
 
-  const response = await fetch(`${config.apiUrl}/jobs/public?${queryParams.toString()}`);
-  
-  if (!response.ok) {
-    throw new Error('Failed to fetch jobs');
+  const url = `${config.apiUrl}/jobs/public?${queryParams.toString()}`;
+  console.log('Fetching jobs from:', url);
+
+  // Add timeout to prevent hanging requests
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    clearTimeout(timeoutId);
+    
+    console.log('Jobs API response status:', response.status);
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to fetch jobs';
+      
+      try {
+        const errorData = await response.json();
+        console.log('Jobs API error data:', errorData);
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch (e) {
+        console.error('Failed to parse error response:', e);
+        errorMessage = `Server error (${response.status}): ${response.statusText}`;
+      }
+      
+      if (response.status === 408 || response.status === 504) {
+        errorMessage = 'Request timeout - server is taking too long to respond';
+      } else if (response.status === 503) {
+        errorMessage = 'Service temporarily unavailable - please try again later';
+      } else if (response.status >= 500) {
+        errorMessage = 'Server error - please try again later';
+      }
+      
+      throw new Error(errorMessage);
+    }
+
+    let data;
+    try {
+      data = await response.json();
+      console.log('Jobs API response data:', data);
+    } catch (e) {
+      console.error('Failed to parse jobs response:', e);
+      throw new Error('Invalid response from server');
+    }
+
+    // Ensure the response has the expected structure
+    if (!data) {
+      throw new Error('No data received from server');
+    }
+
+    // Handle different response formats from the API
+    const jobs = data.jobs || data.data?.jobs || data || [];
+    const totalJobs = data.totalJobs || data.total || data.data?.total || jobs.length;
+    const totalPages = data.totalPages || data.data?.totalPages || Math.ceil(totalJobs / (params.limit || 20));
+
+    return {
+      jobs,
+      totalJobs,
+      totalPages,
+      page: params.page || 1,
+      limit: params.limit || 20
+    };
+
+  } catch (error) {
+    clearTimeout(timeoutId);
+    
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout - server is taking too long to respond');
+    }
+    
+    // Retry logic for network errors
+    if (retries > 0 && (error.message.includes('timeout') || error.message.includes('network') || error.message.includes('fetch'))) {
+      console.log(`Retrying job search... (${retries} retries left)`);
+      // Wait a bit before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return searchJobs(params, retries - 1);
+    }
+    
+    console.error('Job search error:', error);
+    throw error;
   }
-  return response.json();
 };
+
 
 // Job application interface
 export interface JobApplicationData {
@@ -227,15 +309,32 @@ export const createJobApplication = async (applicationData: JobApplicationData, 
 
 // Get candidate's job applications API function
 export const getMyJobApplications = async (token: string, page: number = 1, limit: number = 10) => {
+  if (!token) {
+    throw new Error('No authentication token provided');
+  }
+
   const response = await fetch(`${config.apiUrl}/job-applications/public/my-applications?page=${page}&limit=${limit}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
     },
   });
   
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Failed to fetch job applications');
+    let errorMessage = 'Failed to fetch job applications';
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorMessage;
+    } catch (e) {
+      // If response is not JSON, use status text
+      errorMessage = response.statusText || errorMessage;
+    }
+    
+    if (response.status === 401) {
+      errorMessage = 'Invalid token';
+    }
+    
+    throw new Error(errorMessage);
   }
   
   const data = await response.json();
@@ -254,15 +353,32 @@ export const getMyJobApplications = async (token: string, page: number = 1, limi
 
 // Get recommended jobs for candidate based on skills
 export const getRecommendedJobs = async (token: string, limit: number = 5) => {
+  if (!token) {
+    throw new Error('No authentication token provided');
+  }
+
   const response = await fetch(`${config.apiUrl}/job-applications/public/recommended-jobs?limit=${limit}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
     },
   });
   
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Failed to fetch recommended jobs');
+    let errorMessage = 'Failed to fetch recommended jobs';
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorMessage;
+    } catch (e) {
+      // If response is not JSON, use status text
+      errorMessage = response.statusText || errorMessage;
+    }
+    
+    if (response.status === 401) {
+      errorMessage = 'Invalid token';
+    }
+    
+    throw new Error(errorMessage);
   }
   
   const data = await response.json();

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useLanguage } from "@/contexts/LanguageContext"
-import { useAppSelector } from "@/store/hooks"
+import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,50 +12,31 @@ import {
   TrendingUp, Star, CheckCircle,
   ArrowUpRight, Search,
   Building2, MapPin, Settings,
-  FileText, Loader2, Eye
+  FileText, Loader2, Eye, RefreshCw
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { getMyJobApplications, getRecommendedJobs } from "@/lib/api"
 import JobDetailsModal from "@/components/jobs/JobDetailsModal"
+import { fetchRecentApplications, clearError as clearApplicationsError } from "@/store/slices/jobApplicationsSlice"
+import { fetchRecommendedJobs, clearError as clearRecommendedJobsError, markJobAsApplied } from "@/store/slices/recommendedJobsSlice"
 
-interface JobApplication {
-  _id: string
-  job: {
-    _id: string
-    title: string
-    company: {
-      name: string
-    }
-  }
-  status: string
-  createdAt: string
-  updatedAt: string
-}
-
-interface RecommendedJob {
-  _id: string
-  title: string
-  companyId: {
-    name: string
-  }
-  address: string
-  skills: string[]
-  matchScore: number
-  matchingSkills: string[]
-}
 
 export default function CandidateDashboardPage() {
   const { locale } = useLanguage()
+  const dispatch = useAppDispatch()
   const { user, isAuthenticated, token, isLoading } = useAppSelector((state) => state.account)
+  const { 
+    applications: recentApplications, 
+    stats, 
+    isLoading: isLoadingApplications, 
+    error: applicationsError 
+  } = useAppSelector((state) => state.jobApplications)
+  const { 
+    jobs: recommendedJobs, 
+    isLoading: isLoadingRecommendations, 
+    error: recommendedJobsError 
+  } = useAppSelector((state) => state.recommendedJobs)
   const router = useRouter()
-
-  // State for real data
-  const [recentApplications, setRecentApplications] = useState<JobApplication[]>([])
-  const [recommendedJobs, setRecommendedJobs] = useState<RecommendedJob[]>([])
-  const [isLoadingApplications, setIsLoadingApplications] = useState(true)
-  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   // Job details modal state
   const [jobDetailsModal, setJobDetailsModal] = useState({
@@ -63,76 +44,31 @@ export default function CandidateDashboardPage() {
     jobId: null as string | null
   })
 
-  // Stats calculated from real data
-  const [stats, setStats] = useState({
-    totalApplications: 0,
-    inProgress: 0,
-    interviews: 0,
-    profileCompletion: 85
-  })
+  // Profile completion (this could also be moved to Redux later)
+  const profileCompletion = 85
 
-  // Fetch recent applications
-  const fetchRecentApplications = async () => {
-    if (!token) return
-    
-    try {
-      setIsLoadingApplications(true)
-      const response = await getMyJobApplications(token, 1, 5)
-      
-      if (response.success) {
-        setRecentApplications(response.data.applications || [])
-        
-        // Calculate stats from applications
-        const applications = response.data.applications || []
-        const totalApplications = response.data.total || 0
-        const inProgress = applications.filter((app: JobApplication) => 
-          ['pending', 'reviewing', 'shortlisted'].includes(app.status.toLowerCase())
-        ).length
-        const interviews = applications.filter((app: JobApplication) => 
-          ['interview', 'interviewed'].includes(app.status.toLowerCase())
-        ).length
-
-        setStats(prev => ({
-          ...prev,
-          totalApplications,
-          inProgress,
-          interviews
-        }))
-      }
-    } catch (err) {
-      console.error('Error fetching applications:', err)
-      setError(locale === 'fr' ? 'Erreur lors du chargement des candidatures' : 'Error loading applications')
-    } finally {
-      setIsLoadingApplications(false)
+  // Refresh functions using Redux
+  const handleRefreshApplications = () => {
+    if (token) {
+      dispatch(clearApplicationsError())
+      dispatch(fetchRecentApplications({ token }))
     }
   }
 
-  // Fetch recommended jobs based on skills
-  const fetchRecommendedJobs = async () => {
-    if (!token) return
-    
-    try {
-      setIsLoadingRecommendations(true)
-      const response = await getRecommendedJobs(token, 5)
-      
-      if (response.success) {
-        setRecommendedJobs(response.data.jobs || [])
-      }
-    } catch (err) {
-      console.error('Error fetching recommended jobs:', err)
-      setError(locale === 'fr' ? 'Erreur lors du chargement des emplois recommandés' : 'Error loading recommended jobs')
-    } finally {
-      setIsLoadingRecommendations(false)
+  const handleRefreshRecommendations = () => {
+    if (token) {
+      dispatch(clearRecommendedJobsError())
+      dispatch(fetchRecommendedJobs({ token, limit: 5 }))
     }
   }
 
-  // Load data on component mount
+  // Load data on component mount using Redux
   useEffect(() => {
     if (isAuthenticated && token) {
-      fetchRecentApplications()
-      fetchRecommendedJobs()
+      dispatch(fetchRecentApplications({ token }))
+      dispatch(fetchRecommendedJobs({ token, limit: 5 }))
     }
-  }, [isAuthenticated, token])
+  }, [isAuthenticated, token, dispatch])
 
   // Helper function to get status color and text
   const getStatusInfo = (status: string) => {
@@ -194,9 +130,14 @@ export default function CandidateDashboardPage() {
     setJobDetailsModal({ open: false, jobId: null })
   }
 
-  const handleApplicationSuccess = () => {
+  const handleApplicationSuccess = (jobId?: string) => {
     // Refresh the applications list after successful application
-    fetchRecentApplications()
+    handleRefreshApplications()
+    
+    // Mark the job as applied in recommendations if jobId is provided
+    if (jobId) {
+      dispatch(markJobAsApplied(jobId))
+    }
   }
 
   // Show loading state while auth is being initialized
@@ -310,7 +251,7 @@ export default function CandidateDashboardPage() {
                   <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                     <div className="flex items-center gap-2">
                       <User className="h-5 w-5 text-orange-600" />
-                      <span className="text-2xl font-bold">{stats.profileCompletion}%</span>
+                      <span className="text-2xl font-bold">{profileCompletion}%</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       {locale === 'fr' ? 'Profil' : 'Profile'}
@@ -356,13 +297,13 @@ export default function CandidateDashboardPage() {
                   </div>
                 </div>
                 <Badge variant="secondary" className="text-xl font-bold px-4 py-2 bg-gradient-to-r from-primary/10 to-primary/20 text-primary border-primary/20">
-                  {stats.profileCompletion}%
+                  {profileCompletion}%
                 </Badge>
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <Progress value={stats.profileCompletion} className="h-3" />
+                <Progress value={profileCompletion} className="h-3" />
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
                     <CheckCircle className="h-3 w-3 mr-2" />
@@ -400,12 +341,23 @@ export default function CandidateDashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50 rounded-xl group" asChild>
-                    <Link href="/candidate/applications">
-                      {locale === 'fr' ? 'Voir tout' : 'View All'}
-                      <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-blue-600 hover:bg-blue-50 rounded-xl" 
+                      onClick={handleRefreshApplications}
+                      disabled={isLoadingApplications}
+                    >
+                      <RefreshCw className={`h-4 w-4 ${isLoadingApplications ? 'animate-spin' : ''}`} />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50 rounded-xl group" asChild>
+                      <Link href="/candidate/applications">
+                        {locale === 'fr' ? 'Voir tout' : 'View All'}
+                        <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -416,10 +368,13 @@ export default function CandidateDashboardPage() {
                       {locale === 'fr' ? 'Chargement...' : 'Loading...'}
                     </span>
                   </div>
-                ) : error ? (
+                ) : applicationsError ? (
                   <div className="text-center py-8">
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <Button onClick={fetchRecentApplications} variant="outline" size="sm">
+                    <p className="text-red-600 mb-4">{applicationsError}</p>
+                    <Button onClick={handleRefreshApplications} variant="outline" size="sm" disabled={isLoadingApplications}>
+                      {isLoadingApplications ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : null}
                       {locale === 'fr' ? 'Réessayer' : 'Retry'}
                     </Button>
                   </div>
@@ -498,12 +453,23 @@ export default function CandidateDashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-purple-600 hover:bg-purple-50 rounded-xl group" asChild>
-                    <Link href="/candidate/emplois">
-                      {locale === 'fr' ? 'Voir plus' : 'View More'}
-                      <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-purple-600 hover:bg-purple-50 rounded-xl" 
+                      onClick={handleRefreshRecommendations}
+                      disabled={isLoadingRecommendations}
+                    >
+                      <RefreshCw className={`h-4 w-4 ${isLoadingRecommendations ? 'animate-spin' : ''}`} />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-purple-600 hover:bg-purple-50 rounded-xl group" asChild>
+                      <Link href="/candidate/emplois">
+                        {locale === 'fr' ? 'Voir plus' : 'View More'}
+                        <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -514,10 +480,13 @@ export default function CandidateDashboardPage() {
                       {locale === 'fr' ? 'Chargement...' : 'Loading...'}
                     </span>
                   </div>
-                ) : error ? (
+                ) : recommendedJobsError ? (
                   <div className="text-center py-8">
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <Button onClick={fetchRecommendedJobs} variant="outline" size="sm">
+                    <p className="text-red-600 mb-4">{recommendedJobsError}</p>
+                    <Button onClick={handleRefreshRecommendations} variant="outline" size="sm" disabled={isLoadingRecommendations}>
+                      {isLoadingRecommendations ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : null}
                       {locale === 'fr' ? 'Réessayer' : 'Retry'}
                     </Button>
                   </div>

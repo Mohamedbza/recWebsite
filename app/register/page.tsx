@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Mail, User, Building2, Sparkles, Phone, MapPin, Lock, Eye, EyeOff } from "lucide-react"
@@ -11,7 +11,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useToast } from "@/hooks/use-toast"
-import { apiService } from "@/lib/api" 
+import { apiService } from "@/lib/api"
+import { useAppSelector } from "@/store/hooks" 
 
 // Simplified Types - Only essential fields
 interface CandidateFormData {
@@ -68,8 +69,34 @@ export default function RegisterPage() {
   const { t } = useLanguage()
   const { toast } = useToast()
   const router = useRouter()
+  const { isAuthenticated, user } = useAppSelector((state) => state.account)
   const [isLoading, setIsLoading] = useState(false)
   const [accountType, setAccountType] = useState("candidate")
+
+  // Check if user is already authenticated and redirect to appropriate dashboard
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === 'employer') {
+        router.push("/employeurs/dashboard")
+      } else if (user.role === 'candidate') {
+        router.push("/candidate/dashboard")
+      }
+    }
+  }, [isAuthenticated, user, router])
+
+  // Show loading state while checking authentication or during redirect
+  if (isAuthenticated && user) {
+    return (
+      <div className="container relative flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center py-24 mt-16">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-primary"></div>
+          <p className="text-muted-foreground">
+            Redirecting to your dashboard...
+          </p>
+        </div>
+      </div>
+    )
+  }
   
   // Form state
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>(INITIAL_CANDIDATE_FORM)

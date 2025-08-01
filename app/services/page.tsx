@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import {
   Sparkles,
@@ -15,56 +16,83 @@ import {
   Search,
   TrendingUp,
   Plane,
+  Code,
+  Heart,
+  GraduationCap,
+  Briefcase,
+  ShoppingCart,
+  Wrench,
+  Palette,
+  DollarSign,
+  Shield,
+  Factory,
+  Car,
+  Gamepad2,
+  Leaf,
+  Scale,
+  Camera,
+  Music,
+  MapPin
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/contexts/LanguageContext"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ServiceDetailModal from "@/components/services/ServiceDetailModal"
 
 export default function ServicesPage() {
   const { t } = useLanguage();
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const openServiceModal = (serviceId: string) => {
+    setSelectedServiceId(serviceId)
+    setModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setModalOpen(false)
+    setSelectedServiceId(null)
+  }
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
         {/* Hero Section with Enhanced Design */}
         <section className="relative py-20 md:py-32 overflow-hidden">
           {/* Enhanced Background with better contrast */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary/90 to-slate-900 z-0">
-            {/* Additional dark overlay for maximum text readability */}
-            <div className="absolute inset-0 bg-black/40 z-10"></div>
+          <div className="absolute inset-0 bg-white dark:bg-gray-900 z-0">
             {/* Subtle pattern overlay */}
             <div
-              className="absolute inset-0 opacity-15 z-5"
+              className="absolute inset-0 opacity-15 dark:opacity-25 z-5"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23FFFFFF' fillOpacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%2310b981' fillOpacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}
             />
           </div>
 
           {/* Subtle animated shapes */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-white/15 rounded-full filter blur-3xl opacity-25 floating-element z-5"></div>
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 dark:bg-primary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-white/20 rounded-full filter blur-3xl opacity-25 floating-element z-5"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 dark:bg-secondary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"
             style={{ animationDelay: "-3s" }}
           ></div>
 
           <div className="container relative z-20">
             <div className="text-center max-w-4xl mx-auto">
-              <div className="inline-block mb-6 px-6 py-2 bg-white/25 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer border border-white/30">
+              <div className="inline-block mb-6 px-6 py-2 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer border border-primary/20">
                 <Zap className="inline-block h-4 w-4 mr-2" />
                 {t('services.hero.badge')}
               </div>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6 text-white drop-shadow-lg">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6">
                 {t('services.hero.title')}{" "}
-                <span className="bg-gradient-to-r from-white to-primary-foreground bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                   {t('services.hero.title_highlight')}
                 </span>
               </h1>
-              <p className="text-xl text-white/95 mb-8 leading-relaxed drop-shadow-md">
+              <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
                 {t('services.hero.description')}
               </p>
               <Button 
                 size="lg" 
-                className="group relative overflow-hidden bg-white/95 text-slate-900 hover:bg-white shadow-xl hover:shadow-2xl hover:shadow-white/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0 font-bold"
+                className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0"
                 onClick={() => window.location.href = '/contact'}
               >
                 <Users className="mr-2 h-5 w-5" />
@@ -121,12 +149,20 @@ export default function ServicesPage() {
                       </li>
                     ))}
                   </ul>
-                  <Link href={service.href} className="inline-flex items-center text-sm font-medium text-primary group">
+                  <Button 
+                    variant="ghost"
+                    size="sm"
+                    className="p-0 h-auto font-medium text-primary group"
+                    onClick={() => {
+                      const serviceIds = ['talent-acquisition', 'staffing-solutions', 'consulting', 'market-analysis', 'immigration-support', 'career-coaching']
+                      openServiceModal(serviceIds[index] || 'talent-acquisition')
+                    }}
+                  >
                     <span className="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300">
                       {t('services.more')}
                     </span>
                     <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
+                  </Button>
                 </div>
               );
               })}
@@ -191,75 +227,40 @@ export default function ServicesPage() {
               </p>
             </div>
 
-            <Tabs defaultValue="aerospace" className="w-full mb-8">
-              <div className="flex justify-center mb-8">
-                <TabsList className="grid w-full max-w-md grid-cols-2">
-                  <TabsTrigger value="aerospace" className="flex items-center gap-2">
-                    <Plane className="h-4 w-4" />
-                    {t('services.industries.categories.aerospace') || "Aérospatiale"}
-                  </TabsTrigger>
-                  <TabsTrigger value="others" className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4" />
-                    {t('services.industries.categories.others') || "Autres"}
-                  </TabsTrigger>
-                </TabsList>
-              </div>
-
-              {/* Aerospace Industries Tab */}
-              <TabsContent value="aerospace">
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                  {t('services.industry_list')
-                    .filter(industry => industry.category === 'aerospace' || industry.name.includes('Aéro') || industry.name.includes('Aero') || industry.name.includes('Aviation'))
-                    .map((industry, index) => {
-                      const colors = [
-                        "from-blue-500/20 to-blue-600/20",
-                        "from-indigo-500/20 to-indigo-600/20",
-                        "from-cyan-500/20 to-cyan-600/20"
-                      ];
-                      const color = colors[index % colors.length];
-                      return (
-                      <div key={index} className="magic-card p-6 text-center group">
-                        <div
-                          className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
-                        >
-                          <span className="text-2xl">{industry.emoji || "✈️"}</span>
-                        </div>
-                        <h3 className="font-bold text-lg">{industry.name}</h3>
-                      </div>
-                    );
-                  })}
-                </div>
-              </TabsContent>
-
-              {/* Other Industries Tab */}
-              <TabsContent value="others">
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                  {t('services.industry_list')
-                    .filter(industry => industry.category !== 'aerospace' && !industry.name.includes('Aéro') && !industry.name.includes('Aero') && !industry.name.includes('Aviation'))
-                    .map((industry, index) => {
-                      const colors = [
-                        "from-green-500/20 to-green-600/20",
-                        "from-yellow-500/20 to-yellow-600/20",
-                        "from-purple-500/20 to-purple-600/20",
-                        "from-red-500/20 to-red-600/20",
-                        "from-orange-500/20 to-orange-600/20",
-                        "from-pink-500/20 to-pink-600/20"
-                      ];
-                      const color = colors[index % colors.length];
-                      return (
-                      <div key={index} className="magic-card p-6 text-center group">
-                        <div
-                          className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
-                        >
-                          <span className="text-2xl">{industry.emoji}</span>
-                        </div>
-                        <h3 className="font-bold text-lg">{industry.name}</h3>
-                      </div>
-                    );
-                  })}
-                </div>
-              </TabsContent>
-            </Tabs>
+            {/* Industries Grid */}
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              {[
+                { name: "Technology", icon: Code, color: "from-blue-500/20 to-blue-600/20" },
+                { name: "Healthcare", icon: Heart, color: "from-red-500/20 to-red-600/20" },
+                { name: "Education", icon: GraduationCap, color: "from-green-500/20 to-green-600/20" },
+                { name: "Finance", icon: DollarSign, color: "from-yellow-500/20 to-yellow-600/20" },
+                { name: "Retail", icon: ShoppingCart, color: "from-purple-500/20 to-purple-600/20" },
+                { name: "Manufacturing", icon: Factory, color: "from-orange-500/20 to-orange-600/20" },
+                { name: "Consulting", icon: Briefcase, color: "from-indigo-500/20 to-indigo-600/20" },
+                { name: "Engineering", icon: Wrench, color: "from-cyan-500/20 to-cyan-600/20" },
+                { name: "Design", icon: Palette, color: "from-pink-500/20 to-pink-600/20" },
+                { name: "Insurance", icon: Shield, color: "from-gray-500/20 to-gray-600/20" },
+                { name: "Automotive", icon: Car, color: "from-blue-600/20 to-blue-700/20" },
+                { name: "Gaming", icon: Gamepad2, color: "from-violet-500/20 to-violet-600/20" },
+                { name: "Energy", icon: Leaf, color: "from-green-600/20 to-green-700/20" },
+                { name: "Legal", icon: Scale, color: "from-amber-500/20 to-amber-600/20" },
+                { name: "Media", icon: Camera, color: "from-rose-500/20 to-rose-600/20" },
+                { name: "Entertainment", icon: Music, color: "from-fuchsia-500/20 to-fuchsia-600/20" },
+                { name: "Real Estate", icon: MapPin, color: "from-teal-500/20 to-teal-600/20" },
+                { name: "Aerospace", icon: Plane, color: "from-sky-500/20 to-sky-600/20" }
+              ].map((industry, index) => {
+                return (
+                  <div key={index} className="magic-card p-6 text-center group">
+                    <div
+                      className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${industry.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
+                    >
+                      <industry.icon className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="font-bold text-lg">{industry.name}</h3>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
@@ -328,7 +329,7 @@ export default function ServicesPage() {
                   <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
                     {t('services.cta.description')}
                   </p>
-                  <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <div className="flex justify-center">
                     <Button
                       size="lg"
                       variant="secondary"
@@ -337,14 +338,6 @@ export default function ServicesPage() {
                     >
                       <Users className="mr-2 h-5 w-5" />
                       {t('services.cta.consultation_button')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="rounded-xl bg-transparent text-white border-white/30 hover:bg-white/10 transition-all duration-300"
-                    >
-                      {t('services.cta.pricing_button')}
-                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -360,6 +353,13 @@ export default function ServicesPage() {
           </div>
         </section>
       </main>
+      
+      {/* Service Detail Modal */}
+      <ServiceDetailModal
+        open={modalOpen}
+        onClose={closeModal}
+        serviceId={selectedServiceId}
+      />
     </div>
   )
 }

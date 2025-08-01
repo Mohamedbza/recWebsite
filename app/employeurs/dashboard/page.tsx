@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAuth } from "@/contexts/EmployerAuthContext"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -36,8 +38,19 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { EmployerAuthProvider } from "@/contexts/EmployerAuthContext"
-import { employerApiService, EmployerJob, EmployerApplication, DashboardStats as DashboardStatsType } from "@/lib/employer-api"
+import { EmployerJob, EmployerApplication, DashboardStats as DashboardStatsType } from "@/lib/employer-api"
 import DashboardStats from "@/components/employer/DashboardStats"
+import { 
+  loadDashboardData, 
+  createEmployerJob, 
+  updateEmployerJob, 
+  deleteEmployerJob, 
+  updateApplicationStatus,
+  clearErrors,
+  clearStatsError,
+  clearJobsError,
+  clearApplicationsError 
+} from "@/store/slices/employerDashboardSlice"
 import JobsManagement from "@/components/employer/JobsManagement"
 import ApplicationsKanban from "@/components/employer/ApplicationsKanban"
 import JobModal from "@/components/employer/JobModal"
@@ -53,15 +66,34 @@ import { Switch } from "@/components/ui/switch"
 
 function DashboardContent() {
   const { locale } = useLanguage()
-  const { user, isLoggedIn } = useAuth()
+  const router = useRouter()
+  const dispatch = useAppDispatch()
   const [activeTab, setActiveTab] = useState("overview")
 
-  // State for data
-  const [dashboardStats, setDashboardStats] = useState<DashboardStatsType | null>(null)
-  const [jobs, setJobs] = useState<EmployerJob[]>([])
-  const [applications, setApplications] = useState<EmployerApplication[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // Use Redux authentication state instead of EmployerAuthContext
+  const { user: authUser, isAuthenticated, isLoading: authLoading } = useAppSelector((state) => state.account)
+  
+  // Redux state
+  const {
+    stats: dashboardStats,
+    statsLoading,
+    statsError,
+    jobs,
+    jobsLoading,
+    jobsError,
+    applications,
+    applicationsLoading,
+    applicationsError,
+    initialLoading,
+  } = useAppSelector((state) => state.employerDashboard)
+
+  // Check if user is authenticated and is an employer
+  const isLoggedIn = isAuthenticated && authUser?.role === 'employer'
+  const user = authUser
+
+  // Combined loading and error states
+  const isLoading = authLoading || initialLoading || (statsLoading && jobsLoading && applicationsLoading)
+  const error = statsError || jobsError || applicationsError
 
   // State for modals and actions
   const [selectedJob, setSelectedJob] = useState<EmployerJob | null>(null)
@@ -94,61 +126,33 @@ function DashboardContent() {
     }
   });
 
-  // Load data on component mount
+  // Load data on component mount using Redux
   useEffect(() => {
     if (isLoggedIn) {
-      loadDashboardData()
+      dispatch(loadDashboardData())
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, dispatch])
 
-  const loadDashboardData = async () => {
-    setIsLoading(true)
-    setError(null)
-    
-    try {
-      // Load all data in parallel
-      const [statsData, jobsData, applicationsData] = await Promise.all([
-        employerApiService.getDashboardStats(),
-        employerApiService.getJobs({ limit: 100 }),
-        employerApiService.getApplications({ limit: 100 })
-      ])
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
+        <div className="max-w-md w-full mx-auto p-8 rounded-2xl bg-background/80 backdrop-blur-xl border border-white/20 shadow-2xl">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p className="text-muted-foreground text-center">
+              {locale === 'fr' ? 'Vérification de l\'authentification...' : 'Checking authentication...'}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-      // Validate stats data structure before setting it
-      if (statsData && typeof statsData === 'object') {
-        // Ensure the stats object has the required structure
-        const validatedStats = {
-          jobs: {
-            total: statsData.jobs?.total ?? 0,
-            active: statsData.jobs?.active ?? 0,
-            draft: statsData.jobs?.draft ?? 0,
-            closed: statsData.jobs?.closed ?? 0,
-          },
-          applications: {
-            total: statsData.applications?.total ?? 0,
-            new: statsData.applications?.new ?? 0,
-            reviewed: statsData.applications?.reviewed ?? 0,
-            interview: statsData.applications?.interview ?? 0,
-            hired: statsData.applications?.hired ?? 0,
-            rejected: statsData.applications?.rejected ?? 0,
-            recent: statsData.applications?.recent ?? 0,
-          },
-          topJobs: Array.isArray(statsData.topJobs) ? statsData.topJobs : [],
-        }
-        setDashboardStats(validatedStats)
-      } else {
-        console.warn('Invalid stats data received:', statsData)
-        setDashboardStats(null)
-      }
-
-      setJobs(jobsData.jobs)
-      setApplications(applicationsData.applications)
-    } catch (err) {
-      console.error('Failed to load dashboard data:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load data')
-      setDashboardStats(null)
-    } finally {
-      setIsLoading(false)
-    }
+  // Refresh data function
+  const handleRefreshData = () => {
+    dispatch(clearErrors())
+    dispatch(loadDashboardData())
   }
 
   // Handle job actions
@@ -164,9 +168,7 @@ function DashboardContent() {
 
   const handleDeleteJob = async (jobId: string) => {
     try {
-      await employerApiService.deleteJob(jobId)
-      // Reload data
-      await loadDashboardData()
+      await dispatch(deleteEmployerJob(jobId)).unwrap()
     } catch (err) {
       console.error('Failed to delete job:', err)
       alert(locale === 'fr' ? 'Erreur lors de la suppression' : 'Error deleting job')
@@ -203,15 +205,13 @@ function DashboardContent() {
     };
   }) => {
     try {
-      if (selectedJob) {
+      if (editingJob) {
         // Update existing job
-        await employerApiService.updateJob(selectedJob._id, jobData)
+        await dispatch(updateEmployerJob({ jobId: editingJob._id, jobData })).unwrap()
       } else {
         // Create new job
-        await employerApiService.createJob(jobData)
+        await dispatch(createEmployerJob(jobData)).unwrap()
       }
-      // Reload data
-      await loadDashboardData()
     } catch (err) {
       console.error('Failed to submit job:', err)
       throw err
@@ -226,10 +226,7 @@ function DashboardContent() {
 
   const handleApplicationStatusUpdate = async (applicationId: string, newStatus: string) => {
     try {
-      await employerApiService.updateApplicationStatus(applicationId, newStatus)
-      // Reload applications
-      const applicationsData = await employerApiService.getApplications({ limit: 100 })
-      setApplications(applicationsData.applications)
+      await dispatch(updateApplicationStatus({ applicationId, status: newStatus })).unwrap()
     } catch (err) {
       console.error('Failed to update application status:', err)
       alert(locale === 'fr' ? 'Erreur lors de la mise à jour' : 'Error updating status')
@@ -275,28 +272,25 @@ function DashboardContent() {
     }
   };
 
+  // Redirect to login if not authenticated (instead of showing login required message)
+  useEffect(() => {
+    if (!authLoading && !isLoggedIn) {
+      // Redirect to login page
+      router.push('/login')
+    }
+  }, [authLoading, isLoggedIn, router])
+
+  // Don't render anything if not logged in (will redirect)
   if (!isLoggedIn) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <h2 className="text-2xl font-bold mb-4">
-          {locale === 'fr' ? 'Connexion requise' : 'Login required'}
-        </h2>
-        <p className="mb-6 text-muted-foreground text-center max-w-md">
-          {locale === 'fr'
-            ? "Vous devez être connecté en tant qu'employeur pour accéder au tableau de bord."
-            : "You must be logged in as an employer to access the dashboard."}
-        </p>
-        <div className="flex gap-3">
-          <Button asChild>
-            <Link href="/employeurs/login">
-              {locale === 'fr' ? 'Se connecter' : 'Login'}
-            </Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href="/employeurs/register">
-              {locale === 'fr' ? 'S\'inscrire' : 'Register'}
-            </Link>
-          </Button>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex flex-col items-center justify-center">
+        <div className="max-w-md w-full mx-auto p-8 rounded-2xl bg-background/80 backdrop-blur-xl border border-white/20 shadow-2xl">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p className="text-muted-foreground text-center">
+              {locale === 'fr' ? 'Redirection vers la page de connexion...' : 'Redirecting to login...'}
+            </p>
+          </div>
         </div>
       </div>
     )
@@ -311,8 +305,12 @@ function DashboardContent() {
         <p className="mb-6 text-muted-foreground text-center max-w-md">
           {error}
         </p>
-        <Button onClick={loadDashboardData}>
-          {locale === 'fr' ? 'Réessayer' : 'Retry'}
+        <Button onClick={handleRefreshData} disabled={isLoading}>
+          {isLoading ? (
+            locale === 'fr' ? 'Chargement...' : 'Loading...'
+          ) : (
+            locale === 'fr' ? 'Réessayer' : 'Retry'
+          )}
         </Button>
       </div>
     )

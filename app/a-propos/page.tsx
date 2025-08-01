@@ -31,29 +31,27 @@ export default function AProposPage() {
         {/* Hero Section with Enhanced Design */}
         <section className="relative py-20 md:py-32 overflow-hidden">
           {/* Enhanced Background with better contrast */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 z-0">
-            {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/60 z-10"></div>
+          <div className="absolute inset-0 bg-white dark:bg-gray-900 z-0">
             {/* Subtle pattern overlay */}
             <div
-              className="absolute inset-0 opacity-10 z-5"
+              className="absolute inset-0 opacity-15 dark:opacity-25 z-5"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23FFFFFF' fillOpacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%2310b981' fillOpacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}
             />
           </div>
 
           {/* Subtle animated shapes */}
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"></div>
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 dark:bg-primary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"></div>
           <div
-            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 rounded-full filter blur-3xl opacity-30 floating-element z-5"
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 dark:bg-secondary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"
             style={{ animationDelay: "-3s" }}
           ></div>
 
           <div className="container relative z-20">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <div className="space-y-8">
-                <div className="inline-block mb-6 px-6 py-2 bg-primary/20 backdrop-blur-sm rounded-full text-white font-medium text-sm shimmer border border-white/20">
+                <div className="inline-block mb-6 px-6 py-2 bg-primary/10 dark:bg-primary/20 backdrop-blur-sm rounded-full text-primary dark:text-white font-medium text-sm shimmer border border-primary/20 dark:border-white/20">
                   <Heart className="inline-block h-4 w-4 mr-2" />
                   {t('about.hero.badge')}
                 </div>
@@ -62,7 +60,7 @@ export default function AProposPage() {
                     {t('about.hero.title')}
                   </span>
                 </h1>
-                <p className="text-xl text-white/90 leading-relaxed">
+                <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
                   {t('about.hero.description')}
                 </p>
                 <Button 
@@ -287,12 +285,12 @@ export default function AProposPage() {
                       <p className="text-sm text-muted-foreground">{office.services}</p>
                     </div>
                     
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                       <Button variant="outline" size="sm" className="w-full">
                         <MapPin className="h-4 w-4 mr-2" />
                         {t('about.locations.view_map')}
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}
@@ -373,70 +371,6 @@ export default function AProposPage() {
           ></div>
         </section>
 
-        {/* Locations Section */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-muted/30 to-transparent"></div>
-          <div className="container relative">
-            <div className="text-center mb-16">
-              <div className="inline-block mb-4 px-4 py-1.5 bg-secondary/10 backdrop-blur-sm rounded-full text-secondary font-medium text-sm shimmer">
-                <MapPin className="inline-block h-4 w-4 mr-2" />
-                {t('about.locations.badge')}
-              </div>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
-                {t('about.locations.title')}
-              </h2>
-              <p className="max-w-2xl mx-auto text-muted-foreground">
-                {t('about.locations.description')}
-              </p>
-            </div>
-
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  city: t('about.locations.locations.0.city'),
-                  address: t('about.locations.locations.0.address'),
-                  phone: t('about.locations.locations.0.phone'),
-                  email: t('about.locations.locations.0.email'),
-                },
-                {
-                  city: t('about.locations.locations.1.city'),
-                  address: t('about.locations.locations.1.address'),
-                  phone: t('about.locations.locations.1.phone'),
-                  email: t('about.locations.locations.1.email'),
-                },
-                {
-                  city: t('about.locations.locations.2.city'),
-                  address: t('about.locations.locations.2.address'),
-                  phone: t('about.locations.locations.2.phone'),
-                  email: t('about.locations.locations.2.email'),
-                },
-              ].map((location, index) => (
-                <div key={index} className="magic-card p-8 group">
-                  <h3 className="font-bold text-xl mb-6 text-primary">{location.city}</h3>
-                  <ul className="space-y-4">
-                    <li className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm text-muted-foreground">{location.address}</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <Phone className="h-5 w-5 text-primary" />
-                      <span className="text-sm text-muted-foreground">{location.phone}</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <Mail className="h-5 w-5 text-primary" />
-                      <span className="text-sm text-muted-foreground">{location.email}</span>
-                    </li>
-                  </ul>
-                  <div className="mt-6">
-                    <Button variant="outline" size="sm" className="rounded-xl">
-                      {t('about.locations.view_map')}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Contact Section */}
         <section className="py-16 md:py-24 relative overflow-hidden">

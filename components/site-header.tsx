@@ -54,6 +54,7 @@ export function SiteHeader() {
   
   // Refs for dropdowns and search
   const accountRef = useRef<HTMLDivElement>(null)
+  const candidatsRef = useRef<HTMLDivElement>(null)
   const languageRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -122,6 +123,12 @@ export function SiteHeader() {
       ) {
         setActiveDropdown(null)
       } else if (
+        activeDropdown === "candidats" &&
+        candidatsRef.current &&
+        !candidatsRef.current.contains(e.target as Node)
+      ) {
+        setActiveDropdown(null)
+      } else if (
         activeDropdown === "language" &&
         languageRef.current &&
         !languageRef.current.contains(e.target as Node)
@@ -182,7 +189,7 @@ export function SiteHeader() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/candidate/emplois?q=${encodeURIComponent(searchQuery.trim())}`)
+      router.push(`/emplois?q=${encodeURIComponent(searchQuery.trim())}`)
       setIsSearchExpanded(false)
       setSearchQuery("")
     }
@@ -224,21 +231,65 @@ export function SiteHeader() {
 
             {/* Enhanced Navigation with Better Animations */}
             <nav className="hidden lg:flex gap-2">
-              {/* Candidats Link */}
-              <Link
-                href="/candidats"
-                className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
-                  isActive("/candidats")
-                    ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
-                    : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
-                }`}
-              >
-                <Users className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
-                <span className="relative">
-                  {t('navigation.candidates')}
-                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </span>
-              </Link>
+              {/* Candidats Dropdown */}
+              <div className="relative" ref={candidatsRef}>
+                <button
+                  onClick={() => toggleDropdown("candidats")}
+                  className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                    isActive("/candidats") || isActive("/emplois")
+                      ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
+                      : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
+                  }`}
+                >
+                  <Users className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
+                  <span className="relative">
+                    {t('navigation.candidates')}
+                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
+                  </span>
+                  <ChevronDown
+                    className={`h-3 w-3 transition-all duration-300 ${
+                      activeDropdown === "candidats" 
+                        ? "rotate-180 text-primary" 
+                        : "group-hover/nav:rotate-180"
+                    }`}
+                  />
+                </button>
+
+                {/* Candidats Dropdown Menu */}
+                {activeDropdown === "candidats" && (
+                  <div className="absolute top-full left-0 mt-3 w-64 rounded-2xl bg-background/95 backdrop-blur-xl border border-white/30 shadow-2xl overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+                    <div className="p-1">
+                      <button
+                        onClick={() => handleDropdownItemClick("/candidats")}
+                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-all duration-200 group/item cursor-pointer text-left"
+                      >
+                        <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all duration-200">
+                          <Sparkles className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-medium">{t('navigation.discover') || 'Découvrir'}</div>
+                          <div className="text-xs text-muted-foreground">{t('navigation.discover_desc') || 'Explorez nos services'}</div>
+                        </div>
+                        <ArrowRight className="h-4 w-4 opacity-0 group-hover/item:opacity-100 transition-all duration-200" />
+                      </button>
+                      
+                      <button
+                        onClick={() => handleDropdownItemClick("/emplois")}
+                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-all duration-200 group/item cursor-pointer text-left"
+                      >
+                        <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all duration-200">
+                          <Briefcase className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-medium">{t('navigation.jobs') || 'Emplois'}</div>
+                          <div className="text-xs text-muted-foreground">{t('navigation.jobs_desc') || 'Parcourir les offres'}</div>
+                        </div>
+                        <ArrowRight className="h-4 w-4 opacity-0 group-hover/item:opacity-100 transition-all duration-200" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Employeurs Link */}
               <Link
@@ -288,21 +339,6 @@ export function SiteHeader() {
                 </span>
               </Link>
 
-              {/* Jobs Link */}
-              <Link
-                href="/emplois"
-                className={`group/nav flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
-                  isActive("/emplois")
-                    ? "text-primary bg-primary/15 backdrop-blur-sm shadow-md border border-primary/20"
-                    : "hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10"
-                }`}
-              >
-                <Briefcase className="h-4 w-4 transition-transform duration-300 group-hover/nav:scale-110" />
-                <span className="relative">
-                  {locale === 'fr' ? 'Emplois' : 'Jobs'}
-                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </span>
-              </Link>
             </nav>
           </div>
 
@@ -333,7 +369,7 @@ export function SiteHeader() {
                         ref={searchInputRef}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Rechercher un poste, entreprise..."
+                        placeholder={locale === 'fr' ? 'Rechercher un poste, entreprise...' : 'Search jobs, companies...'}
                         className="pl-10 pr-12 border-0 bg-transparent focus:ring-0 focus:ring-offset-0 text-sm"
                         onKeyDown={(e) => {
                           if (e.key === 'Escape') {
@@ -531,21 +567,40 @@ export function SiteHeader() {
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-2">
                 Navigation Principale
               </div>
-              <Link
-                href="/candidats"
-                className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
-                onClick={() => setIsMobileMenuOpen(false)}
-                style={{ animationDelay: '50ms' }}
-              >
-                <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
-                  <Users className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="font-semibold">{t('navigation.candidates')}</div>
-                  <div className="text-xs text-muted-foreground">Trouvez votre emploi idéal</div>
-                </div>
-                <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
-              </Link>
+              <div className="space-y-1">
+                <div className="text-xs font-semibold text-primary px-4 py-1">{t('navigation.candidates')}</div>
+                <Link
+                  href="/candidats"
+                  className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02] ml-4"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{ animationDelay: '50ms' }}
+                >
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold">{t('navigation.discover') || 'Découvrir'}</div>
+                    <div className="text-xs text-muted-foreground">{t('navigation.discover_desc') || 'Explorez nos services'}</div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
+                </Link>
+                
+                <Link
+                  href="/emplois"
+                  className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02] ml-4"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{ animationDelay: '75ms' }}
+                >
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
+                    <Briefcase className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold">{t('navigation.jobs') || 'Emplois'}</div>
+                    <div className="text-xs text-muted-foreground">{t('navigation.jobs_desc') || 'Parcourir les offres'}</div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
+                </Link>
+              </div>
 
               <Link
                 href="/employeurs"
@@ -601,27 +656,12 @@ export function SiteHeader() {
                 <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
               </Link>
 
-              <Link
-                href="/emplois"
-                className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
-                onClick={() => setIsMobileMenuOpen(false)}
-                style={{ animationDelay: '225ms' }}
-              >
-                <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
-                  <Briefcase className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="font-semibold">{locale === 'fr' ? 'Emplois' : 'Jobs'}</div>
-                  <div className="text-xs text-muted-foreground">Parcourir les offres d&apos;emploi</div>
-                </div>
-                <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
-              </Link>
 
               <Link
                 href="/blog"
                 className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
                 onClick={() => setIsMobileMenuOpen(false)}
-                style={{ animationDelay: '250ms' }}
+                style={{ animationDelay: '225ms' }}
               >
                 <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover/mobile:bg-primary group-hover/mobile:text-white transition-all duration-300">
                   <Search className="h-4 w-4" />

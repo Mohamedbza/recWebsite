@@ -23,6 +23,7 @@ import {
   Headphones
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { useLanguage } from "@/contexts/LanguageContext"
 import { Button } from "@/components/ui/button"
@@ -56,6 +57,7 @@ import {
 
 export default function ContactPage() {
   const { t, locale } = useLanguage()
+  const router = useRouter()
   const [formSuccess, setFormSuccess] = useState(false)
 
   // Form validation schema
@@ -127,7 +129,7 @@ export default function ContactPage() {
       title: locale === 'fr' ? 'Appelez-nous' : 'Call Us',
       description: locale === 'fr' ? 'Lun-Ven: 9h-17h' : 'Mon-Fri: 9am-5pm',
       contact: '+1 (514) 123-4567',
-      action: 'tel:+15141234567',
+      action: () => window.open('tel:+15141234567', '_self'),
       color: 'from-blue-500 to-blue-600'
     },
     {
@@ -135,7 +137,7 @@ export default function ContactPage() {
       title: locale === 'fr' ? 'Écrivez-nous' : 'Email Us',
       description: locale === 'fr' ? 'Réponse sous 24h' : 'Response within 24h',
       contact: 'contact@recruitmentplus.ca',
-      action: 'mailto:contact@recruitmentplus.ca',
+      action: () => window.open('mailto:contact@recruitmentplus.ca?subject=Contact Request', '_self'),
       color: 'from-emerald-500 to-emerald-600'
     },
     {
@@ -143,7 +145,10 @@ export default function ContactPage() {
       title: locale === 'fr' ? 'Chat en direct' : 'Live Chat',
       description: locale === 'fr' ? 'Support instantané' : 'Instant support',
       contact: locale === 'fr' ? 'Disponible maintenant' : 'Available now',
-      action: '#',
+      action: () => {
+        // Simulate opening a chat widget or redirect to a chat service
+        window.open('https://wa.me/15141234567', '_blank')
+      },
       color: 'from-purple-500 to-purple-600'
     },
     {
@@ -151,7 +156,7 @@ export default function ContactPage() {
       title: locale === 'fr' ? 'Rendez-vous' : 'Book Meeting',
       description: locale === 'fr' ? 'Consultation gratuite' : 'Free consultation',
       contact: locale === 'fr' ? 'Planifier maintenant' : 'Schedule now',
-      action: '#',
+      action: () => window.open('https://calendly.com/recruitmentplus', '_blank'),
       color: 'from-orange-500 to-orange-600'
     }
   ]
@@ -189,53 +194,58 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        {/* Revolutionary Hero Section */}
+        {/* Hero Section */}
         <section className="relative py-24 md:py-32 overflow-hidden">
-          {/* Dynamic Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-secondary">
-            <div 
-              className="absolute inset-0 opacity-20"
+          {/* Enhanced Background with better contrast - Theme Aware */}
+          <div className="absolute inset-0 bg-white dark:bg-gray-900 z-0">
+            {/* Subtle pattern overlay - Theme Aware */}
+            <div
+              className="absolute inset-0 opacity-15 dark:opacity-25 z-5"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3Ccircle cx='50' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%2310b981' fillOpacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}
-            ></div>
-            
-            {/* Floating Elements */}
-            <div className="absolute top-1/4 left-10 w-72 h-72 bg-white/10 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-white/5 rounded-full filter blur-3xl opacity-40 animate-pulse" style={{ animationDelay: "-2s" }}></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full filter blur-3xl opacity-30 animate-pulse" style={{ animationDelay: "-4s" }}></div>
+            />
           </div>
 
-          <div className="container relative z-10">
+          {/* Subtle animated shapes - Theme Aware */}
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/20 dark:bg-primary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"></div>
+          <div
+            className="absolute bottom-1/4 right-10 w-64 h-64 bg-secondary/20 dark:bg-secondary/30 rounded-full filter blur-3xl opacity-30 dark:opacity-40 floating-element z-5"
+            style={{ animationDelay: "-3s" }}
+          ></div>
+
+          <div className="container relative z-20">
             <div className="text-center max-w-4xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium">
-                <Zap className="h-4 w-4" />
-                <span className="text-sm">
-                  {locale === 'fr' ? ' Réponse garantie sous 2 heures' : ' Response guaranteed within 2 hours'}
-                </span>
+              <div className="inline-block mb-6 px-6 py-2 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer border border-primary/20">
+                <Zap className="inline-block h-4 w-4 mr-2" />
+                {locale === 'fr' ? 'Réponse garantie sous 2 heures' : 'Response guaranteed within 2 hours'}
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight">
-                {locale === 'fr' ? 'Parlons de vos' : 'Let\'s Talk About'}<br />
-                <span className="bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-transparent">
-                  {locale === 'fr' ? 'Ambitions' : 'Your Vision'}
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6">
+                {locale === 'fr' ? 'Parlons de Vos' : 'Let\'s Talk About Your'}{" "}
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  {locale === 'fr' ? 'Ambitions' : 'Vision'}
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl text-white/90 mb-10 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
                 {locale === 'fr' 
                   ? 'Que vous soyez candidat ou employeur, nous sommes là pour transformer vos objectifs en réussites concrètes.'
                   : 'Whether you\'re a candidate or employer, we\'re here to transform your goals into concrete successes.'}
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button size="lg" className="bg-white/90 hover:bg-white text-primary hover:text-primary/90 px-8 py-4 rounded-xl font-semibold text-lg shadow-2xl hover:shadow-white/25 transition-all duration-300 transform hover:scale-105">
-                  <Users className="mr-2 h-5 w-5" />
-                  {locale === 'fr' ? 'Démarrer maintenant' : 'Get Started Now'}
-                </Button>
-                <Button variant="outline" size="lg" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold text-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  {locale === 'fr' ? 'Prendre rendez-vous' : 'Book a Meeting'}
+              <div className="flex justify-center">
+                <Button 
+                  size="lg" 
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 rounded-2xl border-0"
+                  onClick={() => router.push('/candidats')}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 group-hover:animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <Users className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  <span className="relative z-10 font-semibold">
+                    {locale === 'fr' ? 'Démarrer maintenant' : 'Get Started Now'}
+                  </span>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
                 </Button>
               </div>
             </div>
@@ -256,22 +266,24 @@ export default function ContactPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
               {contactMethods.map((method, index) => (
-                <Card key={index} className="group cursor-pointer border-0 bg-gradient-to-br from-background/80 to-background/40 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
-                  <CardContent className="p-8 text-center">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${method.color} mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      <method.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                      {method.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {method.description}
-                    </p>
-                    <p className="font-semibold text-primary">
-                      {method.contact}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div 
+                  key={index} 
+                  className="magic-card p-8 text-center group cursor-pointer" 
+                  onClick={method.action}
+                >
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${method.color} mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                    <method.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    {method.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {method.description}
+                  </p>
+                  <p className="font-semibold text-primary">
+                    {method.contact}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -520,34 +532,40 @@ export default function ContactPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <div className="space-y-6">
-                      {officeLocations.map((location, index) => (
-                        <div key={index} className="group p-4 rounded-xl border border-muted/30 hover:border-primary/30 bg-gradient-to-r from-background to-muted/20 hover:from-primary/5 hover:to-secondary/5 transition-all duration-300">
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                              <span className="text-2xl">{location.flag}</span>
-                              <div>
-                                <h4 className="font-bold text-lg group-hover:text-primary transition-colors">
-                                  {location.city}
-                                </h4>
-                                <p className="text-sm text-muted-foreground">{location.timezone}</p>
-                              </div>
-                            </div>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-3">{location.address}</p>
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm">
-                              <Phone className="h-4 w-4 text-primary" />
-                              <span className="font-medium">{location.phone}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <Mail className="h-4 w-4 text-primary" />
-                              <span className="font-medium">{location.email}</span>
+                  <div className="space-y-6">
+                    {officeLocations.map((location, index) => (
+                      <div key={index} className="group p-4 rounded-xl border border-muted/30 hover:border-primary/30 bg-gradient-to-r from-background to-muted/20 hover:from-primary/5 hover:to-secondary/5 transition-all duration-300">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{location.flag}</span>
+                            <div>
+                              <h4 className="font-bold text-lg group-hover:text-primary transition-colors">
+                                {location.city}
+                              </h4>
+                              <p className="text-sm text-muted-foreground">{location.timezone}</p>
                             </div>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                        <p className="text-sm text-muted-foreground mb-3">{location.address}</p>
+                        <div className="space-y-2">
+                          <div 
+                            className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => window.open(`tel:${location.phone.replace(/\s/g, '')}`, '_self')}
+                          >
+                            <Phone className="h-4 w-4 text-primary" />
+                            <span className="font-medium">{location.phone}</span>
+                          </div>
+                          <div 
+                            className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => window.open(`mailto:${location.email}?subject=Contact from ${location.city} Office`, '_self')}
+                          >
+                            <Mail className="h-4 w-4 text-primary" />
+                            <span className="font-medium">{location.email}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   </CardContent>
                 </Card>
 
@@ -560,40 +578,40 @@ export default function ContactPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <div className="space-y-4">
-                      {[
-                        {
-                          icon: Headphones,
-                          title: locale === 'fr' ? 'Support 24/7' : '24/7 Support',
-                          desc: locale === 'fr' ? 'Toujours là pour vous' : 'Always there for you'
-                        },
-                        {
-                          icon: Users,
-                          title: locale === 'fr' ? 'Experts dédiés' : 'Dedicated Experts',
-                          desc: locale === 'fr' ? 'Équipe spécialisée' : 'Specialized team'
-                        },
-                        {
-                          icon: Globe,
-                          title: locale === 'fr' ? 'Portée internationale' : 'Global Reach',
-                          desc: locale === 'fr' ? 'Présence mondiale' : 'Worldwide presence'
-                        },
-                        {
-                          icon: Clock,
-                          title: locale === 'fr' ? 'Réponse rapide' : 'Quick Response',
-                          desc: locale === 'fr' ? 'Sous 2 heures' : 'Within 2 hours'
-                        }
-                      ].map((item, index) => (
-                        <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/30 transition-colors">
-                          <div className="p-2 bg-primary/10 rounded-lg">
-                            <item.icon className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <h5 className="font-semibold">{item.title}</h5>
-                            <p className="text-sm text-muted-foreground">{item.desc}</p>
-                          </div>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        icon: Headphones,
+                        title: locale === 'fr' ? 'Support 24/7' : '24/7 Support',
+                        desc: locale === 'fr' ? 'Toujours là pour vous' : 'Always there for you'
+                      },
+                      {
+                        icon: Users,
+                        title: locale === 'fr' ? 'Experts dédiés' : 'Dedicated Experts',
+                        desc: locale === 'fr' ? 'Équipe spécialisée' : 'Specialized team'
+                      },
+                      {
+                        icon: Globe,
+                        title: locale === 'fr' ? 'Portée internationale' : 'Global Reach',
+                        desc: locale === 'fr' ? 'Présence mondiale' : 'Worldwide presence'
+                      },
+                      {
+                        icon: Clock,
+                        title: locale === 'fr' ? 'Réponse rapide' : 'Quick Response',
+                        desc: locale === 'fr' ? 'Sous 2 heures' : 'Within 2 hours'
+                      }
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/30 transition-colors">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <item.icon className="h-5 w-5 text-primary" />
                         </div>
-                      ))}
-                    </div>
+                        <div>
+                          <h5 className="font-semibold">{item.title}</h5>
+                          <p className="text-sm text-muted-foreground">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   </CardContent>
                 </Card>
               </div>

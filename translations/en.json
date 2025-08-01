@@ -63,7 +63,11 @@
     "contact": "Contact",
     "login": "Log in",
     "register": "Create account",
-    "logout": "Log out"
+    "logout": "Log out",
+    "discover": "Discover",
+    "discover_desc": "Explore our services",
+    "jobs": "Jobs",
+    "jobs_desc": "Browse job offers"
   },
   "candidates": {
     "dropdown": {
@@ -287,7 +291,57 @@
         }
       ],
       "location_filter": "Location",
-      "location_all": "All locations"
+      "location_all": "All locations",
+      "search": {
+        "placeholder": "Job title, company...",
+        "location": "Location..."
+      },
+      "filters": {
+        "title": "Filters",
+        "clear": "Clear filters",
+        "job_type": "Job Type",
+        "types": {
+          "full-time": "Full-time",
+          "part-time": "Part-time",
+          "contract": "Contract",
+          "internship": "Internship",
+          "remote": "Remote"
+        },
+        "experience": "Experience Level",
+        "experience_levels": {
+          "all": "All levels",
+          "entry": "Entry level",
+          "mid": "Mid level",
+          "senior": "Senior level",
+          "executive": "Executive"
+        },
+        "skills": "Skills",
+        "add_skill": "Add skill (press Enter)",
+        "sort_by": "Sort by",
+        "sort": {
+          "newest": "Newest first",
+          "oldest": "Oldest first",
+          "salary_high": "Highest salary",
+          "salary_low": "Lowest salary"
+        }
+      },
+      "results": "{count} jobs found",
+      "no_results": {
+        "title": "No jobs found",
+        "description": "No jobs found matching your criteria."
+      },
+      "stats": {
+        "title": "Quick Stats",
+        "total_jobs": "Total jobs",
+        "new_today": "New today"
+      },
+      "time": {
+        "just_now": "Just now",
+        "hours_ago": "{hours}h ago",
+        "yesterday": "Yesterday",
+        "days_ago": "{days} days ago"
+      },
+      "end_of_results": "You've reached the end of the results"
     }
   },
   "employers": {
@@ -643,7 +697,9 @@
   },
   "common": {
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "login": "Log In",
+    "register": "Sign Up"
   },
   "about": {
     "hero": {

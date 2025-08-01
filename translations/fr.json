@@ -63,7 +63,11 @@
     "contact": "Contact",
     "login": "Se connecter",
     "register": "Créer un compte",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "discover": "Découvrir",
+    "discover_desc": "Explorez nos services",
+    "jobs": "Emplois",
+    "jobs_desc": "Parcourir les offres"
   },
   "candidates": {
     "dropdown": {
@@ -287,7 +291,57 @@
         }
       ],
       "location_filter": "Localisation",
-      "location_all": "Toutes les localisations"
+      "location_all": "Toutes les localisations",
+      "search": {
+        "placeholder": "Titre du poste, entreprise...",
+        "location": "Localisation..."
+      },
+      "filters": {
+        "title": "Filtres",
+        "clear": "Effacer les filtres",
+        "job_type": "Type d'emploi",
+        "types": {
+          "full-time": "Temps plein",
+          "part-time": "Temps partiel",
+          "contract": "Contrat",
+          "internship": "Stage",
+          "remote": "Télétravail"
+        },
+        "experience": "Niveau d'expérience",
+        "experience_levels": {
+          "all": "Tous les niveaux",
+          "entry": "Débutant",
+          "mid": "Intermédiaire",
+          "senior": "Senior",
+          "executive": "Exécutif"
+        },
+        "skills": "Compétences",
+        "add_skill": "Ajouter une compétence (Entrée)",
+        "sort_by": "Trier par",
+        "sort": {
+          "newest": "Plus récent",
+          "oldest": "Plus ancien",
+          "salary_high": "Salaire élevé",
+          "salary_low": "Salaire bas"
+        }
+      },
+      "results": "{count} emplois trouvés",
+      "no_results": {
+        "title": "Aucun emploi trouvé",
+        "description": "Aucun emploi trouvé correspondant à vos critères."
+      },
+      "stats": {
+        "title": "Statistiques rapides",
+        "total_jobs": "Total des emplois",
+        "new_today": "Nouveaux aujourd'hui"
+      },
+      "time": {
+        "just_now": "À l'instant",
+        "hours_ago": "Il y a {hours}h",
+        "yesterday": "Hier",
+        "days_ago": "Il y a {days} jours"
+      },
+      "end_of_results": "Vous avez atteint la fin des résultats"
     }
   },
   "employers": {
@@ -643,7 +697,9 @@
   },
   "common": {
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "login": "Se connecter",
+    "register": "S'inscrire"
   },
   "about": {
     "hero": {
