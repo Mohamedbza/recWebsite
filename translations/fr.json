@@ -90,7 +90,7 @@
     },
     "hero": {
       "badge": "Votre carrière commence ici",
-      "title": "Faites carrière avec RECRUTMENT PLUS",
+      "title": "Faites carrière avec Recrutment Plus",
       "description": "Explorez les opportunités et lancez votre avenir professionnel avec notre accompagnement personnalisé, humain et efficace.",
       "find_job_button": "Trouver un emploi",
       "services_button": "Nos services"
@@ -183,12 +183,12 @@
     "testimonials": {
       "badge": "Témoignages",
       "title": "Témoignages de candidats",
-      "description": "Découvrez les expériences de ceux qui ont fait confiance à RECRUTMENT PLUS pour leur carrière.",
+      "description": "Découvrez les expériences de ceux qui ont fait confiance à Recrutment Plus pour leur carrière.",
       "testimonials": [
         {
           "name": "Marie Tremblay",
           "role": "Développeuse Web",
-          "content": "Grâce à RECRUTMENT PLUS, j'ai trouvé un emploi qui correspond parfaitement à mes compétences et aspirations. Leur accompagnement a été précieux.",
+          "content": "Grâce à Recrutment Plus, j'ai trouvé un emploi qui correspond parfaitement à mes compétences et aspirations. Leur accompagnement a été précieux.",
           "rating": 5
         },
         {
@@ -200,7 +200,7 @@
         {
           "name": "Sophie Martin",
           "role": "Infirmière",
-          "content": "En tant que candidate internationale, le processus d'immigration était complexe, mais l'équipe de RECRUTMENT PLUS m'a guidée à chaque étape.",
+          "content": "En tant que candidate internationale, le processus d'immigration était complexe, mais l'équipe de Recrutment Plus m'a guidée à chaque étape.",
           "rating": 5
         }
       ]
@@ -526,13 +526,13 @@
         {
           "name": "Jean Dupont",
           "role": "Directeur RH, TechCorp",
-          "content": "Nous collaborons avec RECRUTMENT PLUS depuis 3 ans et leur expertise nous a permis de constituer une équipe solide et performante. Leur processus de recrutement international a été particulièrement efficace.",
+          "content": "Nous collaborons avec Recrutment Plus depuis 3 ans et leur expertise nous a permis de constituer une équipe solide et performante. Leur processus de recrutement international a été particulièrement efficace.",
           "rating": 5
         },
         {
           "name": "Marie Tremblay",
           "role": "PDG, Santé Plus",
-          "content": "Face à la pénurie de personnel dans le secteur de la santé, RECRUTMENT PLUS nous a fourni des solutions innovantes et efficaces. Leur accompagnement a été précieux pour notre croissance.",
+          "content": "Face à la pénurie de personnel dans le secteur de la santé, Recrutment Plus nous a fourni des solutions innovantes et efficaces. Leur accompagnement a été précieux pour notre croissance.",
           "rating": 5
         }
       ]
@@ -714,8 +714,8 @@
   "about": {
     "hero": {
       "badge": "Notre histoire",
-      "title": "À propos de RECRUTMENT PLUS",
-      "description": "RECRUTMENT PLUS Inc. aide les employeurs canadiens à combler la pénurie de main-d'œuvre avec une approche personnalisée, humaine et simple qui fait la différence.",
+      "title": "À propos de Recrutment Plus",
+      "description": "Recrutment Plus Inc. aide les employeurs canadiens à combler la pénurie de main-d'œuvre avec une approche personnalisée, humaine et simple qui fait la différence.",
       "contact_button": "Contactez-nous"
     },
     "mission": {
@@ -890,7 +890,7 @@
   },
   "register": {
     "welcome": "Créez votre compte",
-    "title": "Rejoignez RECRUTMENT PLUS",
+    "title": "Rejoignez Recrutment Plus",
     "subtitle": "Inscrivez-vous pour accéder à des services de recrutement personnalisés",
     "account_type": "Je suis un(e):",
     "candidate": "Chercheur d'emploi",
