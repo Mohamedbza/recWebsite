@@ -493,12 +493,7 @@ export default function ProfilePage() {
               </p>
             </div>
             <div className="flex gap-3">
-              <Button variant="secondary" asChild className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/30">
-                <a href="/candidate/resume">
-                  <Download className="h-4 w-4 mr-2" />
-                  {locale === 'fr' ? 'Mon CV' : 'My Resume'}
-                </a>
-              </Button>
+             
               <Button 
                 variant="secondary" 
                 className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/30"
