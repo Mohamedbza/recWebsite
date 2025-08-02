@@ -38,9 +38,9 @@ interface CompanyFormData {
 }
 
 const AVAILABLE_LOCATIONS = [
-  { value: 'montreal', label: 'Montreal, Canada' },
-  { value: 'dubai', label: 'Dubai, United Arab Emirates' },
-  { value: 'turkey', label: 'Istanbul, Turkey' }
+  { value: 'montreal', label: 'Canada' },
+    { value: 'dubai', label: 'United Arab Emirates' },
+    { value: 'turkey', label: 'Turkey' }
 ];
 
 const INITIAL_CANDIDATE_FORM: CandidateFormData = {

@@ -15,10 +15,10 @@ import {
   Search, Briefcase, MapPin, AlertCircle, X, 
   Star, DollarSign, Clock, 
   Zap, Eye, Bookmark, Share2,
-  Target, Code, Sparkles, Activity, Loader2, User, LogIn,
-  SlidersHorizontal, Building2, Calendar, Filter
+  Target, Code, Loader2, User, LogIn,
+  SlidersHorizontal, Building2, Filter
 } from 'lucide-react'
-import JobDetailModal, { JobDetail } from "@/components/jobs/JobDetailModal";
+import JobDetailModal from "@/components/jobs/JobDetailModal";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -35,6 +35,7 @@ import {
   setSortBy,
   clearFilters
 } from '@/store/slices/jobsSlice'
+import type { Job } from '@/store/slices/jobsSlice'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useDebounce } from '@/hooks/useDebounce'
 
@@ -76,7 +77,7 @@ const JobCardSkeleton = () => {
 };
 
 export default function PublicJobsPage() {
-  const { locale, t } = useLanguage();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -85,6 +86,9 @@ export default function PublicJobsPage() {
   const { jobs, loading, loadingMore, error, filters, pagination } = useAppSelector(state => state.jobs);
   const { user, isAuthenticated } = useAppSelector((state) => state.account);
   
+  // Filter out any sample/demo data
+  const realJobs = jobs.filter(job => !job._id?.startsWith('sample-'));
+  
   // Redirect signed-in candidates to candidate/emplois
   useEffect(() => {
     if (isAuthenticated && user && user.role === 'candidate') {
@@ -92,14 +96,11 @@ export default function PublicJobsPage() {
     }
   }, [isAuthenticated, user, router]);
   
-  // Check if we're using demo data
-  const isDemoData = jobs.length > 0 && jobs.some(job => job._id?.startsWith('sample-'));
-  
   // Local state
   const [skillInput, setSkillInput] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   
   // Create debounced values
   const debouncedSearch = useDebounce(filters.search, 500);
@@ -377,12 +378,12 @@ export default function PublicJobsPage() {
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('candidates.jobs.stats.total_jobs')}</span>
-                  <span className="font-medium">{pagination.totalJobs}</span>
+                  <span className="font-medium">{realJobs.length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('candidates.jobs.stats.new_today')}</span>
                   <span className="font-medium text-green-600">
-                    {jobs.filter(job => {
+                    {realJobs.filter(job => {
                       const today = new Date();
                       const jobDate = new Date(job.createdAt);
                       return jobDate.toDateString() === today.toDateString();
@@ -397,28 +398,7 @@ export default function PublicJobsPage() {
 
           {/* Job Listings */}
           <div className="flex-1">
-            {/* Demo Data Notification */}
-            {isDemoData && (
-              <Card className="mb-6 border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
-                <CardContent className="p-4">
-                  <div className="flex items-center text-blue-700 dark:text-blue-300">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    <div>
-                      <p className="font-medium">
-                        {locale === 'fr' ? 'Données de démonstration' : 'Demo Data'}
-                      </p>
-                      <p className="text-sm mt-1">
-                        {locale === 'fr' 
-                          ? 'Le serveur d\'emplois n\'est pas disponible. Affichage des emplois de démonstration pour présenter les fonctionnalités.'
-                          : 'Job server is unavailable. Showing demo jobs to demonstrate functionality.'}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {error && !isDemoData && (
+            {error && (
               <Card className="mb-6 border-red-200 bg-red-50">
                 <CardContent className="p-4">
                   <div className="flex items-center text-red-700">
@@ -430,22 +410,22 @@ export default function PublicJobsPage() {
             )}
 
             {/* Results Header */}
-            {!loading && jobs.length > 0 && (
+            {!loading && realJobs.length > 0 && (
               <div className="mb-6 flex items-center justify-between">
                 <p className="text-gray-600">
-                  {t('candidates.jobs.results', { count: pagination.totalJobs })}
+                  {t('candidates.jobs.results', { count: realJobs.length })}
                 </p>
               </div>
             )}
 
             {/* Job Cards */}
-            {loading && jobs.length === 0 ? (
+            {loading && realJobs.length === 0 ? (
               <div className="space-y-4">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <JobCardSkeleton key={index} />
                 ))}
               </div>
-            ) : jobs.length === 0 && !loading ? (
+            ) : realJobs.length === 0 && !loading ? (
               <Card className="border-gray-200">
                 <CardContent className="p-12 text-center">
                   <Search className="h-12 w-12 mx-auto text-gray-300 mb-4" />
@@ -463,7 +443,7 @@ export default function PublicJobsPage() {
             ) : (
               <>
                 <div className="space-y-4">
-                  {jobs.map((job) => (
+                  {realJobs.map((job) => (
                     <Card key={job._id} className="border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => openDetails(job)}>
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
@@ -552,7 +532,7 @@ export default function PublicJobsPage() {
                 <div ref={loadMoreRef} className="h-10" />
 
                 {/* End of Results */}
-                {!pagination.hasMore && jobs.length > 0 && (
+                {!pagination.hasMore && realJobs.length > 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <p>{t('candidates.jobs.end_of_results')}</p>
                   </div>

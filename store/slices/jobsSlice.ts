@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { searchJobs, type JobSearchParams } from '@/lib/api';
 
-interface Job {
+export interface Job {
   _id: string;
   title: string;
   companyId: {

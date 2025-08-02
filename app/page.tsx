@@ -76,7 +76,7 @@ export default function HomePage() {
                 {t('home.hero.title')}
               </span>
             </h1>
-            <p className="mt-4 max-w-3xl text-lg text-gray-700 dark:text-gray-300 mb-8">
+            <p className="mt-4 max-w-3xl text-lg font-bold text-gray-700 dark:text-gray-300 mb-8">
               {t('home.hero.subtitle')}
             </p>
             <div className="magic-card w-full max-w-3xl p-4 shadow-2xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm">
