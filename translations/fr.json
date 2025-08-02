@@ -3,7 +3,7 @@
     "hero": {
       "title": "Ensemble vers l'emploi",
       "subtitle": "Connecter les talents aux meilleures opportunités professionnelles avec une approche personnalisée, humaine et simple.",
-      "learn_more": "EN SAVOIR PLUS SUR RECRUITMENT PLUS"
+      "learn_more": "EN SAVOIR PLUS SUR RECRUTMENT PLUS"
     },
     "services": {
       "title": "Nos Services",
@@ -90,7 +90,7 @@
     },
     "hero": {
       "badge": "Votre carrière commence ici",
-      "title": "Faites carrière avec Recruitment Plus",
+      "title": "Faites carrière avec RECRUTMENT PLUS",
       "description": "Explorez les opportunités et lancez votre avenir professionnel avec notre accompagnement personnalisé, humain et efficace.",
       "find_job_button": "Trouver un emploi",
       "services_button": "Nos services"
@@ -183,12 +183,12 @@
     "testimonials": {
       "badge": "Témoignages",
       "title": "Témoignages de candidats",
-      "description": "Découvrez les expériences de ceux qui ont fait confiance à Recruitment Plus pour leur carrière.",
+      "description": "Découvrez les expériences de ceux qui ont fait confiance à RECRUTMENT PLUS pour leur carrière.",
       "testimonials": [
         {
           "name": "Marie Tremblay",
           "role": "Développeuse Web",
-          "content": "Grâce à Recruitment Plus, j'ai trouvé un emploi qui correspond parfaitement à mes compétences et aspirations. Leur accompagnement a été précieux.",
+          "content": "Grâce à RECRUTMENT PLUS, j'ai trouvé un emploi qui correspond parfaitement à mes compétences et aspirations. Leur accompagnement a été précieux.",
           "rating": 5
         },
         {
@@ -200,7 +200,7 @@
         {
           "name": "Sophie Martin",
           "role": "Infirmière",
-          "content": "En tant que candidate internationale, le processus d'immigration était complexe, mais l'équipe de Recruitment Plus m'a guidée à chaque étape.",
+          "content": "En tant que candidate internationale, le processus d'immigration était complexe, mais l'équipe de RECRUTMENT PLUS m'a guidée à chaque étape.",
           "rating": 5
         }
       ]
@@ -526,13 +526,13 @@
         {
           "name": "Jean Dupont",
           "role": "Directeur RH, TechCorp",
-          "content": "Nous collaborons avec Recruitment Plus depuis 3 ans et leur expertise nous a permis de constituer une équipe solide et performante. Leur processus de recrutement international a été particulièrement efficace.",
+          "content": "Nous collaborons avec RECRUTMENT PLUS depuis 3 ans et leur expertise nous a permis de constituer une équipe solide et performante. Leur processus de recrutement international a été particulièrement efficace.",
           "rating": 5
         },
         {
           "name": "Marie Tremblay",
           "role": "PDG, Santé Plus",
-          "content": "Face à la pénurie de personnel dans le secteur de la santé, Recruitment Plus nous a fourni des solutions innovantes et efficaces. Leur accompagnement a été précieux pour notre croissance.",
+          "content": "Face à la pénurie de personnel dans le secteur de la santé, RECRUTMENT PLUS nous a fourni des solutions innovantes et efficaces. Leur accompagnement a été précieux pour notre croissance.",
           "rating": 5
         }
       ]
@@ -714,8 +714,8 @@
   "about": {
     "hero": {
       "badge": "Notre histoire",
-      "title": "À propos de Recruitment Plus",
-      "description": "Recruitment Plus Inc. aide les employeurs canadiens à combler la pénurie de main-d'œuvre avec une approche personnalisée, humaine et simple qui fait la différence.",
+      "title": "À propos de RECRUTMENT PLUS",
+      "description": "RECRUTMENT PLUS Inc. aide les employeurs canadiens à combler la pénurie de main-d'œuvre avec une approche personnalisée, humaine et simple qui fait la différence.",
       "contact_button": "Contactez-nous"
     },
     "mission": {
@@ -890,7 +890,7 @@
   },
   "register": {
     "welcome": "Créez votre compte",
-    "title": "Rejoignez Recruitment Plus",
+    "title": "Rejoignez RECRUTMENT PLUS",
     "subtitle": "Inscrivez-vous pour accéder à des services de recrutement personnalisés",
     "account_type": "Je suis un(e):",
     "candidate": "Chercheur d'emploi",
