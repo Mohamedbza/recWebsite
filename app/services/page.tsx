@@ -230,6 +230,7 @@ export default function ServicesPage() {
             {/* Industries Grid */}
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {[
+                { name: "Aerospace", icon: Plane, color: "from-sky-500/20 to-sky-600/20 " },
                 { name: "Technology", icon: Code, color: "from-blue-500/20 to-blue-600/20" },
                 { name: "Healthcare", icon: Heart, color: "from-red-500/20 to-red-600/20" },
                 { name: "Education", icon: GraduationCap, color: "from-green-500/20 to-green-600/20" },
@@ -247,7 +248,7 @@ export default function ServicesPage() {
                 { name: "Media", icon: Camera, color: "from-rose-500/20 to-rose-600/20" },
                 { name: "Entertainment", icon: Music, color: "from-fuchsia-500/20 to-fuchsia-600/20" },
                 { name: "Real Estate", icon: MapPin, color: "from-teal-500/20 to-teal-600/20" },
-                { name: "Aerospace", icon: Plane, color: "from-sky-500/20 to-sky-600/20" }
+                 
               ].map((industry, index) => {
                 return (
                   <div key={index} className="magic-card p-6 text-center group">
