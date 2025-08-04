@@ -202,9 +202,9 @@ export default function PrivacyPolicyPage() {
         <div>
           <p>Pour toute question ou préoccupation concernant cette politique de confidentialité ou nos pratiques en matière de protection des données, veuillez nous contacter à:</p>
           <div className="mt-2 space-y-1">
-            <div>Email: confidentialite@recruitmentplus.ca</div>
-            <div>Téléphone: +1 (514) 123-4567</div>
-            <div>Adresse: 123 Rue Principale, Montréal, QC H3Z 2Y7, Canada</div>
+            <div>Email: info@recrutementplus.ca</div>
+            <div>Téléphone: 1866 305-8982</div>
+            <div>Adresse: 1494 Ch. de Chambly, Bureau 211, Longueuil, QC J4J 3X3, Canada</div>
           </div>
         </div>
       )
@@ -378,9 +378,9 @@ export default function PrivacyPolicyPage() {
         <div>
           <p>For any questions or concerns regarding this privacy policy or our data protection practices, please contact us at:</p>
           <div className="mt-2 space-y-1">
-            <div>Email: privacy@recruitmentplus.ca</div>
-            <div>Phone: +1 (514) 123-4567</div>
-            <div>Address: 123 Main Street, Montreal, QC H3Z 2Y7, Canada</div>
+            <div>Email: info@recrutementplus.ca</div>
+            <div>Phone: 1866 305-8982</div>
+            <div>Address: 1494 Ch. de Chambly, Suite 211, Longueuil, QC J4J 3X3, Canada</div>
           </div>
         </div>
       )

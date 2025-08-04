@@ -645,7 +645,7 @@ export default function RegisterPage() {
               value={companyForm.phone}
               onChange={(e) => handleCompanyChange('phone', e.target.value)}
               className="pl-10 h-12 bg-muted/30 border-muted-foreground/20 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all duration-300"
-              placeholder="+1 (555) 123-4567"
+              placeholder="1866 305-8982"
               disabled={isLoading}
             />
           </div>

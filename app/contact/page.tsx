@@ -128,16 +128,16 @@ export default function ContactPage() {
       icon: Phone,
       title: locale === 'fr' ? 'Appelez-nous' : 'Call Us',
       description: locale === 'fr' ? 'Lun-Ven: 9h-17h' : 'Mon-Fri: 9am-5pm',
-      contact: '+1 (514) 123-4567',
-      action: () => window.open('tel:+15141234567', '_self'),
+      contact: '1866 305-8982',
+      action: () => window.open('tel:18663058982', '_self'),
       color: 'from-blue-500 to-blue-600'
     },
     {
       icon: Mail,
       title: locale === 'fr' ? 'Écrivez-nous' : 'Email Us',
       description: locale === 'fr' ? 'Réponse sous 24h' : 'Response within 24h',
-      contact: 'contact@recruitmentplus.ca',
-      action: () => window.open('mailto:contact@recruitmentplus.ca?subject=Contact Request', '_self'),
+      contact: 'info@recrutementplus.ca',
+      action: () => window.open('mailto:info@recrutementplus.ca?subject=Contact Request', '_self'),
       color: 'from-emerald-500 to-emerald-600'
     },
     {
@@ -147,7 +147,7 @@ export default function ContactPage() {
       contact: locale === 'fr' ? 'Disponible maintenant' : 'Available now',
       action: () => {
         // Simulate opening a chat widget or redirect to a chat service
-        window.open('https://wa.me/15141234567', '_blank')
+        window.open('https://wa.me/18663058982', '_blank')
       },
       color: 'from-purple-500 to-purple-600'
     },
@@ -164,30 +164,38 @@ export default function ContactPage() {
   // Office locations
   const officeLocations = [
     {
-      city: locale === 'fr' ? 'Montréal (Siège social)' : 'Montreal (Headquarters)',
+      city: locale === 'fr' ? 'Longueuil (Siège social)' : 'Longueuil (Headquarters)',
       address: locale === 'fr' 
-        ? '123 Rue Principale, Montréal, QC H3Z 2Y7'
-        : '123 Main Street, Montreal, QC H3Z 2Y7',
-      phone: '+1 (514) 123-4567',
-      email: 'montreal@recruitmentplus.ca',
+        ? '1494 Ch. de Chambly, Bureau 211, Longueuil, QC J4J 3X3 Canada'
+        : '1494 Ch. de Chambly, Suite 211, Longueuil, QC J4J 3X3 Canada',
+      phone: '1866 305-8982',
+      email: 'info@recrutementplus.ca',
       flag: '🇨🇦',
       timezone: 'EST'
     },
     {
-      city: 'Istanbul',
-      address: 'Levent Mahallesi, İstanbul, Turkey',
-      phone: '+90 212 123-4567',
-      email: 'istanbul@recruitmentplus.ca',
-      flag: '🇹🇷',
-      timezone: 'TRT'
+      city: 'Montréal',
+      address: '3418 rue Stanley, R 2, Montréal, Québec, H3A 1R8 Canada',
+      phone: '1866 305-8982',
+      email: 'info@recrutementplus.ca',
+      flag: '🇨🇦',
+      timezone: 'EST'
     },
     {
       city: 'Dubai',
-      address: 'Business Bay, Dubai, UAE',
-      phone: '+971 4 123-4567',
-      email: 'dubai@recruitmentplus.ca',
+      address: '33rd Floor, Office No. 3301, Latifa Tower, Trade Center 1, Sheikh Zayed Rd, Dubai, UAE',
+      phone: '1866 305-8982',
+      email: 'info@recrutementplus.ca',
       flag: '🇦🇪',
       timezone: 'GST'
+    },
+    {
+      city: 'Istanbul',
+      address: '10 floor, Block A, 48, BJK Plaza, Vişnezade, Süleyman Seba street, 34357 Beşiktaş/ Istanbul',
+      phone: '1866 305-8982',
+      email: 'info@recrutementplus.ca',
+      flag: '🇹🇷',
+      timezone: 'TRT'
     }
   ]
 

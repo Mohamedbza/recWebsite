@@ -182,16 +182,16 @@ export function SiteFooter() {
                 <li className="flex items-start">
                   <MapPin className="h-5 w-5 text-white mr-2 mt-0.5 shrink-0" />
                   <span className="text-sm text-white/80">
-                    123 {locale === 'fr' ? 'Rue Principale' : 'Main Street'}, {locale === 'fr' ? 'Montréal, QC H3Z 2Y7' : 'Montreal, QC H3Z 2Y7'}
+                    {locale === 'fr' ? '1494 Ch. de Chambly, Bureau 211, Longueuil, QC J4J 3X3' : '1494 Ch. de Chambly, Suite 211, Longueuil, QC J4J 3X3'}
                   </span>
                 </li>
                 <li className="flex items-start">
                   <Phone className="h-5 w-5 text-white mr-2 mt-0.5 shrink-0" />
-                  <span className="text-sm text-white/80">+1 (514) 123-4567</span>
+                  <span className="text-sm text-white/80">1866 305-8982</span>
                 </li>
                 <li className="flex items-start">
                   <Mail className="h-5 w-5 text-white mr-2 mt-0.5 shrink-0" />
-                  <span className="text-sm text-white/80">info@recruitmentplus.ca</span>
+                  <span className="text-sm text-white/80">info@recrutementplus.ca</span>
                 </li>
               </ul>
             </div>

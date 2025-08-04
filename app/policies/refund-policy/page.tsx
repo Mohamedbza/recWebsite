@@ -64,7 +64,7 @@ export default function RefundPolicyPage() {
         <div>
           <p>Pour demander un remboursement, veuillez suivre ces étapes:</p>
           <ol className="list-decimal pl-6 mt-2 space-y-1">
-            <li>Envoyez un email à remboursements@recruitmentplus.ca avec le sujet "Demande de Remboursement"</li>
+            <li>Envoyez un email à info@recrutementplus.ca avec le sujet "Demande de Remboursement"</li>
             <li>Incluez votre nom complet, la date du paiement et le numéro de référence de la transaction</li>
             <li>Expliquez clairement la raison de votre demande de remboursement</li>
             <li>Joignez tout document pertinent (reçu, correspondance, etc.)</li>
@@ -157,7 +157,7 @@ export default function RefundPolicyPage() {
         <div>
           <p>To request a refund, please follow these steps:</p>
           <ol className="list-decimal pl-6 mt-2 space-y-1">
-            <li>Send an email to refunds@recruitmentplus.ca with the subject "Refund Request"</li>
+            <li>Send an email to info@recrutementplus.ca with the subject "Refund Request"</li>
             <li>Include your full name, payment date, and transaction reference number</li>
             <li>Clearly explain the reason for your refund request</li>
             <li>Attach any relevant documentation (receipt, correspondence, etc.)</li>
@@ -251,11 +251,11 @@ export default function RefundPolicyPage() {
                 <div className="mt-4 space-y-2">
                   <div className="flex items-center">
                     <Mail className="h-5 w-5 text-primary mr-2" />
-                    <span>{locale === 'fr' ? 'remboursements@recruitmentplus.ca' : 'refunds@recruitmentplus.ca'}</span>
+                    <span>info@recrutementplus.ca</span>
                   </div>
                   <div className="flex items-center">
                     <Phone className="h-5 w-5 text-primary mr-2" />
-                    <span>+1 (514) 123-4567</span>
+                    <span>1866 305-8982</span>
                   </div>
                 </div>
               </div>

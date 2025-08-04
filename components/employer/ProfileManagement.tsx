@@ -365,7 +365,7 @@ export default function ProfileManagement({ isLoading }: ProfileManagementProps)
                 value={formData.phone}
                 onChange={handleInputChange}
                 disabled={!isEditing}
-                placeholder="+1 (555) 123-4567"
+                placeholder="1866 305-8982"
               />
             </div>
           </div>

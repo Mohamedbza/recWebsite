@@ -46,8 +46,8 @@ export default function AccessibilityPage() {
         <div>
           <p>Si vous rencontrez des difficultés en utilisant notre site web, ou si vous avez besoin d'assistance pour accéder à un contenu spécifique, n'hésitez pas à nous contacter:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>Par téléphone: +1 (514) 123-4567</li>
-            <li>Par email: accessibilite@recruitmentplus.ca</li>
+            <li>Par téléphone: 1866 305-8982</li>
+            <li>Par email: info@recrutementplus.ca</li>
           </ul>
           <p className="mt-2">Notre équipe est disponible pour vous aider et pour fournir des formats alternatifs de contenu si nécessaire.</p>
         </div>
@@ -108,8 +108,8 @@ export default function AccessibilityPage() {
         <div>
           <p>If you encounter difficulties using our website, or if you need assistance accessing specific content, please don't hesitate to contact us:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>By phone: +1 (514) 123-4567</li>
-            <li>By email: accessibility@recruitmentplus.ca</li>
+            <li>By phone: 1866 305-8982</li>
+            <li>By email: info@recrutementplus.ca</li>
           </ul>
           <p className="mt-2">Our team is available to help you and to provide alternative formats of content if necessary.</p>
         </div>
@@ -216,7 +216,7 @@ export default function AccessibilityPage() {
                 </p>
                 <div className="inline-flex items-center space-x-2 bg-white/10 rounded-full px-4 py-2">
                   <Mail className="h-5 w-5 text-primary" />
-                  <span>{locale === 'fr' ? 'accessibilite@recruitmentplus.ca' : 'accessibility@recruitmentplus.ca'}</span>
+                  <span>info@recrutementplus.ca</span>
                 </div>
               </div>
             </div>

@@ -831,22 +831,28 @@
       "view_map": "View on map",
       "locations": [
         {
-          "city": "Montreal (Canada)",
-          "address": "123 Main Street, Montreal, QC H3Z 2Y7, Canada",
-          "phone": "+1 (514) 123-4567",
-          "email": "montreal@recruitmentplus.ca"
+          "city": "Longueuil (Canada)",
+          "address": "1494 Ch. de Chambly, Suite 211, Longueuil, QC J4J 3X3 Canada",
+          "phone": "1866 305-8982",
+          "email": "info@recrutementplus.ca"
         },
         {
-          "city": "Istanbul (Turkey)",
-          "address": "Maslak Mahallesi, Büyükdere Cd. No:255, 34398 Şişli/Istanbul, Turkey",
-          "phone": "+90 (212) 345-6789",
-          "email": "istanbul@recruitmentplus.com"
+          "city": "Montreal (Canada)",
+          "address": "3418 rue Stanley, R 2, Montreal, Quebec, H3A 1R8 Canada",
+          "phone": "1866 305-8982",
+          "email": "info@recrutementplus.ca"
         },
         {
           "city": "Dubai (UAE)",
-          "address": "Sheikh Zayed Road, Business Bay, Dubai, United Arab Emirates",
-          "phone": "+971 (4) 567-8900",
-          "email": "dubai@recruitmentplus.ae"
+          "address": "33rd Floor, Office No. 3301, Latifa Tower, Trade Center 1, Sheikh Zayed Rd, Dubai, UAE",
+          "phone": "1866 305-8982",
+          "email": "info@recrutementplus.ca"
+        },
+        {
+          "city": "Istanbul (Turkey)",
+          "address": "10 floor, Block A, 48, BJK Plaza, Vişnezade, Süleyman Seba street, 34357 Beşiktaş/ Istanbul",
+          "phone": "1866 305-8982",
+          "email": "info@recrutementplus.ca"
         }
       ]
     },
@@ -856,15 +862,15 @@
       "contacts": [
         {
           "title": "Phone",
-          "info": "+1 (514) 123-4567"
+          "info": "1866 305-8982"
         },
         {
           "title": "Email",
-          "info": "info@recruitmentplus.ca"
+          "info": "info@recrutementplus.ca"
         },
         {
           "title": "Address",
-          "info": "Montreal, Quebec City, Toronto"
+          "info": "Longueuil, Montreal, Dubai, Istanbul"
         }
       ],
       "contact_button": "Contact Us"
