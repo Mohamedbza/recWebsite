@@ -122,11 +122,11 @@ export default function TermsOfUsePage() {
         <div>
           <p>Pour toute question concernant ces Conditions d'Utilisation, veuillez nous contacter à:</p>
           <p className="mt-2">Recrutement Plus Inc.<br />
-          123 Rue Principale<br />
-          Montréal, QC H3Z 2Y7<br />
+          1494 Ch. de Chambly, Bureau 211<br />
+          Longueuil, QC J4J 3X3<br />
           Canada<br />
-          Email: conditions@recruitmentplus.ca<br />
-          Téléphone: +1 (514) 123-4567</p>
+          Email: info@recrutementplus.ca<br />
+          Téléphone: 1866 305-8982</p>
         </div>
       )
     }
@@ -239,11 +239,11 @@ export default function TermsOfUsePage() {
         <div>
           <p>For any questions about these Terms of Use, please contact us at:</p>
           <p className="mt-2">Recruitment Plus Inc.<br />
-          123 Main Street<br />
-          Montreal, QC H3Z 2Y7<br />
+          1494 Ch. de Chambly, Suite 211<br />
+          Longueuil, QC J4J 3X3<br />
           Canada<br />
-          Email: terms@recruitmentplus.ca<br />
-          Phone: +1 (514) 123-4567</p>
+          Email: info@recrutementplus.ca<br />
+          Phone: 1866 305-8982</p>
         </div>
       )
     }

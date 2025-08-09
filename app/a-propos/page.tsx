@@ -217,83 +217,154 @@ export default function AProposPage() {
               </p>
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  city: t('about.locations.locations.0.city'),
-                  address: t('about.locations.locations.0.address'),
-                  phone: t('about.locations.locations.0.phone'),
-                  email: t('about.locations.locations.0.email'),
-                  image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-                  employees: "15+",
-                  services: t('about.branch_offices.offices.0.services') || "Recrutement local et national"
-                },
-                {
-                  city: t('about.locations.locations.1.city'),
-                  address: t('about.locations.locations.1.address'),
-                  phone: t('about.locations.locations.1.phone'),
-                  email: t('about.locations.locations.1.email'),
-                  image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
-                  employees: "10+",
-                  services: t('about.branch_offices.offices.1.services') || "Recrutement spécialisé aérospatial"
-                },
-                {
-                  city: t('about.locations.locations.2.city'),
-                  address: t('about.locations.locations.2.address'),
-                  phone: t('about.locations.locations.2.phone'),
-                  email: t('about.locations.locations.2.email'),
-                  image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-                  employees: "8+",
-                  services: t('about.branch_offices.offices.2.services') || "Recrutement international"
-                },
-              ].map((office, index) => (
-                <div key={index} className="magic-card overflow-hidden group">
-                  <div className="h-48 overflow-hidden">
-                    <Image
-                      src={office.image}
-                      alt={`${office.city} office`}
-                      width={400}
-                      height={300}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+            <div className="grid gap-8 sm:grid-cols-1 lg:grid-cols-3">
+              {/* Canada Offices Combined Card */}
+              <div className="magic-card overflow-hidden group">
+                <div className="h-48 overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                    alt="Canada offices"
+                    width={400}
+                    height={300}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-xl text-primary">🇨🇦 Canada</h3>
+                    <Badge variant="outline" className="bg-primary/10 text-primary">
+                      25+ {t('about.branch_offices.employees') || "Employés"}
+                    </Badge>
                   </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="font-bold text-xl text-primary">{office.city}</h3>
-                      <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {office.employees} {t('about.branch_offices.employees') || "Employés"}
-                      </Badge>
-                    </div>
-                    
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-start gap-3">
-                        <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                        <span className="text-sm text-muted-foreground">{office.address}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Phone className="h-5 w-5 text-primary shrink-0" />
-                        <span className="text-sm text-muted-foreground">{office.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Mail className="h-5 w-5 text-primary shrink-0" />
-                        <span className="text-sm text-muted-foreground">{office.email}</span>
+                  
+                  <div className="space-y-4 mb-4">
+                    {/* Longueuil Office */}
+                    <div className="border-l-2 border-primary/20 pl-4">
+                      <h4 className="font-semibold text-primary mb-2">Longueuil (Siège social)</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-3">
+                          <MapPin className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                          <span className="text-sm text-muted-foreground">1494 Ch. de Chambly, Bureau 211, Longueuil, QC J4J 3X3</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Phone className="h-4 w-4 text-primary shrink-0" />
+                          <span className="text-sm text-muted-foreground">1866 305-8982</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Mail className="h-4 w-4 text-primary shrink-0" />
+                          <span className="text-sm text-muted-foreground">info@recrutementplus.ca</span>
+                        </div>
                       </div>
                     </div>
                     
-                    <div className="pt-4 border-t">
-                      <h4 className="font-medium mb-2">{t('about.branch_offices.services') || "Services"}</h4>
-                      <p className="text-sm text-muted-foreground">{office.services}</p>
+                    {/* Montreal Office */}
+                    <div className="border-l-2 border-secondary/20 pl-4">
+                      <h4 className="font-semibold text-secondary mb-2">Montréal</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-3">
+                          <MapPin className="h-4 w-4 text-secondary shrink-0 mt-0.5" />
+                          <span className="text-sm text-muted-foreground">3418 rue Stanley, R 2, Montréal, Québec, H3A 1R8</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Phone className="h-4 w-4 text-secondary shrink-0" />
+                          <span className="text-sm text-muted-foreground">1866 305-8982</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Mail className="h-4 w-4 text-secondary shrink-0" />
+                          <span className="text-sm text-muted-foreground">info@recrutementplus.ca</span>
+                        </div>
+                      </div>
                     </div>
-                    
-                    {/* <div className="mt-4">
-                      <Button variant="outline" size="sm" className="w-full">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        {t('about.locations.view_map')}
-                      </Button>
-                    </div> */}
+                  </div>
+                  
+                  <div className="pt-4 border-t">
+                    <h4 className="font-medium mb-2">{t('about.branch_offices.services') || "Services"}</h4>
+                    <p className="text-sm text-muted-foreground">{t('about.branch_offices.offices.0.services') || "Recrutement local et international - Siège social"}</p>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Dubai Office */}
+              <div className="magic-card overflow-hidden group">
+                <div className="h-48 overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                    alt="Dubai office"
+                    width={400}
+                    height={300}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-xl text-primary">🇦🇪 Dubai</h3>
+                    <Badge variant="outline" className="bg-primary/10 text-primary">
+                      8+ {t('about.branch_offices.employees') || "Employés"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground">33rd Floor, Office No. 3301, Latifa Tower, Trade Center 1, Sheikh Zayed Rd, Dubai, UAE</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground">1866 305-8982</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground">info@recrutementplus.ca</span>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-4 border-t">
+                    <h4 className="font-medium mb-2">{t('about.branch_offices.services') || "Services"}</h4>
+                    <p className="text-sm text-muted-foreground">{t('about.branch_offices.offices.2.services') || "Recrutement Moyen-Orient et Asie - Secteurs émergents"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Istanbul Office */}
+              <div className="magic-card overflow-hidden group">
+                <div className="h-48 overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80"
+                    alt="Istanbul office"
+                    width={400}
+                    height={300}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-xl text-primary">🇹🇷 Istanbul</h3>
+                    <Badge variant="outline" className="bg-primary/10 text-primary">
+                      10+ {t('about.branch_offices.employees') || "Employés"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground">10 floor, Block A, 48, BJK Plaza, Vişnezade, Süleyman Seba street, 34357 Beşiktaş/ Istanbul</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground">1866 305-8982</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground">info@recrutementplus.ca</span>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-4 border-t">
+                    <h4 className="font-medium mb-2">{t('about.branch_offices.services') || "Services"}</h4>
+                    <p className="text-sm text-muted-foreground">{t('about.branch_offices.offices.1.services') || "Recrutement Europe et Moyen-Orient - Spécialités techniques"}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
