@@ -4,21 +4,21 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
-import {
-  Search,
-  Menu,
-  X,
-  ChevronDown,
-  User,
-  LogIn,
-  LogOut,
-  Sparkles,
-  Briefcase,
-  Users,
-  Building2,
-  Phone,
-  ArrowRight,
-  Info,
+import { 
+  Search, 
+  Menu, 
+  X, 
+  ChevronDown, 
+  User, 
+  LogIn, 
+  LogOut, 
+  Sparkles, 
+  Briefcase, 
+  Users, 
+  Building2, 
+  Phone, 
+  ArrowRight, 
+  Info, 
   Settings,
 } from "lucide-react"
 import { useLanguage } from "@/contexts/LanguageContext"
@@ -31,19 +31,19 @@ import { logoutUser } from "@/store/slices/accountSlice"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import React from "react"
 
-  // Define dropdown item types
-  type DropdownItem = {
-    href: string
-    icon: React.ReactNode
-    title: string
-    description: string
-  }
+// Define dropdown item types
+type DropdownItem = {
+  href: string
+  icon: React.ReactNode
+  title: string
+  description: string
+}
 
 export function SiteHeader() {
   const { t, locale } = useLanguage()
   const dispatch = useAppDispatch()
   const { user, isAuthenticated } = useAppSelector((state) => state.account)
-  
+
   // Define dropdown content
   const candidatsDropdown: DropdownItem[] = [
     {
@@ -82,7 +82,7 @@ export function SiteHeader() {
   const [searchQuery, setSearchQuery] = useState("")
   const pathname = usePathname()
   const router = useRouter()
-  
+
   // Refs for dropdowns and search
   const accountRef = useRef<HTMLDivElement>(null)
   const candidatsRef = useRef<HTMLDivElement>(null)
@@ -97,7 +97,7 @@ export function SiteHeader() {
       const scrollY = window.scrollY
       setIsScrolled(scrollY > 20)
     }
-    
+
     // Throttle scroll events for better performance
     let ticking = false
     const scrollHandler = () => {
@@ -109,7 +109,7 @@ export function SiteHeader() {
         ticking = true
       }
     }
-    
+
     window.addEventListener("scroll", scrollHandler, { passive: true })
     return () => window.removeEventListener("scroll", scrollHandler)
   }, [])
@@ -268,7 +268,7 @@ export function SiteHeader() {
             </Link>
 
             {/* Enhanced Navigation with Better Animations */}
-            <nav className="hidden lg:flex gap-2">
+            <nav className="hidden xl:flex gap-2">
               {/* Candidats Dropdown */}
               <div className="relative" ref={candidatsRef}>
                 <button
@@ -286,9 +286,9 @@ export function SiteHeader() {
                   </span>
                   <ChevronDown
                     className={`h-3 w-3 transition-all duration-300 ${
-                      activeDropdown === "candidats" 
-                        ? "rotate-180 text-primary" 
-                        : "group-hover/nav:rotate-180"
+                      activeDropdown === "candidats"
+                         ? "rotate-180 text-primary"
+                         : "group-hover/nav:rotate-180"
                     }`}
                   />
                 </button>
@@ -342,9 +342,9 @@ export function SiteHeader() {
                   </span>
                   <ChevronDown
                     className={`h-3 w-3 transition-all duration-300 ${
-                      activeDropdown === "employeurs" 
-                        ? "rotate-180 text-primary" 
-                        : "group-hover/nav:rotate-180"
+                      activeDropdown === "employeurs"
+                         ? "rotate-180 text-primary"
+                         : "group-hover/nav:rotate-180"
                     }`}
                   />
                 </button>
@@ -412,7 +412,6 @@ export function SiteHeader() {
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </span>
               </Link>
-
             </nav>
           </div>
 
@@ -420,7 +419,7 @@ export function SiteHeader() {
             {/* Blog Link */}
             <Link
               href="/blog"
-              className="hidden lg:flex group/nav px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10 transform hover:scale-105"
+              className="hidden xl:flex group/nav px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-white/15 hover:text-primary hover:shadow-lg hover:shadow-primary/10 transform hover:scale-105"
             >
               <span className="relative">
                 {t('navigation.blog')}
@@ -431,9 +430,9 @@ export function SiteHeader() {
             {/* Enhanced Expandable Search */}
             <div ref={searchRef} className="hidden md:flex items-center">
               <div className={`flex items-center rounded-xl backdrop-blur-sm transition-all duration-500 ease-out ${
-                isSearchExpanded 
-                  ? "bg-background/90 border border-primary/30 shadow-lg shadow-primary/10 w-80" 
-                  : "bg-transparent w-auto"
+                isSearchExpanded
+                   ? "bg-background/90 border border-primary/30 shadow-lg shadow-primary/10 w-80"
+                   : "bg-transparent w-auto"
               }`}>
                 {isSearchExpanded ? (
                   <form onSubmit={handleSearch} className="flex items-center w-full">
@@ -500,9 +499,9 @@ export function SiteHeader() {
                 )}
                 <ChevronDown
                   className={`h-4 w-4 transition-all duration-300 ${
-                    activeDropdown === "account" 
-                      ? "rotate-180 text-primary" 
-                      : "group-hover/account:rotate-180"
+                    activeDropdown === "account"
+                       ? "rotate-180 text-primary"
+                       : "group-hover/account:rotate-180"
                   }`}
                 />
               </button>
@@ -619,7 +618,7 @@ export function SiteHeader() {
 
             {/* Enhanced Mobile Menu Toggle */}
             <button
-              className="lg:hidden p-2.5 rounded-xl hover:bg-white/15 transition-all duration-300 transform hover:scale-105 group/menu"
+              className="xl:hidden p-2.5 rounded-xl hover:bg-white/15 transition-all duration-300 transform hover:scale-105 group/menu"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             >
@@ -634,7 +633,7 @@ export function SiteHeader() {
 
       {/* Enhanced Mobile Menu Panel */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden mt-3 mx-2 rounded-2xl bg-background/90 backdrop-blur-xl shadow-2xl border border-white/30 overflow-hidden animate-in slide-in-from-top-5 duration-300 ease-out">
+        <div className="xl:hidden mt-3 mx-2 rounded-2xl bg-background/90 backdrop-blur-xl shadow-2xl border border-white/30 overflow-hidden animate-in slide-in-from-top-5 duration-300 ease-out">
           <div className="py-6 space-y-6 px-6 max-h-[calc(100vh-6rem)] overflow-y-auto">
             {/* Primary Navigation - Enhanced */}
             <div className="space-y-2">
@@ -662,7 +661,6 @@ export function SiteHeader() {
                   </Link>
                 ))}
               </div>
-
               <div className="space-y-1">
                 <div className="text-xs font-semibold text-primary px-4 py-1">{t('navigation.employers')}</div>
                 {employeursDropdown.map((item, index) => (
@@ -706,7 +704,6 @@ export function SiteHeader() {
                 </div>
                 <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
               </Link>
-
               <Link
                 href="/services"
                 className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
@@ -722,8 +719,6 @@ export function SiteHeader() {
                 </div>
                 <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
               </Link>
-
-
               <Link
                 href="/blog"
                 className="flex items-center gap-4 px-4 py-3 font-medium rounded-xl hover:bg-primary/10 transition-all duration-300 group/mobile transform hover:scale-[1.02]"
@@ -740,7 +735,7 @@ export function SiteHeader() {
                 <ArrowRight className="h-4 w-4 opacity-0 group-hover/mobile:opacity-100 transition-all duration-300" />
               </Link>
             </div>
-              
+            
             {/* Enhanced Mobile Account Section */}
             {isAuthenticated && user ? (
               <div className="space-y-2 border-t border-white/10 pt-6" style={{ animationDelay: '300ms' }}>
