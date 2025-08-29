@@ -419,14 +419,14 @@
       "title": "Industries que nous desservons",
       "description": "Notre expertise couvre un large éventail de secteurs d'activité pour répondre à tous vos besoins en recrutement.",
       "industries": [
+        "Aérospatiale",
         "Technologie", 
         "Santé", 
         "Finance", 
         "Ingénierie", 
         "Manufacture", 
         "Construction", 
-        "Éducation", 
-        "Hôtellerie"
+        "Éducation"
       ]
     },
     "solutions": {
@@ -892,7 +892,25 @@
     "success_title": "Bon retour!",
     "success_message": "Vous vous êtes connecté avec succès.",
     "error_title": "Échec de connexion",
-    "error_message": "Un problème est survenu lors de la connexion. Veuillez vérifier vos identifiants et réessayer."
+    "error_message": "Un problème est survenu lors de la connexion. Veuillez vérifier vos identifiants et réessayer.",
+    "candidate": "Candidat",
+    "employer": "Employeur",
+    "candidate_description": "Accédez à votre portail candidat pour gérer vos candidatures",
+    "employer_description": "Accédez à votre tableau de bord employeur pour gérer vos offres d'emploi",
+    "redirecting": "Redirection vers votre tableau de bord...",
+    "missing_info": "Informations manquantes",
+    "please_enter": "Veuillez entrer votre {fields}",
+    "invalid_email": "Email invalide",
+    "enter_valid_email": "Veuillez entrer une adresse email valide",
+    "authentication_failed": "Échec d'authentification",
+    "invalid_credentials": "Email ou mot de passe invalide. Veuillez vérifier vos identifiants et réessayer.",
+    "request_timeout": "Délai d'attente dépassé",
+    "server_timeout": "Le serveur prend trop de temps à répondre. Veuillez réessayer.",
+    "connection_error": "Erreur de connexion",
+    "connection_failed": "Impossible de se connecter au serveur. Veuillez vérifier votre connexion internet et réessayer.",
+    "login_error": "Erreur de connexion",
+    "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
+    "company_email_placeholder": "entreprise@exemple.com"
   },
   "register": {
     "welcome": "Créez votre compte",

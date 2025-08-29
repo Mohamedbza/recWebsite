@@ -209,61 +209,7 @@ export default function ServicesPage() {
             </div>
           </div>
         </section>
-
-        {/* Industries Section */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-muted/50 to-transparent"></div>
-          <div className="container relative">
-            <div className="text-center mb-16">
-              <div className="inline-block mb-4 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full text-primary font-medium text-sm shimmer">
-                <Building2 className="inline-block h-4 w-4 mr-2" />
-                {t('services.industries.badge')}
-              </div>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {t('services.industries.title')}
-              </h2>
-              <p className="max-w-2xl mx-auto text-muted-foreground">
-                {t('services.industries.description')}
-              </p>
-            </div>
-
-            {/* Industries Grid */}
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {[
-                { name: "Aerospace", icon: Plane, color: "from-sky-500/20 to-sky-600/20 " },
-                { name: "Technology", icon: Code, color: "from-blue-500/20 to-blue-600/20" },
-                { name: "Healthcare", icon: Heart, color: "from-red-500/20 to-red-600/20" },
-                { name: "Education", icon: GraduationCap, color: "from-green-500/20 to-green-600/20" },
-                { name: "Finance", icon: DollarSign, color: "from-yellow-500/20 to-yellow-600/20" },
-                { name: "Retail", icon: ShoppingCart, color: "from-purple-500/20 to-purple-600/20" },
-                { name: "Manufacturing", icon: Factory, color: "from-orange-500/20 to-orange-600/20" },
-                { name: "Consulting", icon: Briefcase, color: "from-indigo-500/20 to-indigo-600/20" },
-                { name: "Engineering", icon: Wrench, color: "from-cyan-500/20 to-cyan-600/20" },
-                { name: "Design", icon: Palette, color: "from-pink-500/20 to-pink-600/20" },
-                { name: "Insurance", icon: Shield, color: "from-gray-500/20 to-gray-600/20" },
-                { name: "Automotive", icon: Car, color: "from-blue-600/20 to-blue-700/20" },
-                { name: "Gaming", icon: Gamepad2, color: "from-violet-500/20 to-violet-600/20" },
-                { name: "Energy", icon: Leaf, color: "from-green-600/20 to-green-700/20" },
-                { name: "Legal", icon: Scale, color: "from-amber-500/20 to-amber-600/20" },
-                { name: "Media", icon: Camera, color: "from-rose-500/20 to-rose-600/20" },
-                { name: "Entertainment", icon: Music, color: "from-fuchsia-500/20 to-fuchsia-600/20" },
-                { name: "Real Estate", icon: MapPin, color: "from-teal-500/20 to-teal-600/20" },
-                 
-              ].map((industry, index) => {
-                return (
-                  <div key={index} className="magic-card p-6 text-center group">
-                    <div
-                      className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${industry.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <industry.icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <h3 className="font-bold text-lg">{industry.name}</h3>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+ 
 
         {/* Benefits Section */}
         <section className="py-16 md:py-24 bg-gradient-to-r from-secondary to-secondary/80 text-primary-foreground relative overflow-hidden">

@@ -419,14 +419,14 @@
       "title": "Industries We Serve",
       "description": "Our expertise covers a wide range of sectors to meet all your recruitment needs.",
       "industries": [
+        "Aerospace",
         "Technology", 
         "Healthcare", 
         "Finance", 
         "Engineering", 
         "Manufacturing", 
         "Construction", 
-        "Education", 
-        "Hospitality"
+        "Education"
       ]
     },
     "solutions": {
@@ -892,7 +892,25 @@
     "success_title": "Welcome back!",
     "success_message": "You have successfully signed in.",
     "error_title": "Sign in failed",
-    "error_message": "There was a problem signing in. Please check your credentials and try again."
+    "error_message": "There was a problem signing in. Please check your credentials and try again.",
+    "candidate": "Candidate",
+    "employer": "Employer",
+    "candidate_description": "Access your candidate portal to manage your job applications",
+    "employer_description": "Access your employer dashboard to manage job postings",
+    "redirecting": "Redirecting to your dashboard...",
+    "missing_info": "Missing Information",
+    "please_enter": "Please enter your {fields}",
+    "invalid_email": "Invalid Email",
+    "enter_valid_email": "Please enter a valid email address",
+    "authentication_failed": "Authentication Failed",
+    "invalid_credentials": "Invalid email or password. Please check your credentials and try again.",
+    "request_timeout": "Request Timeout",
+    "server_timeout": "The server is taking too long to respond. Please try again.",
+    "connection_error": "Connection Error",
+    "connection_failed": "Unable to connect to the server. Please check your internet connection and try again.",
+    "login_error": "Login Error",
+    "unexpected_error": "An unexpected error occurred. Please try again later.",
+    "company_email_placeholder": "company@example.com"
   },
   "register": {
     "welcome": "Create your account",

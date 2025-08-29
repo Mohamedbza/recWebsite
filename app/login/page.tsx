@@ -11,8 +11,10 @@ import { useToast } from "@/hooks/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { loginUser, clearError } from "@/store/slices/accountSlice"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 export default function LoginPage() {
+  const { t } = useLanguage()
   const { toast } = useToast()
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -40,7 +42,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-primary"></div>
           <p className="text-muted-foreground">
-            Redirecting to your dashboard...
+            {t("login.redirecting")}
           </p>
         </div>
       </div>
@@ -60,8 +62,8 @@ export default function LoginPage() {
       if (!password) missingFields.push('password')
       
       toast({
-        title: "Missing Information",
-        description: `Please enter your ${missingFields.join(' and ')}`,
+        title: t("login.missing_info"),
+        description: t("login.please_enter", { fields: missingFields.join(' and ') }),
         variant: "destructive",
       })
       return
@@ -70,8 +72,8 @@ export default function LoginPage() {
     // Validate email format
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address",
+        title: t("login.invalid_email"),
+        description: t("login.enter_valid_email"),
         variant: "destructive",
       })
       return
@@ -93,8 +95,8 @@ export default function LoginPage() {
         
         // Success notification
         toast({
-          title: "Success",
-          description: "You have successfully signed in.",
+          title: t("login.success_title"),
+          description: t("login.success_message"),
         })
 
         // Redirect based on user type
@@ -113,8 +115,8 @@ export default function LoginPage() {
         
         if (errorMessage?.toLowerCase().includes('timeout')) {
           toast({
-            title: "Request Timeout",
-            description: "The server is taking too long to respond. Please try again.",
+            title: t("login.request_timeout"),
+            description: t("login.server_timeout"),
             variant: "destructive",
           })
         } else if (errorMessage?.toLowerCase().includes('401') || 
@@ -124,22 +126,22 @@ export default function LoginPage() {
             errorMessage?.toLowerCase().includes('user not found') ||
             errorMessage?.toLowerCase().includes('invalid email or password')) {
           toast({
-            title: "Authentication Failed",
-            description: "Invalid email or password. Please check your credentials and try again.",
+            title: t("login.authentication_failed"),
+            description: t("login.invalid_credentials"),
             variant: "destructive",
           })
         } else if (errorMessage?.toLowerCase().includes('network') || 
                    errorMessage?.toLowerCase().includes('connection') ||
                    errorMessage?.toLowerCase().includes('fetch')) {
           toast({
-            title: "Connection Error",
-            description: "Unable to connect to the server. Please check your internet connection and try again.",
+            title: t("login.connection_error"),
+            description: t("login.connection_failed"),
             variant: "destructive",
           })
         } else {
           toast({
-            title: "Login Error",
-            description: errorMessage || "An error occurred while signing in. Please try again.",
+            title: t("login.login_error"),
+            description: errorMessage || t("login.unexpected_error"),
             variant: "destructive",
           })
         }
@@ -147,8 +149,8 @@ export default function LoginPage() {
     } catch (error) {
       console.error('Unexpected login error:', error)
       toast({
-        title: "Unexpected Error",
-        description: "An unexpected error occurred. Please try again later.",
+        title: t("login.error_title"),
+        description: t("login.unexpected_error"),
         variant: "destructive",
       })
     }
@@ -167,11 +169,11 @@ export default function LoginPage() {
         <div className="flex flex-col items-center space-y-2 text-center">
           <h1 className="text-3xl font-bold">
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Sign in to your account
+              {t("login.title")}
             </span>
           </h1>
           <p className="text-muted-foreground">
-            Enter your credentials to access your dashboard
+            {t("login.subtitle")}
           </p>
         </div>
 
@@ -180,36 +182,36 @@ export default function LoginPage() {
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="candidate" className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Candidate
+                {t("login.candidate")}
               </TabsTrigger>
               <TabsTrigger value="employer" className="flex items-center gap-2">
                 <Building className="h-4 w-4" />
-                Employer
+                {t("login.employer")}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="candidate">
               <p className="text-sm text-muted-foreground mb-6">
-                Access your candidate portal to manage your job applications
+                {t("login.candidate_description")}
               </p>
             </TabsContent>
 
             <TabsContent value="employer">
               <p className="text-sm text-muted-foreground mb-6">
-                Access your employer dashboard to manage job postings
+                {t("login.employer_description")}
               </p>
             </TabsContent>
           </Tabs>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("login.email_label")}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder={userType === 'employer' ? 'company@example.com' : 'name@example.com'}
+                  placeholder={userType === 'employer' ? t("login.company_email_placeholder") : t("login.email_placeholder")}
                   className="pl-10"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -221,12 +223,12 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("login.password_label")}</Label>
                 <Link 
                   href="/auth/reset-password" 
                   className="text-xs text-primary hover:underline underline-offset-4"
                 >
-                  Forgot password?
+                  {t("login.forgot_password")}
                 </Link>
               </div>
               <div className="relative">
@@ -234,7 +236,7 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t("login.password_placeholder")}
                   className="pl-10 pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -257,17 +259,17 @@ export default function LoginPage() {
               className="w-full magic-button bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg hover:shadow-primary/20 text-white font-medium py-2 h-auto text-base"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? t("login.loading") : t("login.submit")}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm">
-            Don&apos;t have an account?{" "}
+            {t("login.no_account")}{" "}
             <Link
               href="/register"
               className="font-medium text-primary hover:underline underline-offset-4"
             >
-              Create one now
+              {t("login.register_link")}
             </Link>
           </div>
         </div>
